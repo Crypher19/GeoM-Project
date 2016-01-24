@@ -19,6 +19,13 @@ public class DatiCondivisi implements Parcelable {
 		serverPort = 4444;
 		autenticato = false;
 	}
+	
+	public DatiCondivisi(String sa, int sp) {
+		utente = new Utente();
+		serverAddress = sa;
+		serverPort = sp;
+		autenticato = false;
+	}
 
 	public String getServerAddress() {
 		return serverAddress;

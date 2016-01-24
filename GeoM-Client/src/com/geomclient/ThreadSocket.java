@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 //import java.util.StringTokenizer;
 
+import android.util.Log;
+
 //import android.util.Log;
 
 public class ThreadSocket extends Thread {
@@ -43,44 +45,19 @@ public class ThreadSocket extends Thread {
 			sIN = new BufferedReader(in);
 			
 		
-			if ("A".equals(dc.getScelta())) {
-				msgDaInviare = "A;" + dc.getUtente().getUser() + ";";
-				msgDaInviare += dc.getUtente().getPass();
-			}
-			else if ("R".equals(dc.getScelta())) {
-				msgDaInviare = "R;" + dc.getUtente().getUser() + ";";
-				msgDaInviare += dc.getUtente().getPass()+ ";";
-				msgDaInviare += dc.getUtente().getName()+ ";";
-				msgDaInviare += dc.getUtente().getSurn()+ ";";
-				msgDaInviare += dc.getUtente().getMail();
-			}
 			
-
-			// invio il messaggio
-			sOUT.println(msgDaInviare);
-			sOUT.flush();		
-		
-			if ("y".equals(sIN.readLine())) {
-				dc.setAutenticato(true);
-			}
-			else {
-				dc.setAutenticato(false);
-			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//Log.e("OpenJM", "IOException", e);
-			e.printStackTrace();
+			Log.e("GeoM", "IOException", e);
 		}
 		
 		try {
 			sIN.close();
 			sOUT.close();
 			connessione.close();
-			System.out.println("Connessione chiusa.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//Log.e("OpenJM", "IOException", e);
-			e.printStackTrace();
+			Log.e("GeoM", "IOException", e);
 		}
 		
 	}
