@@ -4,14 +4,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class sharedData {
-	List<threadUser> users = new ArrayList<>();
+public class SharedData {
+	List<ThreadUser> users = new ArrayList<>();
 	
-	sharedData(){
+	SharedData(){
 		
 	}
 	
-	public void addUser(threadUser t){
+	public void addUser(ThreadUser t){
 		users.add(t);
 	}
 }

@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class threadUser extends Thread {
+public class ThreadUser extends Thread {
 	private Socket connessione;
 	// stream per gestire il flusso in output
 	private OutputStream out;
@@ -16,11 +16,11 @@ public class threadUser extends Thread {
 	private InputStreamReader in;
 	private BufferedReader sIN;	
 	private String numero;
-	private sharedData sData= null;
+	private SharedData sData= null;
 	private DBclass db;
 	private String numTel;
 	
-	public threadUser(Socket conn,sharedData sData) {
+	public ThreadUser(Socket conn,SharedData sData) {
 		this.connessione = conn;
 		this.numero = numero;
 		this.sData = sData;

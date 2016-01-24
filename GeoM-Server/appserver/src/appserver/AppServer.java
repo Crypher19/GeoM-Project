@@ -3,7 +3,7 @@ package appserver;
 import java.net.*;
 import java.io.*;
 
-public class main {
+public class AppServer {
 	
 	
 	public static void main(String[] args) {
@@ -13,7 +13,7 @@ public class main {
 				Socket connessione;
 				int porta = 4444;
 
-				sharedData sData = new sharedData();
+				SharedData sData = new SharedData();
 				String numero = "";
 						
 				try {
@@ -24,7 +24,7 @@ public class main {
 						connessione = sSocket.accept();
 						System.out.println("Arrivato");
 						
-						threadUser t = new threadUser(connessione,sData);
+						ThreadUser t = new ThreadUser(connessione,sData);
 						sData.addUser(t);
 						t.start();
 					}
