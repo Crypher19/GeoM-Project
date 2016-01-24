@@ -1,4 +1,4 @@
-package appserver;
+package geomserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;

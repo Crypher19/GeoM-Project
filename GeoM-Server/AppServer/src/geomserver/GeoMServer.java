@@ -1,9 +1,9 @@
-package appserver;
+package geomserver;
 
 import java.net.*;
 import java.io.*;
 
-public class AppServer {
+public class GeoMServer {
 	
 	
 	public static void main(String[] args) {

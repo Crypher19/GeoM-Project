@@ -1,4 +1,4 @@
-package appserver;
+package geomserver;
 
 import java.net.Socket;
 import java.util.ArrayList;
