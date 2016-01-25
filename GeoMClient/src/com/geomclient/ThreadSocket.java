@@ -44,7 +44,7 @@ public class ThreadSocket extends Thread {
 			in = new InputStreamReader(connessione.getInputStream());
 			sIN = new BufferedReader(in);
 			
-		
+			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

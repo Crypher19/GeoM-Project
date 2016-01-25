@@ -6,7 +6,7 @@ import android.os.Parcelable;
 // created using http://www.parcelabler.com/
 
 public class DatiCondivisi implements Parcelable {
-	private Utente utente;
+	private Autista utente;
 	private String serverAddress;
 	private int serverPort;
 	private boolean autenticato;
@@ -14,14 +14,14 @@ public class DatiCondivisi implements Parcelable {
 
 	
 	public DatiCondivisi() {
-		utente = new Utente();
+		utente = new Autista();
 		serverAddress = "172.22.108.108";
 		serverPort = 4444;
 		autenticato = false;
 	}
 	
 	public DatiCondivisi(String sa, int sp) {
-		utente = new Utente();
+		utente = new Autista();
 		serverAddress = sa;
 		serverPort = sp;
 		autenticato = false;
@@ -43,11 +43,11 @@ public class DatiCondivisi implements Parcelable {
 		this.serverPort = serverPort;
 	}
 
-	public Utente getUtente() {
+	public Autista getUtente() {
 		return utente;
 	}
 
-	public void setUtente(Utente utente) {
+	public void setUtente(Autista utente) {
 		this.utente = utente;
 	}
 
@@ -69,7 +69,7 @@ public class DatiCondivisi implements Parcelable {
 
 
    protected DatiCondivisi(Parcel in) {
-       utente = (Utente) in.readValue(Utente.class.getClassLoader());
+       utente = (Autista) in.readValue(Autista.class.getClassLoader());
        serverAddress = in.readString();
        serverPort = in.readInt();
        autenticato = in.readByte() != 0x00;
