@@ -4,12 +4,13 @@ from mysql.connector import MySQLConnection, Error
 class pydb:
     def connect():
         """ Connect to MySQL database """
-        global query
+        global cursor
+        global conn
       
         try:
             print('Connecting to MySQL database...')
-            conn = MySQLConnection(user = 'root', database='test')
-            query = conn.cursor()
+            conn = MySQLConnection(user = 'root', database='Geom')
+            cursor = conn.cursor()
             
             if conn.is_connected():
                 print('connection established.')
@@ -18,18 +19,14 @@ class pydb:
      
         except Error as error:
             print(error)
-     
-        finally:
-            conn.close()
-            print('Connection closed.')
 
-    def addTransport():
-        """add new transport"""
+
+    def execQuery(query):
+        """Execte query & give result"""
         try:
             print(query)
-            query.execute('INSERT INTO transports_table VALUES(0,test,test,test,test,false);')
-            print("query executed")
-            return True
+            ris = cursor.execute(query)
+            return ris
 
         except Error as error:
             print(error)
@@ -39,4 +36,4 @@ class pydb:
     if __name__ == '__main__':
         
         connect()
-        addTransport()
+        execQuery('INSERT INTO transports_table VALUES(0,test,test,test,test,false);')
