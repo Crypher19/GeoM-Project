@@ -1,18 +1,21 @@
 import socket
+from UserThread import *
 
-global s
+# variabili globali
+s = None
 
 def connection():
     global s
-    HOST=''
-    PORT=3333
+    HOST = ''
+    PORT = 3333
     s = socket.socket()
     s.bind((HOST, PORT))
-    s.listen(1)
-    print('Pronto')
+    s.listen(1) # accetta massimo una coda da <1> prima di rifiutare le altre connessioni
+    print('Ready')
 
 if __name__ == "__main__":
-    global s
     connection()
-    conn, addr = s.accept()
-    print('Connected by', addr)
+    while True:
+        conn, addr = s.accept()
+        ut = UserThread(conn, addr)
+        ut.start()

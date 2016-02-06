@@ -23,7 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GeoMServer.py" />
-    <Compile Include="ThreadUser.py">
+    <Compile Include="UserThread.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
