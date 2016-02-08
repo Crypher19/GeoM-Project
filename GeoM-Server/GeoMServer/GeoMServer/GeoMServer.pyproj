@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SharedData.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GeoMServer.py" />
     <Compile Include="UserThread.py">
       <SubType>Code</SubType>

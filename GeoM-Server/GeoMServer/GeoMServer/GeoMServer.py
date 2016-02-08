@@ -1,9 +1,6 @@
 import socket
 from UserThread import *
 
-# variabili globali
-s = None
-
 def connection():
     global s
     HOST = ''
@@ -15,7 +12,9 @@ def connection():
 
 if __name__ == "__main__":
     connection()
+    ID = 0
     while True:
         conn, addr = s.accept()
-        ut = UserThread(conn, addr)
+        ID += 1
+        ut = UserThread(ID, conn, addr)
         ut.start()
