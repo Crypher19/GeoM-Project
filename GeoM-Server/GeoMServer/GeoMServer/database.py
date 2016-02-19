@@ -1,7 +1,7 @@
 from mysql.connector import MySQLConnection, Error 
 
 
-class pydb:
+class database(object):
     def connect():
         """ Connect to MySQL database """
         global cursor
@@ -31,7 +31,6 @@ class pydb:
         except Error as error:
             print(error)
             return False
-
 
     if __name__ == '__main__':
         

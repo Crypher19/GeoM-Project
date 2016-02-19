@@ -1,12 +1,19 @@
 from xml.dom import minidom
+from database import *
 
 
 class SharedData(object):
     def __init__(self):
         self.prova = "ciao"
+        global db
+        db = database()
 
     def cambiaProva(self):
         self.prova = "cambiato"
+
+    def startServer(self):
+        """da provare"""
+        db.connect()
 
     def readXMLTable(self, filename):        
         doc = minidom.parse(filename)
