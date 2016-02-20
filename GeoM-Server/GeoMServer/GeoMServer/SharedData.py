@@ -1,17 +1,17 @@
 from xml.dom import minidom
-from database import *
+from Database import *
 
 
 class SharedData(object):
     def __init__(self):
         self.prova = "ciao"
         global db
-        db = database()
+        db = Database()
 
     def cambiaProva(self):
         self.prova = "cambiato"
 
-    def startServer(self):
+    def dbConnect(self):
         """da provare"""
         db.connect()
 

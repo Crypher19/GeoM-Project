@@ -9,7 +9,7 @@ class database(object):
       
         try:
             print('Connecting to MySQL database...')
-            conn = MySQLConnection(user = 'root', database='Geom')
+            conn = MySQLConnection(user='root', database='Geom')
             cursor = conn.cursor()
             
             if conn.is_connected():
@@ -22,7 +22,7 @@ class database(object):
 
 
     def execQuery(query):
-        """Execte query & give result"""
+        """Execute query & give result"""
         try:
             print(query)
             ris = cursor.execute(query)

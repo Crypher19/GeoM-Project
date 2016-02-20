@@ -2,7 +2,7 @@ import threading
 from SharedData import *
 
 class UserThread (threading.Thread):
-
+    
     def __init__(self, ID, conn, addr):
         threading.Thread.__init__(self)
         self.ID = ID
