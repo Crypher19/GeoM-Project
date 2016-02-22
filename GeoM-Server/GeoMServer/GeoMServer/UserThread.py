@@ -17,7 +17,7 @@ class UserThread (threading.Thread):
         print("Thread" + str(self.ID) + sd.prova)
         print("Connected by", self.addr)
         self.send("Connected")
-        sd.readXMLTable("mezzi.xml")
+        #sd.readXMLTable("mezzi.xml")
 
     def send(self, mex):
         mex += '\n'

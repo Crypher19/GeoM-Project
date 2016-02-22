@@ -1,5 +1,6 @@
 import socket
 from UserThread import *
+from ThreadSort import *
 
 def connection():
     global s
@@ -16,5 +17,6 @@ if __name__ == "__main__":
     while True:
         conn, addr = s.accept()
         ID += 1
-        ut = UserThread(ID, conn, addr)
+        ut = ThreadSort(ID, conn, addr)
+        #avvio thread con: controllo tipo thread, autenticazione, aggiunta thread alla lista [HREAD SMISTATORE]
         ut.start()

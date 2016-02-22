@@ -32,15 +32,19 @@ class Database(object):
             print(error)
             return False
 
-    def createUser(self,user,password): # da provare
+
+    def createUser(self, user, password): # da provare
             if(execQuery("insert into transport_users_table (username,pass) VALUES ('" + user + "','" + password + "')")):
                 return true
             return false
 
-    def addTransport(self,TransportType,Name,Company): # da provare
+
+    def addTransport(self, TransportType, Name, Company): # da provare
             if(execQuery("insert into transports_table (TipoMezzo,Compagnia,NomeMezzo) VALUES ('" + TransportType + "','" + Company + "','" + Name + "')")):
                 return true
             return false
+
+    #def setPosXY(Company, Name):
 
     if __name__ == '__main__':
         
