@@ -27,6 +27,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GeoMServer.py" />
+    <Compile Include="ThreadSort.py" />
     <Compile Include="UserThread.py">
       <SubType>Code</SubType>
     </Compile>
