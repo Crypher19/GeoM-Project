@@ -16,6 +16,7 @@ if __name__ == "__main__":
     ID = 0
     while True:
         conn, addr = s.accept()
+        print("connessione ricevuta")
         ID += 1
         ut = ThreadSort(ID, conn, addr)
         #avvio thread con: controllo tipo thread, autenticazione, aggiunta thread alla lista [HREAD SMISTATORE]
