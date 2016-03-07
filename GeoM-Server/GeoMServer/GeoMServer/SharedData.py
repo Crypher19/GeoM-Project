@@ -17,7 +17,14 @@ class SharedData(object):
         """da provare"""
         db.connect()
 
-    #def readXMLObject(self):
+    def toDOCObject(self, string):        
+        doc = minidom.parseString(string)
+
+        # doc.getElementsByTagName returns NodeList
+        msgs = doc.getElementsByTagName("messaggio")
+        for msg in msgs:
+            tipo = msg.getElementsByTagName("tipo")[0] # obtain the msg type
+            print(tipo.firstChild.nodeValue) # print tipo
         
 
     def readXMLTable(self, filename):        

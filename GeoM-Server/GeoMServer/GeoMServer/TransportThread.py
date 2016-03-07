@@ -17,4 +17,3 @@ class TransportThread (threading.Thread):
     def send(self, mex):
         mex += '\n'
         self.conn.send(mex.encode('utf-8'))
-

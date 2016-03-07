@@ -18,7 +18,10 @@ class ThreadSort(threading.Thread):
         # da provare
         
         # Controlla tipo di thread
-        msg = self.conn.recv(1024).decode("utf-8").strip()
+        msg = self.conn.recv(1024).decode('utf-8').strip()
+        print(msg)
+        sd.toDOCObject(msg)
+    """
         print(msg)
         if(msg=="user"):
             print("utente connesso")
@@ -28,4 +31,4 @@ class ThreadSort(threading.Thread):
             print("trasporto connesso")
             tt = TransportThread(self.ID,self.conn,self.addr)
             tt.start();
-        
+        """
