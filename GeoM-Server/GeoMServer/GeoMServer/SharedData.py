@@ -9,8 +9,7 @@ class SharedData(object):
         global db
         db = Database()
         # lista trasporti e relativo indice
-        global lastT
-        lastT =0
+
 
     def cambiaProva(self):
         self.prova = "cambiato"
@@ -31,8 +30,9 @@ class SharedData(object):
             line = bus.getElementsByTagName("line")[0] # obtain the bus line
             print(line.getAttribute("code") + " " + line.firstChild.nodeValue) # print bus code and value of the line element
 
-    def addTransport(self,transport):
-        global TransportsList
-        TransportList[lastT] = transport
-        TransportList[lastT].start()
-        lastT+=1
+    def addTransport(self, transport):
+        global transportList
+        transportList = list()
+        transportList.append(transport) # aggiungo un elemento ThreadTrasport nella lista
+        transportList[-1].start() # parte il threadTransport | -1 -> ultimo elemento
+
