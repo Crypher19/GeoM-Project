@@ -10,7 +10,6 @@ class SharedData(object):
         db = Database()
         # lista trasporti e relativo indice
 
-
     def cambiaProva(self):
         self.prova = "cambiato"
 
