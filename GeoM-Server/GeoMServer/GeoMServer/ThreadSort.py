@@ -21,8 +21,7 @@ class ThreadSort(threading.Thread):
         msg = self.conn.recv(1024).decode('utf-8').strip()
         print(msg)
         sd.toDOCObject(msg)
-    """
-        print(msg)
+
         if(msg=="user"):
             print("utente connesso")
             ut = UserThread(self.ID,self.conn,self.addr)
@@ -30,5 +29,4 @@ class ThreadSort(threading.Thread):
         else:
             print("trasporto connesso")
             tt = TransportThread(self.ID,self.conn,self.addr)
-            tt.start();
-        """
+            sd.addTransport(tt)

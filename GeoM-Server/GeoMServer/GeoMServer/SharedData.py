@@ -8,7 +8,9 @@ class SharedData(object):
         self.prova = "ciao"
         global db
         db = Database()
-        global TransportsList
+        # lista trasporti e relativo indice
+        global lastT
+        lastT =0
 
     def cambiaProva(self):
         self.prova = "cambiato"
@@ -18,14 +20,7 @@ class SharedData(object):
         db.connect()
 
     def toDOCObject(self, string):        
-        doc = minidom.parseString(string)
-
-        # doc.getElementsByTagName returns NodeList
-        msgs = doc.getElementsByTagName("messaggio")
-        for msg in msgs:
-            tipo = msg.getElementsByTagName("tipo")[0] # obtain the msg type
-            print(tipo.firstChild.nodeValue) # print tipo
-        
+        return minidom.parseString(string) # Ritorna oggetto tipo doc
 
     def readXMLTable(self, filename):        
         doc = minidom.parse(filename)
@@ -35,3 +30,9 @@ class SharedData(object):
         for bus in buses:
             line = bus.getElementsByTagName("line")[0] # obtain the bus line
             print(line.getAttribute("code") + " " + line.firstChild.nodeValue) # print bus code and value of the line element
+
+    def addTransport(self,transport):
+        global TransportsList
+        TransportList[lastT] = transport
+        TransportList[lastT].start()
+        lastT+=1

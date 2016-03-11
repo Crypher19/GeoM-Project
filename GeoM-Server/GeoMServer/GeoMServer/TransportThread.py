@@ -14,6 +14,7 @@ class TransportThread (threading.Thread):
         self.send("Connected")
         #sd.readXMLTable("mezzi.xml")
 
+
     def send(self, mex):
         mex += '\n'
         self.conn.send(mex.encode('utf-8'))
