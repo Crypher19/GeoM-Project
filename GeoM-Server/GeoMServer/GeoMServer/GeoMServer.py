@@ -1,4 +1,5 @@
 import socket
+from SharedData import *
 from UserThread import *
 from ThreadSort import *
 
@@ -14,10 +15,11 @@ def connection():
 if __name__ == "__main__":
     connection()
     ID = 0
+    sd = SharedData()
     while True:
         conn, addr = s.accept()
         print("connessione ricevuta")
         ID += 1
-        ut = ThreadSort(ID, conn, addr)
+        ut = ThreadSort(sd, ID, conn, addr)
         #avvio thread con: controllo tipo thread, autenticazione, aggiunta thread alla lista [HREAD SMISTATORE]
         ut.start()

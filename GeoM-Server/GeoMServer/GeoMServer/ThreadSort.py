@@ -6,13 +6,13 @@ from TransportThread import *
 
 class ThreadSort(threading.Thread):
 
-    def __init__(self, ID, conn, addr):
+    def __init__(self, sd, ID, conn, addr):
         threading.Thread.__init__(self)
+        self.sd = sd;
         self.ID = ID
         self.conn = conn
         self.addr = addr
-        global sd
-        sd = SharedData()
+        
 
     def run(self):
         # da provare
@@ -20,13 +20,13 @@ class ThreadSort(threading.Thread):
         # Controlla tipo di thread
         msg = self.conn.recv(1024).decode('utf-8').strip()
         print(msg)
-        sd.toDOCObject(msg)
+        self.sd.toDOCObject(msg)
 
-        if(msg=="user"):
+        if(msg == "user"):
             print("utente connesso")
-            ut = UserThread(self.ID,self.conn,self.addr)
+            ut = UserThread(self.sd, self.ID,self.conn,self.addr)
             ut.start();
         else:
             print("trasporto connesso")
-            tt = TransportThread(self.ID,self.conn,self.addr)
-            sd.addTransport(tt)
+            tt = TransportThread(self.sd, self.ID, self.conn, self.addr)
+            self.sd.addTransport(tt)

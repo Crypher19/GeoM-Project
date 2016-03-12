@@ -2,8 +2,9 @@ import threading
 
 class TransportThread (threading.Thread):
     
-    def __init__(self, ID, conn, addr):
+    def __init__(self, sd, ID, conn, addr):
         threading.Thread.__init__(self)
+        self.sd = sd;
         self.ID = ID
         self.conn = conn
         self.addr = addr
