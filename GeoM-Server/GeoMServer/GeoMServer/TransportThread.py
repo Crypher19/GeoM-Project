@@ -12,9 +12,17 @@ class TransportThread (threading.Thread):
     def run(self):
         print("Thread" + str(self.ID))
         print("Connected by", self.addr)
-        self.send("Connected")
-        #sd.readXMLTable("mezzi.xml")
 
+        #conferma connessione
+        self.send("Connected")
+
+        # ricevi username e password
+        msg = self.conn.recv(1024).decode('utf-8').strip()
+        print(msg)
+
+        #controlla username e password
+        #ricevi - invia dati posizione
+        
 
     def send(self, mex):
         mex += '\n'

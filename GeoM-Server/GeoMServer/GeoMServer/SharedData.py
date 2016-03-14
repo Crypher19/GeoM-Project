@@ -13,11 +13,7 @@ class SharedData(object):
     def cambiaProva(self):
         self.prova = "cambiato"
 
-    def dbConnect(self):
-        """da provare"""
-        db.connect()
-
-    def toDOCObject(self, string):        
+    def toDOMObject(self, string):        
         return minidom.parseString(string) # Ritorna oggetto tipo doc
 
     def readXMLTable(self, filename):        
@@ -28,6 +24,10 @@ class SharedData(object):
         for bus in buses:
             line = bus.getElementsByTagName("line")[0] # obtain the bus line
             print(line.getAttribute("code") + " " + line.firstChild.nodeValue) # print bus code and value of the line element
+
+    def getTransportList(self):
+        db.addTransport("pullmano","molto","veloce")
+        return db.getTransports()
 
     def addTransport(self, transport):
         global transportList

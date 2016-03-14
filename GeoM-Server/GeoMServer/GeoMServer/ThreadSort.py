@@ -3,6 +3,7 @@ from xml.dom import minidom
 from SharedData import *
 from UserThread import *
 from TransportThread import *
+from RequestThread import *
 
 class ThreadSort(threading.Thread):
 
@@ -20,13 +21,15 @@ class ThreadSort(threading.Thread):
         # Controlla tipo di thread
         msg = self.conn.recv(1024).decode('utf-8').strip()
         print(msg)
-        self.sd.toDOCObject(msg)
+        messaggio = self.sd.toDOMObject(msg)
+        tipo = messaggio.getElementsByTagName("tipo")[0] # obtain the tipo line
+        msg = tipo.firstChild.nodeValue # value of the line element
 
         if(msg == "user"):
             print("utente connesso")
             ut = UserThread(self.sd, self.ID,self.conn,self.addr)
-            ut.start();
-        else:
+            ut.start()
+        elif(msg == "transport"):
             print("trasporto connesso")
             tt = TransportThread(self.sd, self.ID, self.conn, self.addr)
             self.sd.addTransport(tt)

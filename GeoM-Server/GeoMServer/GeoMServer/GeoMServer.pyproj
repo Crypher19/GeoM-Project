@@ -28,6 +28,7 @@
     </Compile>
     <Compile Include="GeoMServer.py" />
     <Compile Include="ThreadSort.py" />
+    <Compile Include="RequestThread.py" />
     <Compile Include="TransportThread.py" />
     <Compile Include="UserThread.py">
       <SubType>Code</SubType>
