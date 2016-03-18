@@ -10,12 +10,13 @@ def connection():
     s = socket.socket()
     s.bind((HOST, PORT))
     s.listen(1) # accetta massimo una coda da <1> prima di rifiutare le altre connessioni
-    print('Ready')
+   
 
 if __name__ == "__main__":
     connection()
     ID = 0
     sd = SharedData()
+    print('Ready')
     while True:
         conn, addr = s.accept()
         print("connessione ricevuta")

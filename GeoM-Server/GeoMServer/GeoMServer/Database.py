@@ -1,4 +1,5 @@
 from mysql.connector import MySQLConnection, Error 
+from QueryResult import *
 
 
 class Database(object):
@@ -41,24 +42,26 @@ class Database(object):
                 return True
             return False
 
-    def addTransport(self, TransportType, Name, Company): # da provare
-        if(self.execQuery("INSERT INTO transports_table (TipoMezzo,Compagnia,NomeMezzo) VALUES ('" + TransportType + "','" + Company + "','" + Name + "')")!=False):
+    def addTransport(self, TransportType, Name, Company, Route): # da provare
+        if(self.execQuery("INSERT INTO transports_table (TipoMezzo,Compagnia,NomeMezzo,tratta) VALUES ('" + TransportType + "','" + Company + "','" + Name + "','" + Route + "')")!=False):
             conn.commit()
             return True
         return False
         
     def getTransports(self):
-        ris = self.execQuery("SELECT TipoMezzo,Compagnia,NomeMezzo FROM transports_table")
-        if(ris!=False):
+        ris = self.execQuery("SELECT TipoMezzo,Compagnia,NomeMezzo,Tratta FROM transports_table")
+        listResult = list()
+        if ris != False:
             print("leggo mezzi")
-            for(TipoMezzo,Compagnia,NomeMezzo) in cursor:
-                print("mezzo: " + TipoMezzo)
-            return True
+            for (TipoMezzo,Compagnia,NomeMezzo,Tratta) in cursor:
+                listResult.append(QueryResult(TipoMezzo, Compagnia, Tratta, NomeMezzo))
+                print(listResult[-1].tipoMezzo + listResult[-1].nome)
+            return listResult
         return False
 
     #def setPosXY(Company, Name):
 
     def getUser(self, user, password):
-        if(execQuery("SELECT username,pass FROM transport_users_table WHERE username = '" + user + "' AND pass = '" + password + "');")):
+        if execQuery("SELECT username,pass FROM transport_users_table WHERE username = '" + user + "' AND pass = '" + password + "');"):
             return True
         return False

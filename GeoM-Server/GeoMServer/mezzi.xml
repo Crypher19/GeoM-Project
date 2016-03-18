@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mezzi>
+  <buses compagnia="ASF">
+    <bus>
+      <linea>C82</linea>
+      <tratta>cantù - mariano</tratta>
+    </bus>
+  </buses>
+</mezzi>

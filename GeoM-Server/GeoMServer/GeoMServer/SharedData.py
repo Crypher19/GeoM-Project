@@ -25,9 +25,23 @@ class SharedData(object):
             line = bus.getElementsByTagName("line")[0] # obtain the bus line
             print(line.getAttribute("code") + " " + line.firstChild.nodeValue) # print bus code and value of the line element
 
+    def createXMLObj(self):
+        doc = minidom.parse(filename)
+
+        # doc.getElementsByTagName returns NodeList
+        buses = doc.getElementsByTagName("mezzi")
+        bus   = buses.getElementsByTagName("bus")
+
+        linea = bus.getElementsByTagName("linea")
+        #modificare linea anche tratta
+
+        buses.appendChild(bus)
+            
+        
+
     def getTransportList(self):
-        db.addTransport("pullmano","molto","veloce")
-        return db.getTransports()
+        listaMezzi = list()
+        listaMezzi = db.getTransports()
 
     def addTransport(self, transport):
         global transportList
