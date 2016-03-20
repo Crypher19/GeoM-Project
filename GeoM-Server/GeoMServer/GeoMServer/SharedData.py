@@ -33,7 +33,14 @@ class SharedData(object):
         bus   = buses.getElementsByTagName("bus")
 
         linea = bus.getElementsByTagName("linea")
-        #modificare linea anche tratta
+       
+        ##### da provare ######
+        linea.firstChild.setValue("prova456")
+        print(linea.firstChild.value)
+        ##### da provare ######
+        tratta = bus.getElementsByTagName("tratta")
+        
+        #modificare linea e anche tratta
 
         buses.appendChild(bus)
             

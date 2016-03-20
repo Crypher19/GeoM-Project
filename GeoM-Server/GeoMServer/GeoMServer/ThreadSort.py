@@ -27,7 +27,7 @@ class ThreadSort(threading.Thread):
 
         if(msg == "user"):
             print("utente connesso")
-            ut = UserThread(self.sd, self.ID,self.conn,self.addr)
+            ut = UserThread(self.sd, self.ID, self.conn, self.addr)
             ut.start()
         elif(msg == "transport"):
             print("trasporto connesso")
