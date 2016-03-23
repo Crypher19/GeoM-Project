@@ -1,5 +1,5 @@
 from mysql.connector import MySQLConnection, Error 
-from QueryResult import *
+from QueryResult import QueryResult
 
 
 class Database(object):

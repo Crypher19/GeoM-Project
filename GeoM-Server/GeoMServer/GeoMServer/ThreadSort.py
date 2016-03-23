@@ -1,9 +1,8 @@
 import threading
 from xml.dom import minidom
-from SharedData import *
-from UserThread import *
-from TransportThread import *
-from RequestThread import *
+from SharedData import SharedData
+from UserThread import UserThread
+from TransportThread import TransportThread
 
 class ThreadSort(threading.Thread):
 

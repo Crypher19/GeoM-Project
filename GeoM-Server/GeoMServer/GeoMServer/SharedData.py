@@ -1,8 +1,8 @@
 from xml.dom import minidom
 from Database import *
 from UserThread import *
-from TransportThread import *
-from XMLclass import *
+from TransportThread import TransportThread
+from ParserXML import ParserXML
 
 class SharedData(object):
     def __init__(self):

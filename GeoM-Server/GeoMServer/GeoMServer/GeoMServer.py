@@ -1,7 +1,7 @@
 import socket
-from SharedData import *
-from UserThread import *
-from ThreadSort import *
+from SharedData import SharedData
+from UserThread import UserThread
+from ThreadSort import ThreadSort
 
 def connection():
     global s

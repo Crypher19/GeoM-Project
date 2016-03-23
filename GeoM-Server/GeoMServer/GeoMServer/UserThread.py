@@ -1,5 +1,5 @@
 import threading
-from SharedData import *
+from SharedData import SharedData
 
 class UserThread (threading.Thread):
     
