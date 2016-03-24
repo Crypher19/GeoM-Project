@@ -1,4 +1,6 @@
-class ParserXML(object):
+from xml.dom import minidom
+
+class ParserXML:
     """description of class"""
 
     def toDOMObject(self, string):        
@@ -13,24 +15,22 @@ class ParserXML(object):
             line = bus.getElementsByTagName("line")[0] # obtain the bus line
             print(line.getAttribute("code") + " " + line.firstChild.nodeValue) # print bus code and value of the line element
 
-    def createXMLObj(self, filename):
+    def getDOMOfTransportsList(self, filename):
         doc = minidom.parse(filename)
 
         # doc.getElementsByTagName returns NodeList
         buses = doc.getElementsByTagName("mezzi")
-        bus   = buses.getElementsByTagName("bus")
-
-        linea = bus.getElementsByTagName("linea")
+        bus = buses.item(0)
+        linea = bus.getElementsByTagName("linea")[0]
        
-        ##### da provare ######
-        linea.firstChild.setValue("prova456")
-        print(linea.firstChild.value)
-        ##### da provare ######
+        linea.firstChild.nodeValue = "pippo"
+        print(linea.firstChild.nodeValue)
         tratta = bus.getElementsByTagName("tratta")
         
         #modificare linea e anche tratta
 
-        buses.appendChild(bus)     
+        #buses.appendChild(bus)
+        return doc
         
 
 

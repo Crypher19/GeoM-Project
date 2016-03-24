@@ -2,7 +2,7 @@ from mysql.connector import MySQLConnection, Error
 from QueryResult import QueryResult
 
 
-class Database(object):
+class Database:
 
     def __init__(self):
 

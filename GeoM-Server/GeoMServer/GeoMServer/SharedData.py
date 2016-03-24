@@ -1,10 +1,10 @@
 from xml.dom import minidom
-from Database import *
-from UserThread import *
+from Database import Database
+from UserThread import UserThread
 from TransportThread import TransportThread
 from ParserXML import ParserXML
 
-class SharedData(object):
+class SharedData:
     def __init__(self):
         self.prova = "ciao"
         global db

@@ -1,4 +1,4 @@
-class QueryResult(object):
+class QueryResult:
     
     def __init__(self, compagnia, tipoMezzo, tratta, nome):
         self.compagnia = compagnia

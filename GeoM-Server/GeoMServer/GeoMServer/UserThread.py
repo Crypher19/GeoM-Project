@@ -1,5 +1,6 @@
 import threading
-from SharedData import SharedData
+#from SharedData import SharedData
+from ParserXML import ParserXML
 
 class UserThread (threading.Thread):
     
@@ -14,8 +15,14 @@ class UserThread (threading.Thread):
         print("Connected by", self.addr)
         self.send("Connected")
         self.sd.getTransportList()
+        
         #sd.readXMLTable("mezzi.xml")
+        pxml = ParserXML()
+        doc = pxml.getDOMOfTransportsList("..\mezzi.xml")
+        msg = doc.toxml().replace("\n", "")
+        print(msg)
+        self.send(msg)
 
     def send(self, mex):
-        mex += '\n'
+        mex += "\r\n"
         self.conn.send(mex.encode('utf-8'))
