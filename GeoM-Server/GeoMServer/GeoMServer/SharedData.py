@@ -6,20 +6,19 @@ from ParserXML import ParserXML
 
 class SharedData:
     def __init__(self):
-        self.prova = "ciao"
-        global db
-        db = Database()
-        # lista trasporti e relativo indice
-
-    def cambiaProva(self):
-        self.prova = "cambiato"
-
-    def getTransportList(self):
-        listaMezzi = list()
-        listaMezzi = db.getTransports()
+        self.db = Database()
+        self.listaMezzi = []
+        self.fileMezziXML = "mezzi.xml"
 
     def addTransport(self, transport):
-        global transportList
-        transportList = list()
+        transportList = []
         transportList.append(transport) # aggiungo un elemento ThreadTrasport nella lista
         transportList[-1].start() # parte il threadTransport | -1 -> ultimo elemento
+
+    def getXMLTransportsList(self):
+        self.listaMezzi = self.db.getTransports()
+        pxml = ParserXML()
+        doc = pxml.getDOMOfTransportsList(self.listaMezzi)
+        msg = doc.toxml()
+        msg = msg.replace("\n", "")
+        return msg

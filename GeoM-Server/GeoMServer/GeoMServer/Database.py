@@ -42,20 +42,20 @@ class Database:
                 return True
             return False
 
-    def addTransport(self, TransportType, Name, Company, Route): # da provare
-        if(self.execQuery("INSERT INTO transports_table (TipoMezzo,Compagnia,NomeMezzo,tratta) VALUES ('" + TransportType + "','" + Company + "','" + Name + "','" + Route + "')")!=False):
+    def addTransport(self, TransportType, Name, Company, Route, Enabled): # da provare
+        if(self.execQuery("INSERT INTO transports_table (TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo) VALUES ('" + TransportType + "','" + Company + "','" + Name + "','" + Route + "','" + Enabled + "')")!=False):
             conn.commit()
             return True
         return False
         
     def getTransports(self):
-        ris = self.execQuery("SELECT TipoMezzo,Compagnia,NomeMezzo,Tratta FROM transports_table")
-        listResult = list()
+        ris = self.execQuery("SELECT ID,TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo FROM transports_table")
+        listResult = list() # Lista di QueryResult
         if ris != False:
             print("leggo mezzi")
-            for (TipoMezzo,Compagnia,NomeMezzo,Tratta) in cursor:
-                listResult.append(QueryResult(TipoMezzo, Compagnia, Tratta, NomeMezzo))
-                print(listResult[-1].tipoMezzo + listResult[-1].nome)
+            for (ID, TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo) in cursor:
+                listResult.append(QueryResult(ID, TipoMezzo, Compagnia, NomeMezzo, Tratta, Attivo))
+                #print(listResult[-1].tipoMezzo + listResult[-1].nome)
             return listResult
         return False
 

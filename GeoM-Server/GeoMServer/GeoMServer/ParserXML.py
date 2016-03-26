@@ -1,36 +1,41 @@
 from xml.dom import minidom
+from QueryResult import QueryResult
 
 class ParserXML:
-    """description of class"""
-
     def toDOMObject(self, string):        
-        return minidom.parseString(string) # Ritorna oggetto tipo doc
+        return minidom.parseString(string) # ritorna oggetto tipo doc
 
-    def readXMLTable(self, filename):        
-        doc = minidom.parse(filename)
+    def getDOMOfTransportsList(self, listaMezzi):      
+        DOMimpl = minidom.getDOMImplementation()
 
-        # doc.getElementsByTagName returns NodeList
-        buses = doc.getElementsByTagName("buses")
-        for bus in buses:
-            line = bus.getElementsByTagName("line")[0] # obtain the bus line
-            print(line.getAttribute("code") + " " + line.firstChild.nodeValue) # print bus code and value of the line element
+        xmldoc = DOMimpl.createDocument(None, "mezzi", None)
+        rootMezzi = xmldoc.documentElement
 
-    def getDOMOfTransportsList(self, filename):
-        doc = minidom.parse(filename)
+        for mezzo in listaMezzi:
+            elMezzo = xmldoc.createElement("mezzo") # creo l'elemento "mezzo"
+            elMezzo.setAttribute("id", str(mezzo.ID)) # imposto l'attributo "id"
+            
+            elTipo = xmldoc.createElement("tipo") # creo l'elemento "tipo"
+            elTipo.appendChild(xmldoc.createTextNode(mezzo.tipoMezzo)) # aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elMezzo.appendChild(elTipo) # aggiungo l'elemento al mezzo
 
-        # doc.getElementsByTagName returns NodeList
-        buses = doc.getElementsByTagName("mezzi")
-        bus = buses.item(0)
-        linea = bus.getElementsByTagName("linea")[0]
-       
-        linea.firstChild.nodeValue = "pippo"
-        print(linea.firstChild.nodeValue)
-        tratta = bus.getElementsByTagName("tratta")
-        
-        #modificare linea e anche tratta
+            elCompagnia = xmldoc.createElement("compagnia") # creo l'elemento "compagnia"
+            elCompagnia.appendChild(xmldoc.createTextNode(mezzo.compagnia)) # aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elMezzo.appendChild(elCompagnia) # aggiungo l'elemento al mezzo
 
-        #buses.appendChild(bus)
-        return doc
-        
+            elNome = xmldoc.createElement("nome") # creo l'elemento "nome"
+            elNome.appendChild(xmldoc.createTextNode(mezzo.nomeMezzo)) # aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elMezzo.appendChild(elNome) # aggiungo l'elemento al mezzo
 
+            elTratta = xmldoc.createElement("tratta") # creo l'elemento "tratta"
+            elTratta.appendChild(xmldoc.createTextNode(mezzo.tratta)) # aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elMezzo.appendChild(elTratta) # aggiungo l'elemento al mezzo
 
+            elAttivo = xmldoc.createElement("attivo") # creo l'elemento "attivo"
+            elAttivo.appendChild(xmldoc.createTextNode(mezzo.attivo)) # aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elMezzo.appendChild(elAttivo) # aggiungo l'elemento al mezzo
+            
+            rootMezzi.appendChild(elMezzo)  # aggiungo l'oggetto "mezzo" all'oggetto radice
+
+        print(xmldoc.toprettyxml())  
+        return xmldoc

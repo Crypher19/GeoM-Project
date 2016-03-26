@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <mezzi>
-  <buses compagnia="ASF">
-    <bus>
-      <linea>C82</linea>
-      <tratta>cantù - mariano</tratta>
-    </bus>
-  </buses>
+    <mezzo id="8">
+        <tipo>pullman</tipo>
+        <compagnia>ASF</compagnia>
+        <nome>C82</nome>
+        <tratta>cantu - mariano</tratta>
+        <attivo>false</attivo>   
+     </mezzo>
 </mezzi>
