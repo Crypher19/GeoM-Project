@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ListView
+        android:id="@+id/pt_listview"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:dividerHeight="50dp"
+        android:divider="#00000000"
+        >
+    </ListView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/favourites_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@mipmap/ic_material_favourite_white"
+        app:backgroundTint="@color/colorPrimary"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/test_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@mipmap/ic_material_favourite_white"
+        android:layout_marginRight="@id/favourites_fab"
+        app:backgroundTint="@color/colorPrimary"/>
+
+</android.support.design.widget.CoordinatorLayout>

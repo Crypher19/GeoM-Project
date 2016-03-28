@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">GeoM</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- custom strings -->
+    <string name="str_no_recents">Nessun mezzo recente.\nI mezzi recenti verranno visualizzati qui.\nTocca + per cominciare.</string>
+    <string name="nuovo_bus">Nuovo Bus</string>
+    <string name="nuovo_treno">Nuovo Treno</string>
+</resources>
