@@ -26,7 +26,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Database.py" />
-    <Compile Include="QueryResult.py" />
+    <Compile Include="Transport.py" />
     <Compile Include="SharedData.py">
       <SubType>Code</SubType>
     </Compile>

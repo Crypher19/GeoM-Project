@@ -1,5 +1,4 @@
-class QueryResult:
-    
+class Transport: 
     def __init__(self, ID, tipoMezzo, compagnia, nomeMezzo, tratta, attivo):
         self.ID = ID
         self.tipoMezzo = tipoMezzo
@@ -7,3 +6,6 @@ class QueryResult:
         self.nomeMezzo = nomeMezzo
         self.tratta = tratta
         self.attivo = attivo
+        self.posX = None
+        self.posY = None
+
