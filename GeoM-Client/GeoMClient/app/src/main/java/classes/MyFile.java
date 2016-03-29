@@ -235,11 +235,12 @@ public class MyFile {
     }
 
     public List<Favourite> getFavouritesList(){
-        List<Favourite> favouritesList = null;
+        List<Favourite> favouritesList = new ArrayList<>();
 
-        if(checkFolderAndFile() > 0) {//file esistente e pieno
+        if(fileExistsAndNotEmpty(this.filePath, this.fileName) > 0) {//file esistente e pieno
             return toFavouritesList(this.filePath, this.fileName);
         }
         return favouritesList;//file inesistente o vuoto
     }
 }
+
