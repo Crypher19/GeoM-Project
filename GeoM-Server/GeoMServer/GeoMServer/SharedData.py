@@ -7,13 +7,13 @@ from ParserXML import ParserXML
 class SharedData:
     def __init__(self):
         self.db = Database()
-        self.listaMezzi = []
+        self.listaMezzi = [] # Lista di QueryResult
+        self.transportList = []
         self.fileMezziXML = "mezzi.xml"
 
-    def addTransport(self, transport):
-        transportList = []
-        transportList.append(transport) # aggiungo un elemento ThreadTrasport nella lista
-        transportList[-1].start() # parte il threadTransport | -1 -> ultimo elemento
+    def addTransport(self, transport):        
+        self.transportList.append(transport) # aggiungo un elemento ThreadTrasport nella lista
+        self.transportList[-1].start() # parte il threadTransport | -1 -> ultimo elemento
 
     def getXMLTransportsList(self):
         self.listaMezzi = self.db.getTransports()
@@ -22,3 +22,17 @@ class SharedData:
         msg = doc.toxml()
         msg = msg.replace("\n", "")
         return msg
+
+    def getTransportI(self, nome, compagnia, tratta):
+        for i, mezzo in enumerate(self.listaMezzi):
+            if mezzo.nomeMezzo == nome and mezzo.compagnia == compagnia and mezzo.tratta == tratta:
+                return i #posizione nella lista
+        return False
+        
+    def getTransportX(self, pos):
+        return self.listaMezzi[pos].posX
+
+    def getTransportY(self, pos):
+        return self.listaMezzi[pos].posY
+
+    

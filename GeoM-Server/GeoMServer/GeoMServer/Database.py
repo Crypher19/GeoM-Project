@@ -1,5 +1,5 @@
 from mysql.connector import MySQLConnection, Error 
-from QueryResult import QueryResult
+from Transport import Transport
 
 
 class Database:
@@ -50,11 +50,11 @@ class Database:
         
     def getTransports(self):
         ris = self.execQuery("SELECT ID,TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo FROM transports_table")
-        listResult = list() # Lista di QueryResult
+        listResult = list() # Lista di Transport
         if ris != False:
             print("leggo mezzi")
             for (ID, TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo) in cursor:
-                listResult.append(QueryResult(ID, TipoMezzo, Compagnia, NomeMezzo, Tratta, Attivo))
+                listResult.append(Transport(ID, TipoMezzo, Compagnia, NomeMezzo, Tratta, Attivo))
                 #print(listResult[-1].tipoMezzo + listResult[-1].nome)
             return listResult
         return False
