@@ -1,5 +1,6 @@
 package classes.layout_classes;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,16 +49,16 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.BusViewH
                 //salvo il preferito
                 int addResult;
                 String textToShow;
-                if((addResult=f.addFavourite(fav))==0) textToShow="Preferito aggiunto";
-                else if(addResult==-2) textToShow="ERRORE preferito gia esistente";
-                else textToShow="ERRORE preferito non aggiunto";
+                if ((addResult = f.addFavourite(fav)) == 0) textToShow = "Preferito aggiunto";
+                else if (addResult == -2) textToShow = "ERRORE preferito gia esistente";
+                else textToShow = "ERRORE preferito non aggiunto";
 
                 //lancio MapActivity
                 Intent i = new Intent(v.getContext(), MapActivity.class);
-                //pulisco la lista delle activity in coda
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 i.putExtra("snackbarContent", textToShow);
                 v.getContext().startActivity(i);
+                //evito di ritornare a ChooseTrainActivity
+                ((Activity) v.getContext()).finish();
             }
         });
     }
