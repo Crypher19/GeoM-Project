@@ -20,6 +20,7 @@ class TransportThread (threading.Thread):
         msg = self.conn.recv(1024).decode('utf-8').strip()
         print(msg)
 
+        #if (self.sd.checkPassword(username, password)): ...
         #controlla username e password
         #ricevi - invia dati posizione
         

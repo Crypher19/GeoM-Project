@@ -29,10 +29,9 @@ class SharedData:
                 return i #posizione nella lista
         return False
         
-    def getTransportX(self, pos):
-        return self.listaMezzi[pos].posX
-
-    def getTransportY(self, pos):
-        return self.listaMezzi[pos].posY
+    def checkPassword(self, username, password):
+        if(self.db.getUser(username, password)):
+            return True
+        return False
 
     
