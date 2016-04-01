@@ -1,3 +1,4 @@
+import bcrypt
 from xml.dom import minidom
 from Database import Database
 from UserThread import UserThread
@@ -30,6 +31,7 @@ class SharedData:
         return False
         
     def checkPassword(self, username, password):
+        #bcrypt.
         if(self.db.getUser(username, password)):
             return True
         return False
