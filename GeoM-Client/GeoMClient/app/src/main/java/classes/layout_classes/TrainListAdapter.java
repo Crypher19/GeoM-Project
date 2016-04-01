@@ -1,5 +1,6 @@
 package classes.layout_classes;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -54,10 +55,10 @@ public class TrainListAdapter extends RecyclerView.Adapter<TrainListAdapter.Trai
 
                 //lancio MapActivity
                 Intent i = new Intent(v.getContext(), MapActivity.class);
-                //pulisco la lista delle activity in coda
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 i.putExtra("snackbarContent", textToShow);
                 v.getContext().startActivity(i);
+                //evito di ritornare a ChooseTrainActivity
+                ((Activity) v.getContext()).finish();
             }
         });
     }

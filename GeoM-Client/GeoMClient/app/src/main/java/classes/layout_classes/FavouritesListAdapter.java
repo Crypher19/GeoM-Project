@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import classes.Favourite;
 
 public class FavouritesListAdapter extends ArrayAdapter<Favourite> {
-    private Activity activity;
+    //private Activity activity;
     private ArrayList<Favourite> favList;
     private LayoutInflater inflater = null;
 
     public FavouritesListAdapter(Activity activity, int textViewResourceId, ArrayList<Favourite> favList) {
         super(activity, textViewResourceId, favList);
         try {
-            this.activity = activity;
+            //this.activity = activity;
             this.favList = favList;
 
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

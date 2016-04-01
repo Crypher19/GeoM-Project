@@ -14,16 +14,16 @@ import com.example.mattia.geom.R;
 import java.util.ArrayList;
 
 import classes.PublicTransport;
-//list for public transport elements
+//lista di oggetti PublicTransport
 public class PTListAdapter extends ArrayAdapter<PublicTransport> {
-    private Activity activity;
+    //private Activity activity;
     private ArrayList<PublicTransport> PTList;
     private LayoutInflater inflater = null;
 
     public PTListAdapter(Activity activity, int textViewResourceId, ArrayList<PublicTransport> PTList) {
         super(activity, textViewResourceId, PTList);
         try {
-            this.activity = activity;
+            //this.activity = activity;
             this.PTList = PTList;
 
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

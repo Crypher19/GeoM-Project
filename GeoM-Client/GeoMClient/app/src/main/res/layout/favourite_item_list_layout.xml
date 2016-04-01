@@ -12,33 +12,31 @@
         android:layout_alignParentStart="true" />
 
     <TextView
+        android:id="@+id/pt_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pt_type"
-        android:textSize="30sp"
-        android:text="tipo"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/pt_image"
-        android:layout_toEndOf="@+id/pt_image" />
+        android:layout_toEndOf="@+id/pt_image"
+        android:textSize="30sp" />
 
     <TextView
+        android:id="@+id/pt_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pt_name"
-        android:text="nome"
-        android:textSize="30sp"
         android:layout_toRightOf="@+id/pt_type"
         android:layout_toEndOf="@+id/pt_type"
-        android:layout_marginLeft="10sp"/>
+        android:layout_marginLeft="10sp"
+        android:layout_marginStart="10sp"
+        android:textSize="30sp" />
 
     <TextView
+        android:id="@+id/pt_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pt_city"
-        android:text="citta"
-        android:textSize="20sp"
         android:layout_below="@+id/pt_type"
         android:layout_toEndOf="@+id/pt_image"
-        android:layout_toRightOf="@+id/pt_image"/>
+        android:layout_toRightOf="@+id/pt_image"
+        android:textSize="20sp" />
 
 </RelativeLayout>

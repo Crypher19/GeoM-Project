@@ -1,20 +1,18 @@
 package com.example.mattia.geom;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import classes.Train;
 import classes.layout_classes.TrainListAdapter;
 
+/*Il metodo onClick sugli elementi della cardview è definito in TrainListAdapter*/
 public class ChooseTrainActivity extends AppCompatActivity {
 
     @Override
@@ -33,18 +31,17 @@ public class ChooseTrainActivity extends AppCompatActivity {
             }
         });
 
-        List<Train> TrainList= new ArrayList<>();
-        TrainList.add(new Train("T01", "Milano-Asso"));
-        TrainList.add(new Train("T02", "Milano-Venezia"));
+        //ottengo dal HomeActivity la lista dei treni
+        List<Train> trainList = getIntent().getParcelableArrayListExtra("trainList");
 
-        //list of Train objects in cardview
+        //cardview di oggetti Treno
         RecyclerView recList = (RecyclerView) findViewById(R.id.train_recycler_view);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-        TrainListAdapter ta = new TrainListAdapter(TrainList);
+        TrainListAdapter ta = new TrainListAdapter(trainList);
         recList.setAdapter(ta);
     }
 
