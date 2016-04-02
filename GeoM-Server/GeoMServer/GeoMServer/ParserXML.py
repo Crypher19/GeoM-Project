@@ -6,15 +6,22 @@ class ParserXML:
         return minidom.parseString(string) # ritorna oggetto tipo document
 
     def getTransportObj(self, doc):
-        mezzi = doc.getElementsByTagName("mezzi")[0]
-        mezzo = mezzi.getElementsByTagName("mezzo")[0]
+        mezzi = doc.getElementsByTagName("mezzi")[0].firstChild.nodeValue
+        mezzo = mezzi.getElementsByTagName("mezzo")[0].firstChild.nodeValue
         id = mezzo.getAttribute("id")
-        tipo = mezzo.getElementsByTagName("tipo")[0]
-        compagnia = mezzo.getElementsByTagName("compagnia")[0]
-        nome = mezzo.getElementsByTagName("nome")[0]
-        tratta = mezzo.getElementsByTagName("tratta")[0]
-        attivo = mezzo.getElementsByTagName("attivo")[0]
+        tipo = mezzo.getElementsByTagName("tipo")[0].firstChild.nodeValue
+        compagnia = mezzo.getElementsByTagName("compagnia")[0].firstChild.nodeValue
+        nome = mezzo.getElementsByTagName("nome")[0].firstChild.nodeValue
+        tratta = mezzo.getElementsByTagName("tratta")[0].nodeValue.firstChild.nodeValue
+        attivo = mezzo.getElementsByTagName("attivo")[0].firstChild.nodeValue
         return Transport(id, tipo, compagnia, nome, tratta, attivo)
+
+    def getUsernameAndPassword(self, doc):
+        autenticazione = doc.getElementsByTagName("autenticazione")[0]
+        username = autenticazione.getElementsByTagName("username")[0].firstChild.nodeValue
+        password = autenticazione.getElementsByTagName("password")[0].firstChild.nodeValue
+        print(username + ":" + password)
+        return (username, password)
 
     def getDOMOfTransportsList(self, listaMezzi):      
         DOMimpl = minidom.getDOMImplementation()

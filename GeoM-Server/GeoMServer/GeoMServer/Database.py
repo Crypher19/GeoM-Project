@@ -5,8 +5,7 @@ from Transport import Transport
 class Database:
 
     def __init__(self):
-
-        """ Connect to MySQL database """
+        # Connect to MySQL database
         global cursor
         global conn
       
@@ -18,27 +17,23 @@ class Database:
             if conn.is_connected():
                 print('connection established.')
             else:
-                print('connection failed.')
-     
+                print('connection failed.')   
         except Error as error:
             print(error)
 
     def execQuery(self,query):
-        """Execute query & give result"""
-        
+        # Execute query & give result    
         try:
-            ris = True
             print(query)
             ris = cursor.execute(query)
-            return ris
-
+            return True
         except Error as error:
             print("errore")
             print(error)
             return False
 
-    def createUser(self, user, password): # da provare
-            if(execQuery("insert into transport_users_table (username,pass) VALUES ('" + user + "','" + password + "');")):
+    def createUser(self, username, password): # da provare
+            if(self.execQuery("insert into transport_users_table (username,password) VALUES ('" + username + "','" + password + "');")):
                 return True
             return False
 
@@ -50,7 +45,7 @@ class Database:
         
     def getTransports(self):
         ris = self.execQuery("SELECT ID,TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo FROM transports_table")
-        listResult = list() # Lista di Transport
+        listResult = [] # Lista di Transport
         if ris != False:
             print("leggo mezzi")
             for (ID, TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo) in cursor:
@@ -61,7 +56,8 @@ class Database:
 
     #def setPosXY(Company, Name):
 
-    def getUser(self, user, password):
-        if execQuery("SELECT username,pass FROM transport_users_table WHERE username = '" + user + "' AND pass = '" + password + "');"):
-            return True
+    def getUser(self, username):
+        if self.execQuery("SELECT username,password FROM transport_users_table WHERE username='"+username+"';"):
+            for u, p in cursor:
+                return (u, p)            
         return False

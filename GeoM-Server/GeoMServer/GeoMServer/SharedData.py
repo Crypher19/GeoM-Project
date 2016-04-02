@@ -30,10 +30,11 @@ class SharedData:
                 return i #posizione nella lista
         return False
         
-    def checkPassword(self, username, password):
-        #bcrypt.
-        if(self.db.getUser(username, password)):
-            return True
-        return False
+    def checkLogin(self, username, password):
+        user = self.db.getUser(username) # ricevo una tupla (username, password)
+        if bcrypt.hashpw(password, user[1]) == user[1]:
+            print("It matches")
+        else:
+            print("It does not match")
 
     
