@@ -27,14 +27,22 @@ class SharedData:
     def getTransportI(self, nome, compagnia, tratta):
         for i, mezzo in enumerate(self.listaMezzi):
             if mezzo.nomeMezzo == nome and mezzo.compagnia == compagnia and mezzo.tratta == tratta:
-                return i #posizione nella lista
+                return i  # posizione nella lista
         return False
         
     def checkLogin(self, username, password):
-        user = self.db.getUser(username) # ricevo una tupla (username, password)
-        if bcrypt.hashpw(password, user[1]) == user[1]:
-            print("It matches")
+        auth = self.db.getUser(username) # ricevo una tupla (username, password)
+
+        if auth:
+            # controllo se la password è corretta
+            if bcrypt.hashpw(password.encode('utf-8'), auth[1].encode('utf-8')) == auth[1].encode('utf-8'):
+                print("Password corretta.")
+                return True
+            else:
+                print("Password errata.")
+                return False
         else:
-            print("It does not match")
+            print("Username errato.")
+            return False
 
     

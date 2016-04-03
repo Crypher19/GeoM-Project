@@ -1,0 +1,21 @@
+CREATE TABLE transport_users_table (
+    ID INT(10) AUTO_INCREMENT,
+	Username VARCHAR(30),
+    Password VARCHAR(255),
+    Nome VARCHAR(50),
+    Cognome VARCHAR(50),
+    Compagnia INT(10),
+    PRIMARY KEY (ID),
+    FOREIGN KEY (Compagnia) REFERENCES company_table(ID)
+);
+
+CREATE TABLE transports_table (
+  ID int(10) NOT NULL AUTO_INCREMENT,
+  TipoMezzo varchar(30) DEFAULT NULL,
+  NomeMezzo varchar(30) DEFAULT NULL,
+  Tratta varchar(100) DEFAULT NULL,
+  Attivo varchar(5) DEFAULT 'false',
+  Compagnia int(10) DEFAULT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (Compagnia) REFERENCES company_table(ID)
+);

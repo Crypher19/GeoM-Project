@@ -25,18 +25,20 @@ class UserThread (threading.Thread):
         tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
         posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta)
         
+        # creo un oggetto di tipo DOM (Documento XML)
         DOMimpl = minidom.getDOMImplementation()
         xmldoc = DOMimpl.createDocument(None, "mezzi", None)
 
         pxml.buildXMLMezzo(xmldoc, self.sd.listaMezzi[posI])
 
-        msg = xmldoc.toxml()
-        msg = msg.replace("\n", "")
-
-        self.send(msg)
-       # self.sd.getTransportX(pos) + self.sd.getTransportY(pos)
+        self.send(xmldoc)
+        # self.sd.getTransportX(pos) + self.sd.getTransportY(pos)
         
 
     def send(self, mex):
+        # se il messaggio è di tipo Document, prima lo trasformo in una stringa XML
+        if isinstance(mex, minidom.Document):
+            mex = mex.toxml()
+            mex = mex.replace("\n", "")
         mex += "\r\n"
         self.conn.send(mex.encode('utf-8'))

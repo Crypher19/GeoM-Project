@@ -33,23 +33,23 @@ class Database:
             return False
 
     def createUser(self, username, password): # da provare
-            if(self.execQuery("insert into transport_users_table (username,password) VALUES ('" + username + "','" + password + "');")):
+            if(self.execQuery("INSERT INTO transport_users_table (Username,Password) VALUES ('" + username + "','" + password + "');")):
                 return True
             return False
 
     def addTransport(self, TransportType, Name, Company, Route, Enabled): # da provare
-        if(self.execQuery("INSERT INTO transports_table (TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo) VALUES ('" + TransportType + "','" + Company + "','" + Name + "','" + Route + "','" + Enabled + "')")!=False):
+        if(self.execQuery("INSERT INTO transports_table (TipoMezzo,NomeMezzo,Tratta,Attivo, Compagnia) VALUES ('" + TransportType + "','" + Name + "','" + Route + "','" + Enabled + "','" + Company+ "')")!=False):
             conn.commit()
             return True
         return False
         
     def getTransports(self):
-        ris = self.execQuery("SELECT ID,TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo FROM transports_table")
+        ris = self.execQuery("SELECT ID,TipoMezzo,NomeMezzo,Tratta,Attivo,Compagnia FROM transports_table")
         listResult = [] # Lista di Transport
         if ris != False:
             print("leggo mezzi")
-            for (ID, TipoMezzo,Compagnia,NomeMezzo,Tratta,Attivo) in cursor:
-                listResult.append(Transport(ID, TipoMezzo, Compagnia, NomeMezzo, Tratta, Attivo))
+            for (ID,TipoMezzo,NomeMezzo,Tratta,Attivo,Compagnia) in cursor:
+                listResult.append(Transport(ID, TipoMezzo, NomeMezzo, Tratta, Attivo, Compagnia))
                 #print(listResult[-1].tipoMezzo + listResult[-1].nome)
             return listResult
         return False
@@ -57,7 +57,7 @@ class Database:
     #def setPosXY(Company, Name):
 
     def getUser(self, username):
-        if self.execQuery("SELECT username,password FROM transport_users_table WHERE username='"+username+"';"):
+        if self.execQuery("SELECT Username,Password FROM transport_users_table WHERE Username='"+username+"';"):
             for u, p in cursor:
                 return (u, p)            
         return False
