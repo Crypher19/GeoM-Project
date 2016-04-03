@@ -13,18 +13,18 @@ import com.example.mattia.geom.R;
 
 import java.util.ArrayList;
 
-import classes.PublicTransport;
-//lista di oggetti PublicTransport
-public class PTListAdapter extends ArrayAdapter<PublicTransport> {
+import classes.Favourite;
+
+public class FavouritesListAdapter extends ArrayAdapter<Favourite> {
     //private Activity activity;
-    private ArrayList<PublicTransport> PTList;
+    private ArrayList<Favourite> favList;
     private LayoutInflater inflater = null;
 
-    public PTListAdapter(Activity activity, int textViewResourceId, ArrayList<PublicTransport> PTList) {
-        super(activity, textViewResourceId, PTList);
+    public FavouritesListAdapter(Activity activity, int textViewResourceId, ArrayList<Favourite> favList) {
+        super(activity, textViewResourceId, favList);
         try {
             //this.activity = activity;
-            this.PTList = PTList;
+            this.favList = favList;
 
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -34,10 +34,10 @@ public class PTListAdapter extends ArrayAdapter<PublicTransport> {
     }
 
     public int getCount() {
-        return PTList.size();
+        return favList.size();
     }
 
-    public PublicTransport getItem(PublicTransport position) {
+    public Favourite getItem(Favourite position) {
         return position;
     }
 
@@ -46,9 +46,10 @@ public class PTListAdapter extends ArrayAdapter<PublicTransport> {
     }
 
     public class ViewHolder {
-        public ImageView PTImageId;
-        public TextView PTName;
-        public TextView PTDescripion;
+        public ImageView pt_image;
+        public TextView pt_type;
+        public TextView pt_name;
+        public TextView pt_city;
 
     }
 
@@ -57,22 +58,23 @@ public class PTListAdapter extends ArrayAdapter<PublicTransport> {
         final ViewHolder holder;
         try {
             if (convertView == null) {
-                vi = inflater.inflate(R.layout.pt_item_list_layout, null);
+                vi = inflater.inflate(R.layout.favourite_item_list_layout, null);
                 holder = new ViewHolder();
 
-                holder.PTImageId = (ImageView) vi.findViewById(R.id.pt_image);
-                holder.PTName = (TextView) vi.findViewById(R.id.pt_name);
-                holder.PTDescripion = (TextView) vi.findViewById(R.id.pt_description);
+                holder.pt_image = (ImageView) vi.findViewById(R.id.pt_image);
+                holder.pt_type = (TextView) vi.findViewById(R.id.pt_type);
+                holder.pt_name = (TextView) vi.findViewById(R.id.pt_name);
+                holder.pt_city = (TextView) vi.findViewById(R.id.pt_city);
 
                 vi.setTag(holder);
             } else {
                 holder = (ViewHolder) vi.getTag();
             }
 
-            holder.PTImageId.setImageResource(PTList.get(position).getPTPhotoID());
-            holder.PTName.setText(PTList.get(position).getPTType());
-            holder.PTDescripion.setText(PTList.get(position).getPTDescription());
-
+            holder.pt_image.setImageResource(favList.get(position).getPt_image_id());
+            holder.pt_type.setText(favList.get(position).getPt_type());
+            holder.pt_name.setText(favList.get(position).getPt_name());
+            holder.pt_city.setText(favList.get(position).getPt_city());
 
         } catch (Exception e) {
             e.printStackTrace();

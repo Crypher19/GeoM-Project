@@ -1,33 +1,48 @@
 package com.example.mattia.geom;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import classes.Bus;
 import classes.layout_classes.BusListAdapter;
 
+/*Il metodo onClick sugli elementi della cardview è definito in BusListAdapter*/
 public class ChooseBusActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_bus);
+        //toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
-        ArrayList<Bus> BusList= new ArrayList<>();
-        BusList.add(new Bus("C-80", "Mariano Comense"));
-        BusList.add(new Bus("C-81", "Cantu"));
+        //ottengo dal HomeActivity la lista dei treni
+        List<Bus> busList = getIntent().getParcelableArrayListExtra("busList");
 
-        //list of Bus objects in cardview
+        //cardview di oggetti Bus
         RecyclerView recList = (RecyclerView) findViewById(R.id.bus_recycler_view);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-        BusListAdapter ba = new BusListAdapter(BusList);
+        BusListAdapter ba = new BusListAdapter(busList);
         recList.setAdapter(ba);
     }
+
 }

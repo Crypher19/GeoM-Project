@@ -1,10 +1,12 @@
 package com.example.mattia.geom;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+
+import classes.Favourite;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -12,19 +14,28 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        //toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
+        //ricevo extra
         Bundle b = getIntent().getExtras();
-        String snackbarContent = b.getString("snackbarContent");
+        if (b.containsKey("snackbarContent")){//extra ricevuto da ChooseTrainActivity o ChooseBusActivity
+            String snackbarContent = b.getString("snackbarContent");
+            Snackbar.make(findViewById(R.id.activity_map), snackbarContent, Snackbar.LENGTH_LONG).show();
 
-        Snackbar.make(findViewById(R.id.activity_map), snackbarContent, Snackbar.LENGTH_LONG).show();
+        } else{//extra ricevuto da FavouritesActivity
+            Favourite f = b.getParcelable("favourite");
+            Snackbar.make(findViewById(R.id.activity_map), "ricevuto mezzo: " + f.getPt_name(), Snackbar.LENGTH_LONG).show();
+        }
     }
 
-    //apro HomeActivity (i flag sono cancellati)
-    @Override
-    public void onBackPressed() {
-        Intent mainIntent = new Intent(MapActivity.this, HomeActivity.class);
-        //evito di ritornare alla MapActivity
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mainIntent);
-    }
 }

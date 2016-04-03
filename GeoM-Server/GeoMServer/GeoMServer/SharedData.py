@@ -1,3 +1,4 @@
+import bcrypt
 from xml.dom import minidom
 from Database import Database
 from UserThread import UserThread
@@ -29,10 +30,11 @@ class SharedData:
                 return i #posizione nella lista
         return False
         
-    def getTransportX(self, pos):
-        return self.listaMezzi[pos].posX
-
-    def getTransportY(self, pos):
-        return self.listaMezzi[pos].posY
+    def checkLogin(self, username, password):
+        user = self.db.getUser(username) # ricevo una tupla (username, password)
+        if bcrypt.hashpw(password, user[1]) == user[1]:
+            print("It matches")
+        else:
+            print("It does not match")
 
     

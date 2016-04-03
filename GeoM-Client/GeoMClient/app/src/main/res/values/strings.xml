@@ -4,7 +4,8 @@
     <string name="title_activity_main">MainActivity</string>
 
     <!-- custom strings -->
-    <string name="str_no_recents">Nessun mezzo recente.\nI mezzi recenti verranno visualizzati qui.\nTocca + per cominciare.</string>
-    <string name="nuovo_bus">Nuovo Bus</string>
-    <string name="nuovo_treno">Nuovo Treno</string>
+    <string name="title_activity_map">Replace with map title</string>
+    <string name="title_activity_favourite">Preferiti</string>
+    <string name="title_activity_choose_train">Nuovo Treno</string>
+    <string name="title_activity_choose_bus">Nuovo Bus</string>
 </resources>

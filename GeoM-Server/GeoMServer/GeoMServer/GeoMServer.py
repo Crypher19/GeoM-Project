@@ -22,5 +22,5 @@ if __name__ == "__main__":
         print("connessione ricevuta")
         ID += 1
         ut = ThreadSort(sd, ID, conn, addr)
-        #avvio thread con: controllo tipo thread, autenticazione, aggiunta thread alla lista [HREAD SMISTATORE]
+        #avvio thread con: controllo tipo thread, autenticazione, aggiunta thread alla lista [THREAD SMISTATORE]
         ut.start()

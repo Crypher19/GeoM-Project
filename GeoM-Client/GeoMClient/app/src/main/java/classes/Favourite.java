@@ -1,8 +1,11 @@
 package classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.lang.String;
 
-public class Favourite {
+public class Favourite implements Parcelable{
     private String pt_type;
     private String pt_name;
     private String pt_city;
@@ -60,4 +63,35 @@ public class Favourite {
     public void setPt_image_id(int pt_image_id) {
         this.pt_image_id = pt_image_id;
     }
+
+    //implementazione Parcelable
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(pt_type);
+        dest.writeString(pt_name);
+        dest.writeString(pt_city);
+        dest.writeInt(pt_image_id);
+    }
+
+    public static final Parcelable.Creator<Favourite> CREATOR = new Parcelable.Creator<Favourite>() {
+        public Favourite createFromParcel(Parcel pc) {
+            return new Favourite(pc);
+        }
+        public Favourite[] newArray(int size) {
+            return new Favourite[size];
+        }
+    };
+
+    public Favourite(Parcel pc){
+        pt_type = pc.readString();
+        pt_name = pc.readString();
+        pt_city = pc.readString();
+        pt_image_id = pc.readInt();
+    }
 }
+

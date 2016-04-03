@@ -1,4 +1,5 @@
 import threading
+from ParserXML import ParserXML
 
 class TransportThread (threading.Thread):
     
@@ -20,7 +21,13 @@ class TransportThread (threading.Thread):
         msg = self.conn.recv(1024).decode('utf-8').strip()
         print(msg)
 
-        #controlla username e password
+        pxml = ParserXML()
+        userdoc = pxml.toDOMObject(msg)
+
+        auth = pxml.getUsernameAndPassword(userdoc) # ottengo una tupla contenente username e password
+        # controllo username e password
+        self.sd.checkLogin(auth[0], auth[1])
+        
         #ricevi - invia dati posizione
         
 
