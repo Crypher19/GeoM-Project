@@ -93,5 +93,13 @@ public class Favourite implements Parcelable{
         pt_city = pc.readString();
         pt_image_id = pc.readInt();
     }
+
+    //override equals
+    public boolean equals(Favourite f){
+        return this.pt_type.equals(f.getPt_type()) &&
+                this.pt_name.equals(f.getPt_name()) &&
+                this.pt_city.equals(f.getPt_city()) &&
+                this.pt_image_id == f.getPt_image_id();
+    }
 }
 

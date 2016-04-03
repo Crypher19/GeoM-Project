@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -74,6 +75,34 @@ public class MyFile {
         return toFile(doc);
     }
 
+    public int addFavourite(Favourite favourite){
+        try {
+            if(folderExistsAndNotEmpty(this.folderPath, this.folderName) > -1){//cartella ok
+                int i;
+                if((i = fileExistsAndNotEmpty(this.filePath, this.fileName)) == 0){//file vuoto
+                    Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+
+                    Element root = doc.createElement("favourites");
+                    doc.appendChild(root);
+
+                    return add(doc, root, favourite);
+                } else if(i == 1) {//file pieno
+                    if(isDuplicate(favourite) == 0){//non ho un doppione
+
+                        Document doc = toDocument(this.filePath, this.fileName);
+                        Element root = doc.getDocumentElement();
+
+                        return add(doc, root, favourite);
+                    }
+                    else return -2;//duplicato
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;//errore
+    }
+
     public int checkFolderAndFile(){
         File folder = new File(folderPath + File.separator + folderName);
         try {
@@ -98,7 +127,7 @@ public class MyFile {
         BufferedReader br;
 
         try {
-            if (new File(filePath + File.separator + fileName).exists()) {
+            if (new File(filePath + File.separator + fileName).exists()) {//file esistente
                 br = new BufferedReader(new FileReader(filePath + File.separator + fileName));
                 if (br.readLine() != null) {
                     br.close();
@@ -143,32 +172,40 @@ public class MyFile {
         return 0;//non duplicato
     }
 
-    public int addFavourite(Favourite favourite){
+    public int removeFavourite(Favourite f){
         try {
-            if(folderExistsAndNotEmpty(this.folderPath, this.folderName) > -1){//cartella ok
-                int i;
-                if((i = fileExistsAndNotEmpty(this.filePath, this.fileName)) == 0){//file vuoto
-                    Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            int pos = -1;//preferito non trovato
+            List<Favourite> favList = getFavouritesList();
 
-                    Element root = doc.createElement("favourites");
-                    doc.appendChild(root);
-
-                    return add(doc, root, favourite);
-                } else if(i == 1) {//file pieno
-                    if(isDuplicate(favourite) == 0){//non ho un doppione
-
-                        Document doc = toDocument(this.filePath, this.fileName);
-                        Element root = doc.getDocumentElement();
-
-                        return add(doc, root, favourite);
-                    }
-                    else return -2;//duplicato
+            for(int i = 0; i < favList.size(); i++){
+                if(favList.get(i).equals(f)){
+                    pos = i;
                 }
             }
-        } catch (Exception e) {
+            if(pos > -1){//preferito trovato
+                if(folderExistsAndNotEmpty(this.folderPath, this.folderName) > -1) {//cartella ok
+                    if (fileExistsAndNotEmpty(this.filePath, this.fileName) > -1) {//file ok
+                        //rimuovo il preferito
+                        favList.remove(pos);
+                        //creo un nuovo documento
+                        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                        //creo l'elemento radice
+                        Element root = doc.createElement("favourites");
+                        doc.appendChild(root);
+                        //aggiungo uno alla volta tutti gli elementi alla radice
+                        for(int i = 0; i < favList.size(); i++){
+                            if(add(doc, root, favList.get(i))!= 0){
+                                return -1;//preferito non aggiunto
+                            }
+                        }
+                        return 0;//tutti i preferiti aggiunti
+                    }
+                }
+            }
+        } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
-        return -1;//errore
+        return -1;
     }
 
     private int toFile(Document doc){

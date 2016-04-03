@@ -7,7 +7,7 @@ import com.example.mattia.geom.R;
 
 import java.io.Serializable;
 
-public class PublicTransport implements Serializable, Parcelable {
+public class PublicTransport implements Serializable, Parcelable{
     private String PTType;
     private String PTDescription;
     private int PTPhotoID;

@@ -2,6 +2,7 @@ package classes.layout_classes;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +12,18 @@ import android.widget.TextView;
 import com.example.mattia.geom.MapActivity;
 import com.example.mattia.geom.R;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import classes.Favourite;
 import classes.MyFile;
+import classes.SharedData;
 import classes.Train;
 
 public class TrainListAdapter extends RecyclerView.Adapter<TrainListAdapter.TrainViewHolder> {
-
     private List<Train> trainList;
     private MyFile f;
+    private SharedData s;
 
     public TrainListAdapter(List<Train> trainList) {
         this.trainList = trainList;
@@ -43,19 +46,25 @@ public class TrainListAdapter extends RecyclerView.Adapter<TrainListAdapter.Trai
                 //ottengo la posizione dell'elemento
                 int pos = trainViewHolder.getAdapterPosition();
                 //ottengo l'elemento in posizion "pos"
-                Train t = trainList.get(pos);
+                Train train = trainList.get(pos);
                 //trasformo l'elemento in un preferito
-                Favourite fav = new Favourite(t);
+                Favourite fav = new Favourite(train);
+
                 //salvo il preferito
                 int addResult;
                 String textToShow;
-                if((addResult=f.addFavourite(fav))==0) textToShow="Preferito aggiunto";
+
+                if((addResult=f.addFavourite(fav))==0){
+                    s.addItemInFavouritesList(fav);//aggiorno la lista dei preferiti
+                    textToShow="Preferito aggiunto";
+                }
                 else if(addResult==-2) textToShow="ERRORE preferito gia esistente";
                 else textToShow="ERRORE preferito non aggiunto";
 
                 //lancio MapActivity
                 Intent i = new Intent(v.getContext(), MapActivity.class);
                 i.putExtra("snackbarContent", textToShow);
+                i.putExtra("train", (Parcelable)train);
                 v.getContext().startActivity(i);
                 //evito di ritornare a ChooseTrainActivity
                 ((Activity) v.getContext()).finish();
@@ -65,7 +74,8 @@ public class TrainListAdapter extends RecyclerView.Adapter<TrainListAdapter.Trai
 
     @Override
     public TrainViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        f=new MyFile();
+        f = new MyFile();
+        s = ((Activity) viewGroup.getRootView().getContext()).getIntent().getParcelableExtra("SharedData");
 
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).

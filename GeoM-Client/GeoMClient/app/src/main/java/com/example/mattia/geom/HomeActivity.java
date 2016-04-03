@@ -3,6 +3,7 @@ package com.example.mattia.geom;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,18 +16,16 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import classes.Bus;
 import classes.Favourite;
+import classes.MyFile;
 import classes.PublicTransport;
-import classes.Train;
+import classes.SharedData;
 import classes.layout_classes.PTListAdapter;
 
 public class HomeActivity extends AppCompatActivity {
-    List<PublicTransport> PTList;
-    List<Bus> busList;
-    List<Train> trainList;
-    List<Favourite> favList;
 
+    SharedData s;
+    MyFile f;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,45 +33,40 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //prendo da MainActivity le tre liste "obbligatorie"
-        PTList = getIntent().getParcelableArrayListExtra("PTList");
-        busList = getIntent().getParcelableArrayListExtra("busList");
-        trainList = getIntent().getParcelableArrayListExtra("trainList");
+        f = new MyFile();
+        s = getIntent().getParcelableExtra("SharedData");
 
         //lista di mezzi di trasporto
         ListView lv = (ListView) findViewById(R.id.pt_listview);
-        lv.setAdapter(new PTListAdapter(HomeActivity.this, R.layout.pt_item_list_layout, new ArrayList<>(PTList)));
+        lv.setAdapter(new PTListAdapter(HomeActivity.this, R.layout.pt_item_list_layout, new ArrayList<>(s.getPTList())));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapter, final View components, int pos, long id){
+            public void onItemClick(AdapterView<?> adapter, final View components, int pos, long id) {
+                //ottengo il tipo di mezzo di trasporto
+                String pt_type = ((PublicTransport) adapter.getItemAtPosition(pos)).getPTType();
 
-                PublicTransport pt = (PublicTransport) adapter.getItemAtPosition(pos);
-                String pt_name = pt.getPTType();
-                Intent i;
-                if(pt_name.equals("Treno")){//scelgo il mezzo "Treno"
-                    i = new Intent(HomeActivity.this, ChooseTrainActivity.class);
-                    //prendo da MainActivity la lista "opzionale"
-                    i.putParcelableArrayListExtra("trainList", new ArrayList<>(trainList));
-                } else {//scelgo il mezzo "Bus"
-                    i = new Intent(HomeActivity.this, ChooseBusActivity.class);
-                    //prendo da MainActivity la lista "opzionale"
-                    i.putParcelableArrayListExtra("busList", new ArrayList<>(busList));
-                }
-                startActivity(i);
+                if(pt_type.equals("Bus")){//scelgo il mezzo "Bus"
+                    Intent i = new Intent(new Intent(HomeActivity.this, ChooseBusActivity.class));
+                    i.putExtra("SharedData", s);
+                    startActivity(i);
+                } else if (pt_type.equals("Treno")) {//scelgo il mezzo "Treno"
+                    Intent i = new Intent(new Intent(HomeActivity.this, ChooseTrainActivity.class));
+                    i.putExtra("SharedData", s);
+                    startActivity(i);
+                } else Snackbar.make(findViewById(R.id.home_activity), "ERRORE impssibile aprire pagina", Snackbar.LENGTH_SHORT).show();
             }
         });
 
         //pulsante preferiti
-        FloatingActionButton favourite_fab = (FloatingActionButton) findViewById(R.id.favourites_fab);
-        favourite_fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton favourites_fab = (FloatingActionButton) findViewById(R.id.favourites_fab);
+        favourites_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //se ci sono preferiti
-                if (getIntent().hasExtra("favList")) {
-                    favList = getIntent().getParcelableArrayListExtra("favList");
-
+                List<Favourite> favList;
+                if ((favList = f.getFavouritesList()).size() > 0) {
+                    s.setFavList(favList);
                     Intent i = new Intent(HomeActivity.this, FavouritesActivity.class);
-                    i.putParcelableArrayListExtra("favList", new ArrayList<>(favList));
+                    i.putExtra("SharedData", s);
                     startActivity(i);
                 }//se non ci sono preferiti
                 else {

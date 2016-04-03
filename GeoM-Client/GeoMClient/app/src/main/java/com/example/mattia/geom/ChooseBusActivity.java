@@ -7,18 +7,20 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import java.util.List;
-
-import classes.Bus;
+import classes.SharedData;
 import classes.layout_classes.BusListAdapter;
 
 /*Il metodo onClick sugli elementi della cardview è definito in BusListAdapter*/
 public class ChooseBusActivity extends AppCompatActivity {
+    SharedData s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_bus);
+
+        s = getIntent().getParcelableExtra("SharedData");
+
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -31,9 +33,6 @@ public class ChooseBusActivity extends AppCompatActivity {
             }
         });
 
-        //ottengo dal HomeActivity la lista dei treni
-        List<Bus> busList = getIntent().getParcelableArrayListExtra("busList");
-
         //cardview di oggetti Bus
         RecyclerView recList = (RecyclerView) findViewById(R.id.bus_recycler_view);
         recList.setHasFixedSize(true);
@@ -41,7 +40,7 @@ public class ChooseBusActivity extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-        BusListAdapter ba = new BusListAdapter(busList);
+        BusListAdapter ba = new BusListAdapter(s.getBusList());
         recList.setAdapter(ba);
     }
 
