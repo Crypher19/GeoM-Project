@@ -42,7 +42,7 @@ class TransportThread (threading.Thread):
             msg = self.conn.recv(1024).decode('utf-8').strip()
             print(msg)                
 
-            #ricevi - invia dati posizione (for/while)
+            # ricevi dati posizione (for/while)
             
 
     def send(self, mex):
