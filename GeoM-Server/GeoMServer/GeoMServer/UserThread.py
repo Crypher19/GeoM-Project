@@ -1,6 +1,7 @@
 import threading
 from xml.dom import minidom
 from ParserXML import ParserXML
+import time
 
 class UserThread (threading.Thread):
     
@@ -10,30 +11,36 @@ class UserThread (threading.Thread):
         self.ID = ID
         self.conn = conn
         self.addr = addr
+        self.time = 5
         
     def run(self):
         print("Connected by", self.addr)
         self.send("Connected")
 
-        msg = self.sd.getXMLTransportsList()             
-        self.send(msg)
-
-        #ricevo mezzo dell'utente
-        msg = self.conn.recv(1024).decode('utf-8').strip()
+        msg = self.sd.getXMLTransportsList() # Creo lista mezzi     
+        self.send(msg)       
         pxml = ParserXML()
-        doc = pxml.toDOMObject(msg)
-        tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
-        posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta)
         
-        # creo un oggetto di tipo DOM (Documento XML)
-        DOMimpl = minidom.getDOMImplementation()
-        xmldoc = DOMimpl.createDocument(None, "mezzi", None)
+        while True:
+            #rimuovo timeout per ricezione mezzo
+            self.conn.settimeout( None )
 
-        pxml.buildXMLMezzo(xmldoc, self.sd.listaMezzi[posI])
+            # ricevo mezzo dell'utente
+            msg = self.conn.recv(1024).decode('utf-8').strip()
+            doc = pxml.toDOMObject(msg)
+            tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
+            posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta)
 
-        self.send(xmldoc)
-        # self.sd.getTransportX(pos) + self.sd.getTransportY(pos)
-        
+            #imposto timeout per invio coordinate
+            self.conn.settimeout( 1 )
+            msg = "vuoto"
+            while True :
+                time.sleep(self.time)
+                print("invio messaggio....")
+                msg = self.conn.recv(1024).decode('utf-8').strip()
+                print(msg);
+
+            
 
     def send(self, mex):
         # se il messaggio è di tipo Document, prima lo trasformo in una stringa XML

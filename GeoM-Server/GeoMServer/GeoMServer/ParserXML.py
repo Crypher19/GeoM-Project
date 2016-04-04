@@ -6,13 +6,13 @@ class ParserXML:
         return minidom.parseString(string) # ritorna oggetto tipo document
 
     def getTransportObj(self, doc):
-        mezzi = doc.getElementsByTagName("mezzi")[0].firstChild.nodeValue
-        mezzo = mezzi.getElementsByTagName("mezzo")[0].firstChild.nodeValue
+        mezzi = doc.getElementsByTagName("mezzi")[0]
+        mezzo = mezzi.getElementsByTagName("mezzo")[0]
         id = mezzo.getAttribute("id")
         tipo = mezzo.getElementsByTagName("tipo")[0].firstChild.nodeValue
         compagnia = mezzo.getElementsByTagName("compagnia")[0].firstChild.nodeValue
         nome = mezzo.getElementsByTagName("nome")[0].firstChild.nodeValue
-        tratta = mezzo.getElementsByTagName("tratta")[0].nodeValue.firstChild.nodeValue
+        tratta = mezzo.getElementsByTagName("tratta")[0].firstChild.nodeValue
         attivo = mezzo.getElementsByTagName("attivo")[0].firstChild.nodeValue
         return Transport(id, tipo, compagnia, nome, tratta, attivo)
 
@@ -52,7 +52,7 @@ class ParserXML:
         elMezzo.appendChild(elTipo) # aggiungo l'elemento al mezzo
 
         elCompagnia = xmldoc.createElement("compagnia") # creo l'elemento "compagnia"
-        elCompagnia.appendChild(xmldoc.createTextNode(mezzo.compagnia)) # aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elCompagnia.appendChild(xmldoc.createTextNode(str(mezzo.compagnia))) # aggiungo all'elemento un nodo di tipo testo contenente il valore della query
         elMezzo.appendChild(elCompagnia) # aggiungo l'elemento al mezzo
 
         elNome = xmldoc.createElement("nome") # creo l'elemento "nome"
@@ -78,3 +78,24 @@ class ParserXML:
             elMezzo.appendChild(elPosY) # aggiungo l'elemento al mezzo
             
         rootMezzi.appendChild(elMezzo) # aggiungo l'oggetto "mezzo" all'oggetto radice
+
+    def buildXMLcoord (self, xmldoc, coordX, coordY):
+        rootPosizione = xmldoc.documentElement # ottengo la root "posizione" dal documento
+
+        elCoordX = xmldoc.createElement("coordX") # creo l'elemento "coordX"
+        elCoordX.appendChild(xmldoc.createTextNode(coordX)) # aggiungo all'elemento un nodo di tipo testo contenente la coordinata X
+        rootPosizione.appendChild(elCoordX)
+
+        elCoordY = xmldoc.createElement("coordY") # creo l'elemento "coordY"
+        elCoordY.appendChild(xmldoc.createTextNode(coordY)) # aggiungo all'elemento un nodo di tipo testo contenente la coordinata Y
+        rootPosizione.appendChild(elCoordY)
+
+    def getDOMofCoord(self, coordX, coordY):
+        DOMimpl = minidom.getDOMImplementation()
+        xmldoc = DOMimpl.createDocument(None, "posizione", None)
+
+        buildXMLcoord(self, xmldoc, coordX, coordY)
+
+        return xmldocCoord
+
+        
