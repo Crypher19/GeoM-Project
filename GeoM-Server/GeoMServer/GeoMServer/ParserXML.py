@@ -33,12 +33,12 @@ class ParserXML:
         #print(xmldoc.toprettyxml())  
         return xmldoc
 
-    def getDOMConferma(self):
+    def getDOMResponse(self, msg="OK"):
         # creo un oggetto di tipo DOM (Documento XML)
         DOMimpl = minidom.getDOMImplementation()
         xmldoc = DOMimpl.createDocument(None, "messaggio", None)
         rootMezzi = xmldoc.documentElement
-        rootMezzi.appendChild(xmldoc.createTextNode("OK"))  # aggiungo all'elemento un nodo di tipo testo contenente il valore "OK"
+        rootMezzi.appendChild(xmldoc.createTextNode(msg))  # aggiungo all'elemento un nodo di tipo testo contenente il valore "OK"
         return xmldoc
 
     def buildXMLMezzo(self, xmldoc, mezzo):
@@ -97,5 +97,4 @@ class ParserXML:
         buildXMLcoord(self, xmldoc, coordX, coordY)
 
         return xmldocCoord
-
         

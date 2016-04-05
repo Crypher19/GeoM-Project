@@ -2,6 +2,7 @@ import threading
 from xml.dom import minidom
 from ParserXML import ParserXML
 import time
+import socket
 
 class UserThread (threading.Thread):
     
@@ -21,26 +22,41 @@ class UserThread (threading.Thread):
         self.send(msg)       
         pxml = ParserXML()
         
-        while True:
-            #rimuovo timeout per ricezione mezzo
-            self.conn.settimeout( None )
+        while True: # TODO: esco quando il client si disconnette
+            # rimuovo timeout per ricezione mezzo
+            self.conn.settimeout( None ) 
 
             # ricevo mezzo dell'utente
             msg = self.conn.recv(1024).decode('utf-8').strip()
             doc = pxml.toDOMObject(msg)
             tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
             posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta)
+            
+            #invio risposta se il mezzo è attivo
+            if posI == -1:
+                self.send(getDOMResponse(msg="Mezzo di trasporto non attivo"))
+            else:
+                self.send(getDOMResponse())
 
             #imposto timeout per invio coordinate
             self.conn.settimeout( 1 )
-            msg = "vuoto"
-            while True :
+            loop = True
+            while loop :
                 time.sleep(self.time)
-                print("invio messaggio....")
-                msg = self.conn.recv(1024).decode('utf-8').strip()
-                print(msg);
+                print("invio messaggio....") 
+                # lettura posizioni xy del mezzo interessato
+                #print(self.sd.transportList[posI].posX)
+                #print(self.sd.transportList[posI].posY)
+                # TODO: invio posizioni X-Y al client
 
-            
+                try: # provo a ricevere un messaggio
+                    msg = self.conn.recv(1024).decode('utf-8').strip()
+                    loop = False
+                    #print(type())
+
+                except socket.timeout: # ricevo timeout dalla socket
+                    print("Timeout")
+                
 
     def send(self, mex):
         # se il messaggio è di tipo Document, prima lo trasformo in una stringa XML

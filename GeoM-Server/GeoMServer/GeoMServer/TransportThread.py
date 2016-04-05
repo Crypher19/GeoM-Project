@@ -17,8 +17,8 @@ class TransportThread (threading.Thread):
 
         # conferma connessione
         pxml = ParserXML()
-        ack = pxml.getDOMConferma()
-        self.send("Connected")
+        ack = pxml.getDOMResponse()
+        self.send(ack)
         #self.send(ack)
 
         # ricevi username e password
@@ -30,11 +30,18 @@ class TransportThread (threading.Thread):
         auth = pxml.getUsernameAndPassword(userdoc) # ottengo una tupla contenente username e password
         # controllo username e password
         if self.sd.checkLogin(auth[0], auth[1]):
+            #invio ack password corretta
+            self.send(ack)
+
+            # invio lista dei mezzi
+            msg = self.sd.getXMLTransportsList()
+            self.send(msg)  
+
             # ricevo il mezzo 
             msg = self.conn.recv(1024).decode('utf-8').strip()
             print(msg)
             mezzodoc = pxml.toDOMObject(msg)   
-               
+
             # invio conferma di ricezione del mezzo           
             self.send(ack)
             
@@ -43,7 +50,8 @@ class TransportThread (threading.Thread):
             print(msg)                
 
             # ricevi dati posizione (for/while)
-            
+        else:
+            self.send(getDOMResponse(msg="username o password errati"))
 
     def send(self, mex):
         # se il messaggio è di tipo Document, prima lo trasformo in una stringa XML
