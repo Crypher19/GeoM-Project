@@ -1,0 +1,2 @@
+# GeoM-Project
+Le versioni precedenti di "AppTrasporti" e di "AppUtenti" sono state spostate nell'archivio: <a href="https://drive.google.com/folderview?id=0B6BkIbrqE7vcbjF6NnBaYnlIYlk&usp=drive_web&tid=0B6BkIbrqE7vcVnNZQlhxcnlpUXM" target="_blank">QUI</a>
