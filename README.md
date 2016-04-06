@@ -1,6 +1,6 @@
 # GeoM-Project
-- L'archivio di questo progetto è stato spostato <a href="https://drive.google.com/open?id=0B6BkIbrqE7vcVnNZQlhxcnlpUXM" target="_blank">QUI</a>- 
-<br/>Presentazione "Idee creative per l'innovazione imprenditoriale" <a href="https://drive.google.com/open?id=0ByCUeE-gfZ5UTkl4M3JwTW1RN2M">LINK</a>
+- L'archivio di questo progetto è stato spostato <a href="https://drive.google.com/open?id=0B6BkIbrqE7vcVnNZQlhxcnlpUXM" target="_blank">QUI</a><br/>
+- Presentazione "Idee creative per l'innovazione imprenditoriale" <a href="https://drive.google.com/open?id=0ByCUeE-gfZ5UTkl4M3JwTW1RN2M">LINK</a>
 <hr>
 
 ### Caratteristiche dell'applicazione server (GeoMServer):
