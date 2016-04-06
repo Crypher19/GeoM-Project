@@ -44,7 +44,7 @@ class Database:
         return False
         
     def getTransports(self):
-        ris = self.execQuery("SELECT ID,TipoMezzo,NomeMezzo,Tratta,Attivo,Compagnia FROM transports_table")
+        ris = self.execQuery("SELECT transports_table.ID,transports_table.TipoMezzo,transports_table.NomeMezzo,transports_table.Tratta,transports_table.Attivo,company_table.Nome FROM transports_table, company_table WHERE company_table.ID = transports_table.Compagnia")
         listResult = [] # Lista di Transport
         if ris != False:
             print("leggo mezzi")

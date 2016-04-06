@@ -14,7 +14,7 @@ class ParserXML:
         nome = mezzo.getElementsByTagName("nome")[0].firstChild.nodeValue
         tratta = mezzo.getElementsByTagName("tratta")[0].firstChild.nodeValue
         attivo = mezzo.getElementsByTagName("attivo")[0].firstChild.nodeValue
-        return Transport(id, tipo, compagnia, nome, tratta, attivo)
+        return Transport(id, tipo, nome, tratta, attivo, compagnia)
 
     def getUsernameAndPassword(self, doc):
         autenticazione = doc.getElementsByTagName("autenticazione")[0]
