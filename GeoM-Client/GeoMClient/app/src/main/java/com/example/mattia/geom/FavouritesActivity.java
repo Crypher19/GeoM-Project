@@ -69,17 +69,25 @@ public class FavouritesActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this, R.style.AppCompatAlertDialogStyleLight);
-                builder.setTitle("Rimuovere questo preferito?");
+                builder.setTitle("Eliminare questo preferito?");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int id) {
+                        String snackbarContent;
+
                         //ottengo il preferito
                         Favourite fav = (Favourite) parent.getItemAtPosition(position);
                         if(removeListItem(fav)){
-                            Snackbar.make(view, "Preferito rimosso", Snackbar.LENGTH_SHORT).show();
-                        } else{
-                            Snackbar.make(view, "ERRORE, impossibile rimuovere il preferto", Snackbar.LENGTH_SHORT).show();//errore
-                        }
+                            snackbarContent = "Preferito eliminato";
+                        } else snackbarContent = "ERRORE, preferito non eliminato";
+
+                        if(s.getFavList().size() == 0){//ultimo preferito rimasto
+                            Intent i = new Intent(FavouritesActivity.this, HomeActivity.class);
+                            i.putExtra("snackbarContent", snackbarContent);
+                            i.putExtra("SharedData", s);
+                            startActivity(i);
+                            finish();
+                        } else Snackbar.make(view, snackbarContent, Snackbar.LENGTH_SHORT).show();//non è l'ultimo preferito
                     }
                 });
                 builder.setNegativeButton("ANNULLA", null);
@@ -135,6 +143,34 @@ public class FavouritesActivity extends AppCompatActivity {
 
             Snackbar.make((findViewById(R.id.activity_favourites)), "Preferiti aggiornati", Snackbar.LENGTH_SHORT).show();
             return true;
+        } else if(id == R.id.action_delete_all){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this, R.style.AppCompatAlertDialogStyleLight);
+            builder.setTitle("Eliminare tutti i preferiti?");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+                    List<Favourite> favList;
+                    MyFile f = new MyFile();
+                    String snackbarContent;
+                    Intent i;
+
+                    if (f.removeAllFavourites() > -1) {
+                        favList = new ArrayList<>();//lista vuota
+                        s.setFavList(favList);
+                        refreshListContent(favList);
+                        snackbarContent = "Preferiti eliminati";
+                    } else snackbarContent = "ERRORE, preferiti non eliminati";
+
+                    i = new Intent(FavouritesActivity.this, HomeActivity.class);
+                    i.putExtra("snackbarContent", snackbarContent);
+                    i.putExtra("SharedData", s);
+                    startActivity(i);
+                    finish();
+                }
+            });
+            builder.setNegativeButton("ANNULLA", null);
+            builder.show();
         }
 
         return super.onOptionsItemSelected(item);

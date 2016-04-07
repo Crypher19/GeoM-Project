@@ -34,7 +34,16 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         f = new MyFile();
+
         s = getIntent().getParcelableExtra("SharedData");
+
+        //quando passo da FavouritesActivity a HomeActivity avendo eliminato tutti i preferiti
+        if(getIntent().hasExtra("snackbarContent")){
+            Snackbar.make(findViewById(R.id.home_activity),
+                getIntent().getStringExtra("snackbarContent"),
+                Snackbar.LENGTH_SHORT)
+                .show();
+        }
 
         //lista di mezzi di trasporto
         ListView lv = (ListView) findViewById(R.id.pt_listview);

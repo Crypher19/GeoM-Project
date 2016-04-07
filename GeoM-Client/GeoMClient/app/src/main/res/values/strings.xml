@@ -2,6 +2,7 @@
     <string name="app_name">GeoM</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Aggiorna</string>
+    <string name="action_delete_all">Cancella tutto</string>
     <string name="title_activity_main">MainActivity</string>
 
     <!-- custom strings -->

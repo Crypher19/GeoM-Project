@@ -45,7 +45,7 @@ public class MapActivity extends AppCompatActivity {
 
         //messaggio preferiti
         if(b.containsKey("snackbarContent")){
-            Snackbar.make(findViewById(R.id.activity_map), b.getString("snackbarContent"), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.activity_map), b.getString("snackbarContent"), Snackbar.LENGTH_SHORT).show();
         }
     }
 
