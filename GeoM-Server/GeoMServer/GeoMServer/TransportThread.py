@@ -12,46 +12,52 @@ class TransportThread (threading.Thread):
         self.addr = addr
         
     def run(self):
-        print("Thread" + str(self.ID))
-        print("Connected by", self.addr)
+        try:
+            print("Thread" + str(self.ID))
+            print("Connected by", self.addr)
 
-        # conferma connessione
-        pxml = ParserXML()
-        ack = pxml.getDOMResponse()
-        self.send(ack)
-        #self.send(ack)
-
-        # ricevi username e password
-        msg = self.conn.recv(1024).decode('utf-8').strip()
-        print(msg)
-
-        userdoc = pxml.toDOMObject(msg)
-
-        auth = pxml.getUsernameAndPassword(userdoc) # ottengo una tupla contenente username e password
-        # controllo username e password
-        if self.sd.checkLogin(auth[0], auth[1]):
-            #invio ack password corretta
+            # conferma connessione
+            pxml = ParserXML()
+            ack = pxml.getDOMResponse()
             self.send(ack)
+            #self.send(ack)
 
-            # invio lista dei mezzi
-            msg = self.sd.getXMLTransportsList()
-            self.send(msg)  
-
-            # ricevo il mezzo 
+            # ricevi username e password
             msg = self.conn.recv(1024).decode('utf-8').strip()
             print(msg)
-            mezzodoc = pxml.toDOMObject(msg)   
 
-            # invio conferma di ricezione del mezzo           
-            self.send(ack)
+            userdoc = pxml.toDOMObject(msg)
+
+            auth = pxml.getUsernameAndPassword(userdoc) # ottengo una tupla contenente username e password
+            # controllo username e password
+            if self.sd.checkLogin(auth[0], auth[1]):
+                #invio ack password corretta
+                self.send(ack)
+
+                # invio lista dei mezzi
+                msg = self.sd.getXMLTransportsList()
+                self.send(msg)  
+
+                # ricevo il mezzo 
+                msg = self.conn.recv(1024).decode('utf-8').strip()
+                print(msg)
+                mezzodoc = pxml.toDOMObject(msg)   
+
+                # invio conferma di ricezione del mezzo           
+                self.send(ack)
             
-            # ricevo posizione di prova
-            msg = self.conn.recv(1024).decode('utf-8').strip()
-            print(msg)                
+                # ricevo posizione di prova
+                while pxml. msg! = pxml.getDOMresponse("End"):
+                    msg = self.conn.recv(1024).decode('utf-8').strip()
+                    print(msg)              
 
-            # ricevi dati posizione (for/while)
-        else:
-            self.send(getDOMResponse(msg="username o password errati"))
+                # ricevi dati posizione (for/while)
+            else:
+                self.send(getDOMResponse(msg="username o password errati"))
+
+            # fine del programma
+        except ConnectionResetError:
+            print("socked closed by client")
 
     def send(self, mex):
         # se il messaggio è di tipo Document, prima lo trasformo in una stringa XML

@@ -5,6 +5,13 @@ class ParserXML:
     def toDOMObject(self, string):        
         return minidom.parseString(string) # ritorna oggetto tipo document
 
+    def DOCtoString(self, doc):
+        if isinstance(doc, minidom.Document):
+            msg = mex.toxml()
+            msg = mex.replace("\n", "")
+            return msg
+        return None
+
     def getTransportObj(self, doc):
         mezzi = doc.getElementsByTagName("mezzi")[0]
         mezzo = mezzi.getElementsByTagName("mezzo")[0]
