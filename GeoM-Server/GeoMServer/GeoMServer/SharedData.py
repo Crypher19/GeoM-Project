@@ -11,11 +11,15 @@ class SharedData:
         self.listaMezzi = [] # Lista di QueryResult
         self.transportList = [] # lista di thread transport attivi
         self.fileMezziXML = "mezzi.xml"
+        
 
     def addTransport(self, transport):        
         self.transportList.append(transport) # aggiungo un elemento ThreadTrasport nella lista
         self.transportList[-1].start() # parte il threadTransport | -1 -> ultimo elemento
         
+    def delTransport(self, index):
+        del transportList[index]
+
     def getXMLTransportsList(self):
         self.listaMezzi = self.db.getTransports()
         pxml = ParserXML()

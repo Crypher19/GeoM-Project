@@ -4,12 +4,13 @@ from ParserXML import ParserXML
 
 class TransportThread (threading.Thread):
     
-    def __init__(self, sd, ID, conn, addr):
+    def __init__(self, sd, ID, conn, addr, index):
         threading.Thread.__init__(self)
         self.sd = sd
         self.ID = ID
         self.conn = conn
         self.addr = addr
+        self.index = index
         
     def run(self):
         try:
@@ -41,14 +42,15 @@ class TransportThread (threading.Thread):
                 # ricevo il mezzo 
                 msg = self.conn.recv(1024).decode('utf-8').strip()
                 print(msg)
-                mezzodoc = pxml.toDOMObject(msg)   
+                doc = pxml.toDOMObject(msg)   
 
                 # invio conferma di ricezione del mezzo           
                 self.send(ack)
             
                 # ricevo posizione di prova
-                while pxml. msg! = pxml.getDOMresponse("End"):
+                while pxml.readDOMResponse(doc, "messaggio") != "END":
                     msg = self.conn.recv(1024).decode('utf-8').strip()
+                    doc = pxml.toDOMObject(msg)
                     print(msg)              
 
                 # ricevi dati posizione (for/while)
@@ -58,6 +60,8 @@ class TransportThread (threading.Thread):
             # fine del programma
         except ConnectionResetError:
             print("socked closed by client")
+        self.sd.delTransport(index)
+        print("transport deleted")
 
     def send(self, mex):
         # se il messaggio è di tipo Document, prima lo trasformo in una stringa XML

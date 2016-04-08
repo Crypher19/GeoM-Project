@@ -40,6 +40,13 @@ class ParserXML:
         #print(xmldoc.toprettyxml())  
         return xmldoc
 
+    def readDOMResponse(self, doc , element):
+        try:
+            contenuto = doc.getElementsByTagName(element)[0].firstChild.nodeValue
+            return contenuto
+        except IndexError:
+            return None
+
     def getDOMResponse(self, msg="OK"):
         # creo un oggetto di tipo DOM (Documento XML)
         DOMimpl = minidom.getDOMImplementation()

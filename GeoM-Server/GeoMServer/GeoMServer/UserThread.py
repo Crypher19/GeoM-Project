@@ -15,52 +15,56 @@ class UserThread (threading.Thread):
         self.time = 5
         
     def run(self):
-        print("Connected by", self.addr)
-        self.send("Connected")
+        try:
+            print("Connected by", self.addr)
+            self.send("Connected")
 
-        msg = self.sd.getXMLTransportsList() # Creo lista mezzi     
-        self.send(msg)       
-        pxml = ParserXML()
+            msg = self.sd.getXMLTransportsList() # Creo lista mezzi     
+            self.send(msg)       
+            pxml = ParserXML()
         
-        while True: # TODO: esco quando il client si disconnette
-            # rimuovo timeout per ricezione mezzo
-            self.conn.settimeout( None ) 
+            while True: # TODO: esco quando il client si disconnette
+                # rimuovo timeout per ricezione mezzo
+                self.conn.settimeout( None ) 
 
-            # ricevo mezzo dell'utente
-            msg = self.conn.recv(1024).decode('utf-8').strip()
-            print(msg)
-            doc = pxml.toDOMObject(msg)
-            tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
-            posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta)
+                # ricevo mezzo dell'utente
+                msg = self.conn.recv(1024).decode('utf-8').strip()
+                print(msg)
+                doc = pxml.toDOMObject(msg)
+                tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
+                posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta)
             
-            #invio risposta se il mezzo è attivo
-            loop = False
-            if posI == -1:
-                self.send(pxml.getDOMResponse(msg="Mezzo di trasporto non attivo"))
-                print("mezzo di trasporto NON trovato")
-            else:
-                self.send(pxml.getDOMResponse())
-                print("mezzo di trasporto trovato")
-                loop = True
+                #invio risposta se il mezzo è attivo
+                loop = False
+                if posI == -1:
+                    self.send(pxml.getDOMResponse(msg="Mezzo di trasporto non attivo"))
+                    print("mezzo di trasporto NON trovato")
+                else:
+                    self.send(pxml.getDOMResponse())
+                    print("mezzo di trasporto trovato")
+                    loop = True
 
-            #imposto timeout per invio coordinate
-            self.conn.settimeout( 1 )
+                #imposto timeout per invio coordinate
+                self.conn.settimeout( 1 )
             
-            while loop :
-                time.sleep(self.time)
-                print("invio messaggio....") 
-                # lettura posizioni xy del mezzo interessato
-                #print(self.sd.transportList[posI].posX)
-                #print(self.sd.transportList[posI].posY)
-                # TODO: invio posizioni X-Y al client
+                while loop :
+                    time.sleep(self.time)
+                    print("invio messaggio....") 
+                    # lettura posizioni xy del mezzo interessato
+                    #print(self.sd.transportList[posI].posX)
+                    #print(self.sd.transportList[posI].posY)
+                    # TODO: invio posizioni X-Y al client
 
-                try: # provo a ricevere un messaggio
-                    msg = self.conn.recv(1024).decode('utf-8').strip()
-                    loop = False
-                    #print(type())
+                    try: # provo a ricevere un messaggio
+                        msg = self.conn.recv(1024).decode('utf-8').strip()
+                        loop = False
+                        #print(type())
 
-                except socket.timeout: # ricevo timeout dalla socket
-                    print("Timeout")
+                    except socket.timeout: # ricevo timeout dalla socket
+                        print("Timeout")
+
+        except ConnectionResetError:
+            print("socked closed by client")
                 
 
     def send(self, mex):

@@ -13,6 +13,7 @@ class ThreadSort(threading.Thread):
         self.ID = ID
         self.conn = conn
         self.addr = addr
+        self.index = 0
         
 
     def run(self):      
@@ -30,5 +31,6 @@ class ThreadSort(threading.Thread):
             ut.start()
         elif msg == "transport":
             print("trasporto connesso")
-            tt = TransportThread(self.sd, self.ID, self.conn, self.addr)
+            tt = TransportThread(self.sd, self.ID, self.conn, self.addr, self.index)
+            self.index += 1
             self.sd.addTransport(tt)
