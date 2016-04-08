@@ -55,6 +55,7 @@ class UserThread (threading.Thread):
                         # TODO: invio posizioni X-Y al client
 
                     except IndexError:
+                        loop = False
                         print("can't find transport, maybe disconnected")
 
                     try: # provo a ricevere un messaggio
