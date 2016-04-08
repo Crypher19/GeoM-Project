@@ -18,7 +18,7 @@ class SharedData:
         self.transportList[-1].start() # parte il threadTransport | -1 -> ultimo elemento
         
     def delTransport(self, index):
-        del transportList[index]
+        del self.transportList[index]
 
     def getXMLTransportsList(self):
         self.listaMezzi = self.db.getTransports()
@@ -29,8 +29,8 @@ class SharedData:
         return msg
 
     def getTransportI(self, nome, compagnia, tratta):
-        for i, mezzo in enumerate(self.listaMezzi):
-            if mezzo.nomeMezzo == nome and mezzo.compagnia == compagnia and mezzo.tratta == tratta:
+        for i, thMezzo in enumerate(self.transportList):
+            if thMezzo.mezzo.nomeMezzo == nome and thMezzo.mezzo.compagnia == compagnia and thMezzo.mezzo.tratta == tratta:
                 return i  # posizione nella lista
         return -1
         

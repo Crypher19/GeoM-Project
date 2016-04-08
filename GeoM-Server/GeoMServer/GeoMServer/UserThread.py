@@ -29,7 +29,6 @@ class UserThread (threading.Thread):
 
                 # ricevo mezzo dell'utente
                 msg = self.conn.recv(1024).decode('utf-8').strip()
-                print(msg)
                 doc = pxml.toDOMObject(msg)
                 tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
                 posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta)
@@ -48,12 +47,15 @@ class UserThread (threading.Thread):
                 self.conn.settimeout( 1 )
             
                 while loop :
-                    time.sleep(self.time)
-                    print("invio messaggio....") 
-                    # lettura posizioni xy del mezzo interessato
-                    #print(self.sd.transportList[posI].posX)
-                    #print(self.sd.transportList[posI].posY)
-                    # TODO: invio posizioni X-Y al client
+                    try:
+                        time.sleep(self.time)
+                        # lettura posizioni xy del mezzo interessato
+                        print(self.sd.transportList[posI].coordX)
+                        print(self.sd.transportList[posI].coordY)
+                        # TODO: invio posizioni X-Y al client
+
+                    except IndexError:
+                        print("can't find transport, maybe disconnected")
 
                     try: # provo a ricevere un messaggio
                         msg = self.conn.recv(1024).decode('utf-8').strip()

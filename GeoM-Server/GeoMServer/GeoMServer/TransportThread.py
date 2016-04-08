@@ -1,6 +1,7 @@
 import threading
 from xml.dom import minidom
 from ParserXML import ParserXML
+from Transport import Transport
 
 class TransportThread (threading.Thread):
     
@@ -11,7 +12,7 @@ class TransportThread (threading.Thread):
         self.conn = conn
         self.addr = addr
         self.index = index
-        
+
     def run(self):
         try:
             print("Thread" + str(self.ID))
@@ -25,7 +26,6 @@ class TransportThread (threading.Thread):
 
             # ricevi username e password
             msg = self.conn.recv(1024).decode('utf-8').strip()
-            print(msg)
 
             userdoc = pxml.toDOMObject(msg)
 
@@ -39,10 +39,11 @@ class TransportThread (threading.Thread):
                 msg = self.sd.getXMLTransportsList()
                 self.send(msg)  
 
-                # ricevo il mezzo 
+                # ricevo il mezzo dell'autista
                 msg = self.conn.recv(1024).decode('utf-8').strip()
                 print(msg)
-                doc = pxml.toDOMObject(msg)   
+                doc = pxml.toDOMObject(msg)
+                self.mezzo = pxml.getTransportObj(doc)
 
                 # invio conferma di ricezione del mezzo           
                 self.send(ack)
@@ -51,7 +52,10 @@ class TransportThread (threading.Thread):
                 while pxml.readDOMResponse(doc, "messaggio") != "END":
                     msg = self.conn.recv(1024).decode('utf-8').strip()
                     doc = pxml.toDOMObject(msg)
-                    print(msg)              
+                    pos = pxml.getCoordFromDOM(doc)
+                    if pos != False:
+                        self.coordX,self.coordY = pos[0],pos[1]     
+                       
 
                 # ricevi dati posizione (for/while)
             else:
@@ -60,7 +64,7 @@ class TransportThread (threading.Thread):
             # fine del programma
         except ConnectionResetError:
             print("socked closed by client")
-        self.sd.delTransport(index)
+        self.sd.delTransport(self.index)
         print("transport deleted")
 
     def send(self, mex):

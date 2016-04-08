@@ -27,7 +27,6 @@ class ParserXML:
         autenticazione = doc.getElementsByTagName("autenticazione")[0]
         username = autenticazione.getElementsByTagName("username")[0].firstChild.nodeValue
         password = autenticazione.getElementsByTagName("password")[0].firstChild.nodeValue
-        print(username + ":" + password)
         return (username, password)
 
     def getDOMOfTransportsList(self, listaMezzi):      
@@ -111,4 +110,16 @@ class ParserXML:
         buildXMLcoord(self, xmldoc, coordX, coordY)
 
         return xmldocCoord
+
+    def getCoordFromDOM(self, doc):
+        try:
+            posizione = doc.getElementsByTagName("posizione")[0]
+            coordX = posizione.getElementsByTagName("coordX")[0].firstChild.nodeValue
+            coordY = posizione.getElementsByTagName("coordY")[0].firstChild.nodeValue
+            print(coordX + ":" + coordY)
+            return (coordX, coordY)         
+        except IndexError:
+            return False
+        
+        
         
