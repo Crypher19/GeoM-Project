@@ -9,6 +9,3 @@
 - <b>Altre librerie/moduli utilizzati:</b>
   - <a href="http://dev.mysql.com/downloads/connector/python/">MySQL Connector v2.1.3 per Python 3.4</a><br />
   - <a href="https://pypi.python.org/pypi/bcrypt/2.0.0">bcrypt 2.0.0</a>
-
-
-PROVA BRANCH
