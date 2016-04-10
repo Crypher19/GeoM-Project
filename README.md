@@ -1,4 +1,4 @@
-# GeoM-Project
+﻿# GeoM-Project
 - L'archivio di questo progetto è stato spostato <a href="https://drive.google.com/open?id=0B6BkIbrqE7vcVnNZQlhxcnlpUXM" >QUI</a><br/>
 - Presentazione "Idee creative per l'innovazione imprenditoriale" <a href="https://drive.google.com/open?id=0ByCUeE-gfZ5UaW9HNjdvZGp2Rnc">LINK</a>
 
@@ -9,3 +9,6 @@
 - <b>Altre librerie/moduli utilizzati:</b>
   - <a href="http://dev.mysql.com/downloads/connector/python/">MySQL Connector v2.1.3 per Python 3.4</a><br />
   - <a href="https://pypi.python.org/pypi/bcrypt/2.0.0">bcrypt 2.0.0</a>
+
+
+PROVA BRANCH
