@@ -5,7 +5,14 @@ import android.os.Parcelable;
 
 import com.example.mattia.geom.R;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.io.Serializable;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class PublicTransport implements Serializable, Parcelable{
     //tipi di default
@@ -39,6 +46,50 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_info = pt_info;
         this.pt_image_id = pt_image_id;
     }
+
+    /*public Document getDOMPT() throws ParserConfigurationException {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+
+        Element rootElement = doc.createElement("mezzi"); // creo la radice "posizione"
+
+        Element elMezzo = doc.createElement("mezzo"); // creo l'elemento "mezzo"
+        elMezzo.setAttribute("id", Integer.toString(PTID)); // imposto l'attributo "id"
+
+        Element elTipo = doc.createElement("tipo"); // creo l'elemento "tipo"
+        elTipo.appendChild(doc.createTextNode(PTType));// aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elMezzo.appendChild(elTipo); // aggiungo l'elemento al mezzo
+
+        Element elCompagnia = doc.createElement("compagnia"); // creo l'elemento "compagnia"
+        elCompagnia.appendChild(doc.createTextNode(Integer.toString(PTCompany))); //# aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elMezzo.appendChild(elCompagnia); // aggiungo l'elemento al mezzo
+
+        Element elNome = doc.createElement("nome"); // creo l'elemento "nome"
+        elNome.appendChild(doc.createTextNode(PTName)); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elMezzo.appendChild(elNome); // aggiungo l'elemento al mezzo
+
+        Element elTratta = doc.createElement("tratta"); // creo l'elemento "tratta"
+        elTratta.appendChild(doc.createTextNode(PTCity)); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elMezzo.appendChild(elTratta); // aggiungo l'elemento al mezzo
+
+        Element elAttivo = doc.createElement("attivo"); // creo l'elemento "attivo"
+        elAttivo.appendChild(doc.createTextNode(Boolean.toString(PTEnabled))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elMezzo.appendChild(elAttivo); // aggiungo l'elemento al mezzo
+
+        // se sono stati modificati, aggiungo l'XML delle coordinate
+        if (coordX != 0.d && coordY != 0.d) {
+            Element elCoordX = doc.createElement("coordX"); // creo l'elemento "coordX"
+            elCoordX.appendChild(doc.createTextNode(Double.toString(coordX))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elMezzo.appendChild(elCoordX); // aggiungo l'elemento al mezzo
+
+            Element elCoordY = doc.createElement("coordY"); // creo l'elemento "coordY"
+            elCoordY.appendChild(doc.createTextNode(Double.toString(coordY))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elMezzo.appendChild(elCoordY); // aggiungo l'elemento al mezzo
+        }
+        rootElement.appendChild(elMezzo); // aggiungo l'oggetto "mezzo" all'oggetto radice
+        return doc;
+    }*/
 
     public String getPt_type() {
         return pt_type;
