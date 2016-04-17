@@ -13,7 +13,7 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map"
@@ -22,14 +22,6 @@
             android:name=".FavouritesActivity"
             android:label="@string/title_activity_favourite"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ChooseTrainActivity"
-            android:label="@string/title_activity_choose_train"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ChooseBusActivity"
-            android:label="@string/title_activity_choose_bus"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,6 +29,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ChoosePTActivity"
+            android:label="@string/title_activity_choose_pt"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

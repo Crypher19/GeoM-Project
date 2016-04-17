@@ -10,4 +10,5 @@
     <string name="title_activity_favourite">Preferiti</string>
     <string name="title_activity_choose_train">Nuovo Treno</string>
     <string name="title_activity_choose_bus">Nuovo Bus</string>
+    <string name="title_activity_choose_pt">ChoosePTActivity</string>
 </resources>

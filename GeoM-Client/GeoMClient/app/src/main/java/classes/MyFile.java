@@ -48,35 +48,35 @@ public class MyFile {
         checkFolderAndFile();
     }
 
-    private int add(Document doc, Element root, Favourite r){
+    private int add(Document doc, Element root, PublicTransport pt){
         //favourite
         Element favourite = doc.createElement("favourite");
         root.appendChild(favourite);
 
         //pt_type
         Element pt_type = doc.createElement("pt_type");
-        pt_type.appendChild(doc.createTextNode(r.getPt_type()));
+        pt_type.appendChild(doc.createTextNode(pt.getPt_type()));
         favourite.appendChild(pt_type);
 
         //pt_name
         Element pt_name = doc.createElement("pt_name");
-        pt_name.appendChild(doc.createTextNode(r.getPt_name()));
+        pt_name.appendChild(doc.createTextNode(pt.getPt_name()));
         favourite.appendChild(pt_name);
 
-        //pt_city
-        Element pt_city = doc.createElement("pt_city");
-        pt_city.appendChild(doc.createTextNode(r.getPt_city()));
-        favourite.appendChild(pt_city);
+        //pt_route
+        Element pt_route = doc.createElement("pt_route");
+        pt_route.appendChild(doc.createTextNode(pt.getPt_route()));
+        favourite.appendChild(pt_route);
 
         //pt_image_id
         Element pt_image_id = doc.createElement("pt_image_id");
-        pt_image_id.appendChild(doc.createTextNode(Integer.toString(r.getPt_image_id())));
+        pt_image_id.appendChild(doc.createTextNode(Integer.toString(pt.getPt_image_id())));
         favourite.appendChild(pt_image_id);
 
         return toFile(doc);
     }
 
-    public int addFavourite(Favourite favourite){
+    public int addFavourite(PublicTransport favourite){
         try {
             if(folderExistsAndNotEmpty(this.folderPath, this.folderName) > -1){//cartella ok
                 int i;
@@ -163,14 +163,12 @@ public class MyFile {
         return node.getNodeValue();
     }
 
-    private int isDuplicate(Favourite favourite){
-        List<Favourite> rList = toFavouritesList(this.filePath, this.fileName);
+    private int isDuplicate(PublicTransport favourite){
+        List<PublicTransport> favList = toFavouritesList(this.filePath, this.fileName);
 
-        for(int i = 0; i < rList.size(); i++){
-            if(favourite.getPt_type().equals(rList.get(i).getPt_type())
-                    && favourite.getPt_name().equals(rList.get(i).getPt_name())
-                    && favourite.getPt_city().equals(rList.get(i).getPt_city())
-                    && favourite.getPt_image_id() == rList.get(i).getPt_image_id()) return -1; //duplicato
+        for(int i = 0; i < favList.size(); i++){
+            if(favourite.equals("favourite", favList.get(i)))
+                return -1; //duplicato
         }
         return 0;//non duplicato
     }
@@ -190,13 +188,13 @@ public class MyFile {
         return -1;
     }
 
-    public int removeFavourite(Favourite f){
+    public int removeFavourite(PublicTransport fav){
         try {
             int pos = -1;//preferito non trovato
-            List<Favourite> favList = getFavouritesList();
+            List<PublicTransport> favList = getFavouritesList();
 
             for(int i = 0; i < favList.size(); i++){
-                if(favList.get(i).equals(f)){
+                if(favList.get(i).equals("favourite", fav)){
                     pos = i;
                 }
             }
@@ -267,12 +265,12 @@ public class MyFile {
         return null;
     }
 
-    private List<Favourite> toFavouritesList(String filePath, String fileName){
+    private List<PublicTransport> toFavouritesList(String filePath, String fileName){
         try {
             Document doc = toDocument(filePath, fileName);
 
             NodeList nList = doc.getElementsByTagName("favourite");
-            List<Favourite> fList = new ArrayList<>();
+            List<PublicTransport> ptList = new ArrayList<>();
 
             for(int i = 0; i < nList.getLength(); i++){
                 Node node = nList.item(i);//ottengo il nodo
@@ -281,22 +279,20 @@ public class MyFile {
                     Element element = (Element) node;//ottengo l'elemento nel nodo
 
                     //aggiungo un nuovo preferito
-                    fList.add(new Favourite(
-                            getValue("pt_type", element),
+                    ptList.add(new PublicTransport(getValue("pt_type", element),
                             getValue("pt_name", element),
-                            getValue("pt_city", element),
-                            Integer.parseInt(getValue("pt_image_id", element))));
+                            getValue("pt_route", element)));
                 }
             }
-            return fList;
+            return ptList;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public List<Favourite> getFavouritesList(){
-        List<Favourite> favouritesList = new ArrayList<>();
+    public List<PublicTransport> getFavouritesList(){
+        List<PublicTransport> favouritesList = new ArrayList<>();
 
         if(fileExistsAndNotEmpty(this.filePath, this.fileName) > 0) {//file esistente e pieno
             return toFavouritesList(this.filePath, this.fileName);

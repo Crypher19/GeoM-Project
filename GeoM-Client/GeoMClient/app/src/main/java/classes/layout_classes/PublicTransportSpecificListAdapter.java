@@ -12,50 +12,46 @@ import android.widget.TextView;
 import com.example.mattia.geom.MapActivity;
 import com.example.mattia.geom.R;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import classes.Favourite;
 import classes.MyFile;
+import classes.PublicTransport;
 import classes.SharedData;
-import classes.Train;
 
-public class TrainListAdapter extends RecyclerView.Adapter<TrainListAdapter.TrainViewHolder> {
-    private List<Train> trainList;
+public class PublicTransportSpecificListAdapter extends RecyclerView.Adapter<PublicTransportSpecificListAdapter.PublicTransportSpecificViewHolder> {
+    private List<PublicTransport> PTList;
     private MyFile f;
     private SharedData s;
 
-    public TrainListAdapter(List<Train> trainList) {
-        this.trainList = trainList;
+    public PublicTransportSpecificListAdapter(List<PublicTransport> PTList) {
+        this.PTList = PTList;
     }
 
     @Override
     public int getItemCount() {
-        return trainList.size();
+        return PTList.size();
     }
 
     @Override
-    public void onBindViewHolder(final TrainViewHolder trainViewHolder, int i) {
-        Train t = trainList.get(i);
-        trainViewHolder.trainName.setText(t.getPTName());
-        trainViewHolder.trainCity.setText(t.getPTCity());
+    public void onBindViewHolder(final PublicTransportSpecificViewHolder holder, int position) {
 
-        trainViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        PublicTransport pt = PTList.get(position);
+        holder.pt_name.setText(pt.getPt_name());
+        holder.pt_route.setText(pt.getPt_route());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //ottengo la posizione dell'elemento
-                int pos = trainViewHolder.getAdapterPosition();
+                int pos = holder.getAdapterPosition();
                 //ottengo l'elemento in posizion "pos"
-                Train train = trainList.get(pos);
-                //trasformo l'elemento in un preferito
-                Favourite fav = new Favourite(train);
-
+                PublicTransport fav = PTList.get(pos);
                 //salvo il preferito
                 int addResult;
                 String textToShow;
 
                 if((addResult=f.addFavourite(fav))==0){
-                    s.addItemInFavouritesList(fav);//aggiorno la lista dei preferiti
+                    s.favList.add(fav);//aggiorno la lista dei preferiti
                     textToShow="Preferito aggiunto";
                 }
                 else if(addResult==-2) textToShow="ERRORE preferito gia esistente";
@@ -64,7 +60,7 @@ public class TrainListAdapter extends RecyclerView.Adapter<TrainListAdapter.Trai
                 //lancio MapActivity
                 Intent i = new Intent(v.getContext(), MapActivity.class);
                 i.putExtra("snackbarContent", textToShow);
-                i.putExtra("train", (Parcelable)train);
+                i.putExtra("train", (Parcelable)fav);
                 v.getContext().startActivity(i);
                 //evito di ritornare a ChooseTrainActivity
                 ((Activity) v.getContext()).finish();
@@ -73,25 +69,25 @@ public class TrainListAdapter extends RecyclerView.Adapter<TrainListAdapter.Trai
     }
 
     @Override
-    public TrainViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public PublicTransportSpecificViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         f = new MyFile();
         s = ((Activity) viewGroup.getRootView().getContext()).getIntent().getParcelableExtra("SharedData");
 
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(R.layout.bus_train_card_layout, viewGroup, false);
+                inflate(R.layout.pt_item_card_layout, viewGroup, false);
 
-        return new TrainViewHolder(itemView);
+        return new PublicTransportSpecificViewHolder(itemView);
     }
 
-    public static class TrainViewHolder extends RecyclerView.ViewHolder {
-        protected TextView trainName;
-        protected TextView trainCity;
+    public static class PublicTransportSpecificViewHolder extends RecyclerView.ViewHolder {
+        protected TextView pt_name;
+        protected TextView pt_route;
 
-        public TrainViewHolder(View v) {
+        public PublicTransportSpecificViewHolder(View v) {
             super(v);
-            trainName =  (TextView) v.findViewById(R.id.bus_train_name);
-            trainCity = (TextView)  v.findViewById(R.id.bus_train_city);
+            pt_name =  (TextView) v.findViewById(R.id.pt_name);
+            pt_route = (TextView)  v.findViewById(R.id.pt_route);
         }
     }
 }

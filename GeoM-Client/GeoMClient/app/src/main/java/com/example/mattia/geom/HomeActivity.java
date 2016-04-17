@@ -16,11 +16,10 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import classes.Favourite;
 import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
-import classes.layout_classes.PTListAdapter;
+import classes.layout_classes.PublicTransportGenericListAdapter;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -47,22 +46,18 @@ public class HomeActivity extends AppCompatActivity {
 
         //lista di mezzi di trasporto
         ListView lv = (ListView) findViewById(R.id.pt_listview);
-        lv.setAdapter(new PTListAdapter(HomeActivity.this, R.layout.pt_item_list_layout, new ArrayList<>(s.getPTList())));
+        lv.setAdapter(new PublicTransportGenericListAdapter(HomeActivity.this, R.layout.pt_generic_item_list_layout, new ArrayList<>(s.PTList)));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, final View components, int pos, long id) {
                 //ottengo il tipo di mezzo di trasporto
-                String pt_type = ((PublicTransport) adapter.getItemAtPosition(pos)).getPTType();
+                String pt_type = ((PublicTransport) adapter.getItemAtPosition(pos)).getPt_type();
 
-                if(pt_type.equals("Bus")){//scelgo il mezzo "Bus"
-                    Intent i = new Intent(new Intent(HomeActivity.this, ChooseBusActivity.class));
-                    i.putExtra("SharedData", s);
-                    startActivity(i);
-                } else if (pt_type.equals("Treno")) {//scelgo il mezzo "Treno"
-                    Intent i = new Intent(new Intent(HomeActivity.this, ChooseTrainActivity.class));
-                    i.putExtra("SharedData", s);
-                    startActivity(i);
-                } else Snackbar.make(findViewById(R.id.home_activity), "ERRORE impssibile aprire pagina", Snackbar.LENGTH_SHORT).show();
+                //intent ad un unica activity
+                Intent i = new Intent(HomeActivity.this, ChoosePTActivity.class);
+                i.putExtra("SharedData", s);
+                i.putExtra("pt_type", pt_type); //indico la lista da visualizzare
+                startActivity(i);
             }
         });
 
@@ -71,9 +66,9 @@ public class HomeActivity extends AppCompatActivity {
         favourites_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Favourite> favList;
-                if ((favList = f.getFavouritesList()).size() > 0) {
-                    s.setFavList(favList);
+                List<PublicTransport> favList;
+                if (!(favList = f.getFavouritesList()).isEmpty()) {
+                    s.favList = favList;
                     Intent i = new Intent(HomeActivity.this, FavouritesActivity.class);
                     i.putExtra("SharedData", s);
                     startActivity(i);

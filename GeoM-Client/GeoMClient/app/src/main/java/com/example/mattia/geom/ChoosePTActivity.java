@@ -8,24 +8,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import classes.SharedData;
-import classes.layout_classes.BusListAdapter;
+import classes.layout_classes.PublicTransportSpecificListAdapter;
 
-/*Il metodo onClick sugli elementi della cardview è definito in BusListAdapter*/
-public class ChooseBusActivity extends AppCompatActivity {
+public class ChoosePTActivity extends AppCompatActivity {
     SharedData s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_bus);
+        setContentView(R.layout.activity_choose_pt);
 
         s = getIntent().getParcelableExtra("SharedData");
 
-        //toolbar
+        String pt_type = getIntent().getStringExtra("pt_type");//tipo di lista da visualizzare
+
+        //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Nuovo " + pt_type);//il titolo varia in base alla lista visualizzata
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,15 +35,21 @@ public class ChooseBusActivity extends AppCompatActivity {
             }
         });
 
-        //cardview di oggetti Bus
-        RecyclerView recList = (RecyclerView) findViewById(R.id.bus_recycler_view);
+        RecyclerView recList = (RecyclerView) findViewById(R.id.pt_recycler_view);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-        BusListAdapter ba = new BusListAdapter(s.getBusList());
-        recList.setAdapter(ba);
+        PublicTransportSpecificListAdapter publicTransportSpecificListAdaptera;
+
+        if(pt_type.equals("Bus")){//cardview di Bus
+            publicTransportSpecificListAdaptera = new PublicTransportSpecificListAdapter(s.busList);
+            recList.setAdapter(publicTransportSpecificListAdaptera);
+        } else if(pt_type.equals("Treno")){//cardview di Train
+            publicTransportSpecificListAdaptera = new PublicTransportSpecificListAdapter(s.trainList);
+            recList.setAdapter(publicTransportSpecificListAdaptera);
+        }
     }
 
 }

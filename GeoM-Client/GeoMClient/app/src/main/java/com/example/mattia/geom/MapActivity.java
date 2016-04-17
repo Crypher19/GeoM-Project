@@ -6,9 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import classes.Bus;
-import classes.Favourite;
-import classes.Train;
+import classes.PublicTransport;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -32,15 +30,9 @@ public class MapActivity extends AppCompatActivity {
         //ricevo extra
         Bundle b = getIntent().getExtras();
 
-        if (b.containsKey("bus")){//extra ricevuto da ChooseBusActivity
-            Bus bus = b.getParcelable("bus");
-            System.out.println("Ricevuto bus " + bus.getPTName());
-        } else if(b.containsKey("train")){//extra ricevuto da ChooseTrainActivity
-            Train train = b.getParcelable("train");
-            System.out.println("Ricevuto train " + train.getPTName());
-        } else if(b.containsKey("favourite")){//extra ricevuto da FavouritesActivity
-            Favourite favourite = b.getParcelable("favourite");
-            System.out.println("Ricevuto favourite " + favourite.getPt_name());
+        //extra ricevuto da ChooseBusActivity o ChooseTrainActivity o FavouritesActivity
+        if (b.containsKey("PublicTransport")){
+            PublicTransport pt = b.getParcelable("PublicTransport");
         }
 
         //messaggio preferiti
