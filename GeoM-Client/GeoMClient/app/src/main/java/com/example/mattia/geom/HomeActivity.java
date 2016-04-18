@@ -67,8 +67,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 List<PublicTransport> favList;
-                if (!s.favList.isEmpty() /*= f.getFavouritesList()).isEmpty()*/) {
-                    //s.favList = favList;
+                if (!(favList = f.getFavouritesList()).isEmpty()) {
+                    s.favList = favList;
                     Intent i = new Intent(HomeActivity.this, FavouritesActivity.class);
                     i.putExtra("SharedData", s);
                     startActivity(i);

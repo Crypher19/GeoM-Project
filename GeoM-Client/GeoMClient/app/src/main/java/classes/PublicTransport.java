@@ -21,11 +21,16 @@ public class PublicTransport implements Serializable, Parcelable{
     private final String pt_type_genericPT = "publictransport";
     private final String pt_type_favourite = "favourite";
 
-    protected String pt_type; //tipo
-    protected String pt_name; //nome
-    protected String pt_route; //tratta
-    protected String pt_info; //informazioni generali (solo per pt generico)
-    protected int pt_image_id; //icona
+    private int pt_id;
+    private String pt_type; //tipo
+    private String pt_name; //nome
+    private int pt_company; //compagnia
+    private String pt_route; //tratta
+    private String pt_info; //informazioni generali (solo per pt generico)
+    private boolean pt_enabled; //attivo
+    private int pt_image_id; //icona
+    private double pt_coordX;
+    private double pt_coordY;
 
     //costruttore specifico
     public PublicTransport(String pt_type, String pt_name, String pt_route){
@@ -47,49 +52,47 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_image_id = pt_image_id;
     }
 
-    /*public Document getDOMPT() throws ParserConfigurationException {
+    public Document getDOMPT() throws ParserConfigurationException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.newDocument();
 
         Element rootElement = doc.createElement("mezzi"); // creo la radice "posizione"
-
         Element elMezzo = doc.createElement("mezzo"); // creo l'elemento "mezzo"
-        elMezzo.setAttribute("id", Integer.toString(PTID)); // imposto l'attributo "id"
+        elMezzo.setAttribute("id", Integer.toString(pt_id)); // imposto l'attributo "id"
 
         Element elTipo = doc.createElement("tipo"); // creo l'elemento "tipo"
-        elTipo.appendChild(doc.createTextNode(PTType));// aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elTipo.appendChild(doc.createTextNode(pt_type));// aggiungo all'elemento un nodo di tipo testo contenente il valore della query
         elMezzo.appendChild(elTipo); // aggiungo l'elemento al mezzo
 
         Element elCompagnia = doc.createElement("compagnia"); // creo l'elemento "compagnia"
-        elCompagnia.appendChild(doc.createTextNode(Integer.toString(PTCompany))); //# aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elCompagnia.appendChild(doc.createTextNode(Integer.toString(pt_company))); //# aggiungo all'elemento un nodo di tipo testo contenente il valore della query
         elMezzo.appendChild(elCompagnia); // aggiungo l'elemento al mezzo
 
         Element elNome = doc.createElement("nome"); // creo l'elemento "nome"
-        elNome.appendChild(doc.createTextNode(PTName)); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elNome.appendChild(doc.createTextNode(pt_name)); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
         elMezzo.appendChild(elNome); // aggiungo l'elemento al mezzo
 
         Element elTratta = doc.createElement("tratta"); // creo l'elemento "tratta"
-        elTratta.appendChild(doc.createTextNode(PTCity)); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elTratta.appendChild(doc.createTextNode(pt_route)); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
         elMezzo.appendChild(elTratta); // aggiungo l'elemento al mezzo
 
         Element elAttivo = doc.createElement("attivo"); // creo l'elemento "attivo"
-        elAttivo.appendChild(doc.createTextNode(Boolean.toString(PTEnabled))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elAttivo.appendChild(doc.createTextNode(Boolean.toString(pt_enabled))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
         elMezzo.appendChild(elAttivo); // aggiungo l'elemento al mezzo
 
         // se sono stati modificati, aggiungo l'XML delle coordinate
-        if (coordX != 0.d && coordY != 0.d) {
+        if (pt_coordX != 0.d && pt_coordY != 0.d) {
             Element elCoordX = doc.createElement("coordX"); // creo l'elemento "coordX"
-            elCoordX.appendChild(doc.createTextNode(Double.toString(coordX))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elCoordX.appendChild(doc.createTextNode(Double.toString(pt_coordX))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
             elMezzo.appendChild(elCoordX); // aggiungo l'elemento al mezzo
-
             Element elCoordY = doc.createElement("coordY"); // creo l'elemento "coordY"
-            elCoordY.appendChild(doc.createTextNode(Double.toString(coordY))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+            elCoordY.appendChild(doc.createTextNode(Double.toString(pt_coordY))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
             elMezzo.appendChild(elCoordY); // aggiungo l'elemento al mezzo
         }
         rootElement.appendChild(elMezzo); // aggiungo l'oggetto "mezzo" all'oggetto radice
         return doc;
-    }*/
+    }
 
     public String getPt_type() {
         return pt_type;
@@ -131,39 +134,49 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_name = pt_name;
     }
 
-    //implementazione Parcelable
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getPt_id() {
+        return pt_id;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(pt_type);
-        dest.writeString(pt_name);
-        dest.writeString(pt_route);
-        dest.writeString(pt_info);
-        dest.writeInt(pt_image_id);
+    public void setPt_id(int pt_id) {
+        this.pt_id = pt_id;
     }
 
-    public static final Parcelable.Creator<PublicTransport> CREATOR = new Parcelable.Creator<PublicTransport>() {
-        public PublicTransport createFromParcel(Parcel pc) {
-            return new PublicTransport(pc);
-        }
-        public PublicTransport[] newArray(int size) {
-            return new PublicTransport[size];
-        }
-    };
-
-    public PublicTransport(Parcel pc){
-        pt_type = pc.readString();
-        pt_name = pc.readString();
-        pt_route = pc.readString();
-        pt_info = pc.readString();
-        pt_image_id = pc.readInt();
+    public int getPt_company() {
+        return pt_company;
     }
 
-    //override equals
+    public void setPt_company(int pt_company) {
+        this.pt_company = pt_company;
+    }
+
+    public boolean isPt_enabled() {
+        return pt_enabled;
+    }
+
+    public void setPt_enabled(boolean pt_enabled) {
+        this.pt_enabled = pt_enabled;
+    }
+
+    public double getPt_coordX() {
+        return pt_coordX;
+    }
+
+    public void setPt_coordX(double pt_coordX) {
+        this.pt_coordX = pt_coordX;
+    }
+
+    public double getPt_coordY() {
+        return pt_coordY;
+    }
+
+    public void setPt_coordY(double pt_coordY) {
+        this.pt_coordY = pt_coordY;
+    }
+
+
+
+    /* //override equals
     public boolean equals(String type, PublicTransport pt){
 
         if(type.equals(pt_type_bus) || type.equals(pt_type_train)){//train, bus
@@ -180,6 +193,54 @@ public class PublicTransport implements Serializable, Parcelable{
                     && this.pt_info.equals(pt.getPt_info());
         }
          return false;
+    }*/
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.pt_type_bus);
+        dest.writeString(this.pt_type_train);
+        dest.writeString(this.pt_type_genericPT);
+        dest.writeString(this.pt_type_favourite);
+        dest.writeInt(this.pt_id);
+        dest.writeString(this.pt_type);
+        dest.writeString(this.pt_name);
+        dest.writeInt(this.pt_company);
+        dest.writeString(this.pt_route);
+        dest.writeString(this.pt_info);
+        dest.writeByte(pt_enabled ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.pt_image_id);
+        dest.writeDouble(this.pt_coordX);
+        dest.writeDouble(this.pt_coordY);
+    }
+
+    protected PublicTransport(Parcel in) {
+        this.pt_id = in.readInt();
+        this.pt_type = in.readString();
+        this.pt_name = in.readString();
+        this.pt_company = in.readInt();
+        this.pt_route = in.readString();
+        this.pt_info = in.readString();
+        this.pt_enabled = in.readByte() != 0;
+        this.pt_image_id = in.readInt();
+        this.pt_coordX = in.readDouble();
+        this.pt_coordY = in.readDouble();
+    }
+
+    public static final Creator<PublicTransport> CREATOR = new Creator<PublicTransport>() {
+        @Override
+        public PublicTransport createFromParcel(Parcel source) {
+            return new PublicTransport(source);
+        }
+
+        @Override
+        public PublicTransport[] newArray(int size) {
+            return new PublicTransport[size];
+        }
+    };
 }
 
