@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent i = new Intent(HomeActivity.this, ChoosePTActivity.class);
                 i.putExtra("SharedData", s);
                 i.putExtra("pt_type", pt_type); //indico la lista da visualizzare
-                startActivity(i);
+                startActivityForResult(i, 1);
             }
         });
 
@@ -66,12 +66,10 @@ public class HomeActivity extends AppCompatActivity {
         favourites_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<PublicTransport> favList;
-                if (!(favList = f.getFavouritesList()).isEmpty()) {
-                    s.favList = favList;
+                if (!s.favList.isEmpty()) {
                     Intent i = new Intent(HomeActivity.this, FavouritesActivity.class);
                     i.putExtra("SharedData", s);
-                    startActivity(i);
+                    startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, R.style.AppCompatAlertDialogStyleLight);
@@ -103,5 +101,12 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent i) {
+        super.onActivityResult(requestCode, resultCode, i);
+        if(resultCode == RESULT_OK){
+            s = i.getParcelableExtra("SharedData");
+        }
     }
 }

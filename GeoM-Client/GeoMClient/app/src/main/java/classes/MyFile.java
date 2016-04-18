@@ -53,6 +53,11 @@ public class MyFile {
         Element favourite = doc.createElement("favourite");
         root.appendChild(favourite);
 
+        //pt_id
+        Element pt_id = doc.createElement("pt_id");
+        pt_id.appendChild(doc.createTextNode(Integer.toString(pt.getPt_id())));
+        favourite.appendChild(pt_id);
+
         //pt_type
         Element pt_type = doc.createElement("pt_type");
         pt_type.appendChild(doc.createTextNode(pt.getPt_type()));
@@ -63,10 +68,30 @@ public class MyFile {
         pt_name.appendChild(doc.createTextNode(pt.getPt_name()));
         favourite.appendChild(pt_name);
 
+        //pt_company
+        Element pt_company = doc.createElement("pt_company");
+        pt_company.appendChild(doc.createTextNode(Integer.toString(pt.getPt_company())));
+        favourite.appendChild(pt_company);
+
         //pt_route
         Element pt_route = doc.createElement("pt_route");
         pt_route.appendChild(doc.createTextNode(pt.getPt_route()));
         favourite.appendChild(pt_route);
+
+        //pt_enabled
+        Element pt_enabled = doc.createElement("pt_enabled");
+        pt_enabled.appendChild(doc.createTextNode(Boolean.toString(pt.isPt_enabled())));
+        favourite.appendChild(pt_enabled);
+
+        //pt_coordX
+        Element pt_coordX = doc.createElement("pt_coordX");
+        pt_coordX.appendChild(doc.createTextNode(Double.toString(pt.getPt_coordX())));
+        favourite.appendChild(pt_coordX);
+
+        //pt_coordY
+        Element pt_coordY = doc.createElement("pt_coordY");
+        pt_coordY.appendChild(doc.createTextNode(Double.toString(pt.getPt_coordY())));
+        favourite.appendChild(pt_coordY);
 
         //pt_image_id
         Element pt_image_id = doc.createElement("pt_image_id");
@@ -167,7 +192,7 @@ public class MyFile {
         List<PublicTransport> favList = toFavouritesList(this.filePath, this.fileName);
 
         for(int i = 0; i < favList.size(); i++){
-            if(favourite.equals("favourite", favList.get(i)))
+            if(favourite.equals(favList.get(i)))
                 return -1; //duplicato
         }
         return 0;//non duplicato
@@ -194,7 +219,7 @@ public class MyFile {
             List<PublicTransport> favList = getFavouritesList();
 
             for(int i = 0; i < favList.size(); i++){
-                if(favList.get(i).equals("favourite", fav)){
+                if(favList.get(i).equals(fav)){
                     pos = i;
                 }
             }
@@ -279,9 +304,14 @@ public class MyFile {
                     Element element = (Element) node;//ottengo l'elemento nel nodo
 
                     //aggiungo un nuovo preferito
-                    ptList.add(new PublicTransport(getValue("pt_type", element),
+                    ptList.add(new PublicTransport(Integer.parseInt(getValue("pt_id", element)),
+                            getValue("pt_type", element),
                             getValue("pt_name", element),
-                            getValue("pt_route", element)));
+                            Integer.parseInt(getValue("pt_company", element)),
+                            getValue("pt_route", element),
+                            Boolean.parseBoolean(getValue("pt_enabled", element)),
+                            Double.parseDouble(getValue("pt_coordX", element)),
+                            Double.parseDouble(getValue("pt_coordY", element))));
                 }
             }
             return ptList;

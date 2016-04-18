@@ -15,11 +15,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class PublicTransport implements Serializable, Parcelable{
-    //tipi di default
-    private final String pt_type_bus = "Bus";
-    private final String pt_type_train = "Treno";
-    private final String pt_type_genericPT = "publictransport";
-    private final String pt_type_favourite = "favourite";
+    //tipi di default (non final per problemi con Parcelable)
+    private String pt_type_bus = "Bus";
+    private String pt_type_train = "Treno";
+    private String pt_type_genericPT = "publictransport";
+    private String pt_type_favourite = "favourite";
 
     private int pt_id;
     private String pt_type; //tipo
@@ -33,16 +33,24 @@ public class PublicTransport implements Serializable, Parcelable{
     private double pt_coordY;
 
     //costruttore specifico
-    public PublicTransport(String pt_type, String pt_name, String pt_route){
+    public PublicTransport(int pt_id, String pt_type, String pt_name, int pt_company,
+                           String pt_route, boolean pt_enabled, double pt_coordX, double pt_coordY){
+        this.pt_id = pt_id;
         this.pt_type = pt_type;
         this.pt_name = pt_name;
+        this.pt_company = pt_company;
         this.pt_route = pt_route;
+        this.pt_enabled = pt_enabled;
+        this.pt_coordX = pt_coordX;
+        this.pt_coordY = pt_coordY;
 
         if(pt_type.equals(pt_type_bus)){
             this.pt_image_id = R.mipmap.ic_material_bus_grey;//bus
         } else if(pt_type.equals(pt_type_train)){
             this.pt_image_id = R.mipmap.ic_material_train_grey;//treno
         } else this.pt_image_id = R.mipmap.ic_material_no_image_grey;//sconosciuto
+
+        this.pt_info = null;//evito errori in fase di cancellazione preferito
     }
 
     //costruttore generico
@@ -174,26 +182,16 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_coordY = pt_coordY;
     }
 
-
-
-    /* //override equals
-    public boolean equals(String type, PublicTransport pt){
-
-        if(type.equals(pt_type_bus) || type.equals(pt_type_train)){//train, bus
-            return this.pt_name.equals(pt.getPt_name())
-                    &&this.pt_route.equals(pt.getPt_route());
-        }else if(type.equals(pt_type_favourite)){ //favourites
-            return this.pt_image_id == pt.getPt_image_id()
-                    && this.pt_type.equals(pt.getPt_type())
-                    && this.pt_name.equals(pt.getPt_name())
-                    && this.pt_route.equals(pt.getPt_route());
-        } else if(type.equals(pt_type_genericPT)){//generic pt
+    //override equals
+    public boolean equals(PublicTransport pt){
+        if(pt_info == null){//train, bus, favourites
+            return this.pt_id == pt.getPt_id();
+        } else {//generic pt
             return this.pt_image_id == pt.getPt_image_id()
                     && this.pt_type.equals(pt.getPt_type())
                     && this.pt_info.equals(pt.getPt_info());
         }
-         return false;
-    }*/
+    }
 
     @Override
     public int describeContents() {
@@ -219,6 +217,10 @@ public class PublicTransport implements Serializable, Parcelable{
     }
 
     protected PublicTransport(Parcel in) {
+        this.pt_type_bus = in.readString();
+        this.pt_type_train = in.readString();
+        this.pt_type_genericPT = in.readString();
+        this.pt_type_favourite = in.readString();
         this.pt_id = in.readInt();
         this.pt_type = in.readString();
         this.pt_name = in.readString();

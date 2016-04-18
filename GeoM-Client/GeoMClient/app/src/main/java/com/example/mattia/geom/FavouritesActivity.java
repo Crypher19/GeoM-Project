@@ -61,7 +61,7 @@ public class FavouritesActivity extends AppCompatActivity {
                 //invio la posizione del preferito selezionato
                 PublicTransport fav = s.favList.get(position);
                 i.putExtra("favourite", (Parcelable) fav);
-                startActivity(i);
+                startActivityForResult(i, 4);
             }
         });
 
@@ -86,8 +86,9 @@ public class FavouritesActivity extends AppCompatActivity {
                             Intent i = new Intent(FavouritesActivity.this, HomeActivity.class);
                             i.putExtra("snackbarContent", snackbarContent);
                             i.putExtra("SharedData", s);
+                            //elimino la lista delle activity
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
-                            finish();
                         } else Snackbar.make(view, snackbarContent, Snackbar.LENGTH_SHORT).show();//non è l'ultimo preferito
                     }
                 });
@@ -134,7 +135,7 @@ public class FavouritesActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
+        if (id == R.id.action_refresh) {//aggiorna lista preferiti
             List<PublicTransport> favList;
             MyFile f = new MyFile();
 
@@ -144,7 +145,7 @@ public class FavouritesActivity extends AppCompatActivity {
 
             Snackbar.make((findViewById(R.id.activity_favourites)), "Preferiti aggiornati", Snackbar.LENGTH_SHORT).show();
             return true;
-        } else if(id == R.id.action_delete_all){
+        } else if(id == R.id.action_delete_all){//elimina tutti i preferiti
 
             AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this, R.style.AppCompatAlertDialogStyleLight);
             builder.setTitle("Eliminare tutti i preferiti?");
@@ -166,14 +167,32 @@ public class FavouritesActivity extends AppCompatActivity {
                     i = new Intent(FavouritesActivity.this, HomeActivity.class);
                     i.putExtra("snackbarContent", snackbarContent);
                     i.putExtra("SharedData", s);
-                    startActivity(i);
-                    finish();
+                    //elimino la lista delle activity
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivityForResult(i, 3);
                 }
             });
+
+
             builder.setNegativeButton("ANNULLA", null);
             builder.show();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent i = new Intent();
+        i.putExtra("SharedData", s);
+        setResult(RESULT_OK, i);
+        super.onBackPressed();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent i) {
+        super.onActivityResult(requestCode, resultCode, i);
+        if(resultCode == RESULT_OK){
+            s = i.getParcelableExtra("SharedData");
+        }
     }
 }

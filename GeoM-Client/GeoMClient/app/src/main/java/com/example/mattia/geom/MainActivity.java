@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
 
         //carico la lista dei bus (DA SOSTITUIRE CON RICHIESTA SERVER)
         List<PublicTransport> busList= new ArrayList<>();
-        busList.add(new PublicTransport("Bus", "C-80", "Cantu-Mariano"));
-        busList.add(new PublicTransport("Bus", "C-81", "Como-Mariano"));
+        busList.add(new PublicTransport(1, "Bus", "C-80", 11, "Cantu-Mariano", true, 12.3, 11.5));
+        busList.add(new PublicTransport(2, "Bus", "C-81", 11, "Como-Mariano", false, 12.3, 12.5));
         s.busList = busList;
 
         //carico la lista dei treni (DA SOSTITUIRE CON RICHIESTA SERVER)
         List<PublicTransport> trainList= new ArrayList<>();
-        trainList.add(new PublicTransport("Treno", "T01", "Milano-Asso"));
-        trainList.add(new PublicTransport("Treno", "T02", "Milano-Venezia"));
+        trainList.add(new PublicTransport(3, "Treno", "T01", 12, "Milano-Asso", true, 14.5, 14.6));
+        trainList.add(new PublicTransport(4, "Treno", "T02", 13, "Milano-Venezia", true, 15.1, 17.1));
         s.trainList = trainList;
 
         //puntatore ai dati condivisi

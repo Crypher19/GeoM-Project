@@ -1,5 +1,6 @@
 package com.example.mattia.geom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.view.View;
 import classes.SharedData;
 import classes.layout_classes.PublicTransportSpecificListAdapter;
 
+/*implementazione metodi onClick di cardview in PublicTransportSpecificListAdapter*/
 public class ChoosePTActivity extends AppCompatActivity {
     SharedData s;
 
@@ -52,4 +54,11 @@ public class ChoosePTActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed(){
+        Intent i = new Intent();
+        i.putExtra("SharedData", s);
+        setResult(RESULT_OK, i);
+        super.onBackPressed();
+    }
 }

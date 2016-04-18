@@ -18,7 +18,9 @@ import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
 
-public class PublicTransportSpecificListAdapter extends RecyclerView.Adapter<PublicTransportSpecificListAdapter.PublicTransportSpecificViewHolder> {
+public class PublicTransportSpecificListAdapter
+        extends RecyclerView.Adapter<PublicTransportSpecificListAdapter.PublicTransportSpecificViewHolder> {
+
     private List<PublicTransport> PTList;
     private MyFile f;
     private SharedData s;
@@ -60,10 +62,9 @@ public class PublicTransportSpecificListAdapter extends RecyclerView.Adapter<Pub
                 //lancio MapActivity
                 Intent i = new Intent(v.getContext(), MapActivity.class);
                 i.putExtra("snackbarContent", textToShow);
-                i.putExtra("train", (Parcelable)fav);
-                v.getContext().startActivity(i);
-                //evito di ritornare a ChooseTrainActivity
-                ((Activity) v.getContext()).finish();
+                i.putExtra("PublicTransport", (Parcelable)fav);
+                i.putExtra("SharedData", s);
+                ((Activity)v.getContext()).startActivity(i);
             }
         });
     }
