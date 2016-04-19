@@ -13,7 +13,7 @@
         />
 
     <TextView
-        android:id="@+id/pt_name"
+        android:id="@+id/pt_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/pt_image"
@@ -23,12 +23,12 @@
         />
 
     <TextView
-        android:id="@+id/pt_description"
+        android:id="@+id/pt_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/pt_image"
         android:layout_toEndOf="@+id/pt_image"
-        android:layout_below="@+id/pt_name"
+        android:layout_below="@+id/pt_type"
         />
 
 </RelativeLayout>

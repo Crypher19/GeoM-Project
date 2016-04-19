@@ -8,80 +8,16 @@ import java.util.List;
 
 public class SharedData implements Parcelable{
 
-    private List<PublicTransport> PTList;
-    private List<Bus> busList;
-    private List<Train> trainList;
-    private List<Favourite> favList;
+    public List<PublicTransport> PTList;
+    public List<PublicTransport> busList;
+    public List<PublicTransport> trainList;
+    public List<PublicTransport> favList;
 
     public SharedData(){
         PTList = new ArrayList<>();
         busList = new ArrayList<>();
         trainList = new ArrayList<>();
         favList = new ArrayList<>();
-    }
-
-    public List<PublicTransport> getPTList() {
-        return this.PTList;
-    }
-
-    public void setPTList(List<PublicTransport> PTList) {
-        this.PTList = PTList;
-    }
-
-    public List<Bus> getBusList() {
-        return busList;
-    }
-
-    public void setBusList(List<Bus> busList) {
-        this.busList = busList;
-    }
-
-    public List<Train> getTrainList() {
-        return trainList;
-    }
-
-    public void setTrainList(List<Train> trainList) {
-        this.trainList = trainList;
-    }
-
-    public List<Favourite> getFavList() {
-        return favList;
-    }
-
-    public void setFavList(List<Favourite> favList) {
-        this.favList = favList;
-    }
-
-    public PublicTransport getPTInPos(int i){
-        return this.PTList.get(i);
-    }
-
-    public Bus getBusInPos(int i){
-        return this.busList.get(i);
-    }
-
-    public Train getTrainInPos(int i){
-        return this.trainList.get(i);
-    }
-
-    public Favourite getFavouriteInPos(int i){
-        return this.favList.get(i);
-    }
-
-    public void addItemInPTList(PublicTransport p){
-        this.PTList.add(p);
-    }
-
-    public void addItemInTrainList(Train t){
-        this.trainList.add(t);
-    }
-
-    public void addItemInBusList(Bus b){
-        this.busList.add(b);
-    }
-
-    public void addItemInFavouritesList(Favourite f){
-        this.favList.add(f);
     }
 
     //implementazione Parcelable
@@ -111,8 +47,8 @@ public class SharedData implements Parcelable{
         this();//costruttore
 
         pc.readTypedList(PTList, PublicTransport.CREATOR);
-        pc.readTypedList(busList, Bus.CREATOR);
-        pc.readTypedList(trainList, Train.CREATOR);
-        pc.readTypedList(favList, Favourite.CREATOR);
+        pc.readTypedList(busList, PublicTransport.CREATOR);
+        pc.readTypedList(trainList, PublicTransport.CREATOR);
+        pc.readTypedList(favList, PublicTransport.CREATOR);
     }
 }

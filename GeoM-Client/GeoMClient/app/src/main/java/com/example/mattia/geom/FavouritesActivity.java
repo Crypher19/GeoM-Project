@@ -3,6 +3,7 @@ package com.example.mattia.geom;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,8 +17,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import classes.Favourite;
 import classes.MyFile;
+import classes.PublicTransport;
 import classes.SharedData;
 import classes.layout_classes.FavouritesListAdapter;
 
@@ -25,12 +26,12 @@ public class FavouritesActivity extends AppCompatActivity {
     SharedData s;
     ListView lv;
     FavouritesListAdapter fla;
-    List<Favourite> favList;
+    List<PublicTransport> favList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favourite);
+        setContentView(R.layout.activity_favourites);
 
         s = (getIntent().getParcelableExtra("SharedData"));
 
@@ -49,8 +50,8 @@ public class FavouritesActivity extends AppCompatActivity {
         //costruisco e visualizzo la lista nell'activity
         lv = (ListView) findViewById(R.id.favListView);
         fla = new FavouritesListAdapter(
-                FavouritesActivity.this, R.layout.favourite_item_list_layout,
-                new ArrayList<>(s.getFavList()));
+                FavouritesActivity.this, R.layout.pt_specific_item_list_layout,
+                new ArrayList<>(s.favList));
         lv.setAdapter(fla);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,9 +59,9 @@ public class FavouritesActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(FavouritesActivity.this, MapActivity.class);
                 //invio la posizione del preferito selezionato
-                Favourite fav = s.getFavouriteInPos(position);
-                i.putExtra("favourite", fav);
-                startActivity(i);
+                PublicTransport fav = s.favList.get(position);
+                i.putExtra("favourite", (Parcelable) fav);
+                startActivityForResult(i, 4);
             }
         });
 
@@ -76,17 +77,18 @@ public class FavouritesActivity extends AppCompatActivity {
                         String snackbarContent;
 
                         //ottengo il preferito
-                        Favourite fav = (Favourite) parent.getItemAtPosition(position);
+                        PublicTransport fav = (PublicTransport) parent.getItemAtPosition(position);
                         if(removeListItem(fav)){
                             snackbarContent = "Preferito eliminato";
                         } else snackbarContent = "ERRORE, preferito non eliminato";
 
-                        if(s.getFavList().size() == 0){//ultimo preferito rimasto
+                        if(s.favList.size() == 0){//ultimo preferito rimasto
                             Intent i = new Intent(FavouritesActivity.this, HomeActivity.class);
                             i.putExtra("snackbarContent", snackbarContent);
                             i.putExtra("SharedData", s);
+                            //elimino la lista delle activity
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
-                            finish();
                         } else Snackbar.make(view, snackbarContent, Snackbar.LENGTH_SHORT).show();//non è l'ultimo preferito
                     }
                 });
@@ -98,21 +100,21 @@ public class FavouritesActivity extends AppCompatActivity {
         });
     }
 
-    public void refreshListContent(List<Favourite> favList){
+    public void refreshListContent(List<PublicTransport> favList){
         fla.clear();
         fla.addAll(favList);
         fla.notifyDataSetChanged();
     }
 
-    public boolean removeListItem(Favourite fav){
+    public boolean removeListItem(PublicTransport fav){
         MyFile f = new MyFile();
         //rimuovo il preferito dalla lista e dal file xml
-        favList = s.getFavList();
+        favList = s.favList;
 
         if (favList.remove(fav) && f.removeFavourite(fav) == 0) {
-            s.setFavList(favList);
+            s.favList = favList;
             //se va tutto bene aggiorno la lista da visualizzare
-            refreshListContent(s.getFavList());
+            refreshListContent(s.favList);
             return true;
         } else
             return false;
@@ -133,31 +135,31 @@ public class FavouritesActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
-            List<Favourite> favList;
+        if (id == R.id.action_refresh) {//aggiorna lista preferiti
+            List<PublicTransport> favList;
             MyFile f = new MyFile();
 
             favList = f.getFavouritesList();
-            s.setFavList(favList);
+            s.favList = favList;
             refreshListContent(favList);
 
             Snackbar.make((findViewById(R.id.activity_favourites)), "Preferiti aggiornati", Snackbar.LENGTH_SHORT).show();
             return true;
-        } else if(id == R.id.action_delete_all){
+        } else if(id == R.id.action_delete_all){//elimina tutti i preferiti
 
             AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this, R.style.AppCompatAlertDialogStyleLight);
             builder.setTitle("Eliminare tutti i preferiti?");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int id) {
-                    List<Favourite> favList;
+                    List<PublicTransport> favList;
                     MyFile f = new MyFile();
                     String snackbarContent;
                     Intent i;
 
                     if (f.removeAllFavourites() > -1) {
                         favList = new ArrayList<>();//lista vuota
-                        s.setFavList(favList);
+                        s.favList = favList;
                         refreshListContent(favList);
                         snackbarContent = "Preferiti eliminati";
                     } else snackbarContent = "ERRORE, preferiti non eliminati";
@@ -165,14 +167,32 @@ public class FavouritesActivity extends AppCompatActivity {
                     i = new Intent(FavouritesActivity.this, HomeActivity.class);
                     i.putExtra("snackbarContent", snackbarContent);
                     i.putExtra("SharedData", s);
-                    startActivity(i);
-                    finish();
+                    //elimino la lista delle activity
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivityForResult(i, 3);
                 }
             });
+
+
             builder.setNegativeButton("ANNULLA", null);
             builder.show();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent i = new Intent();
+        i.putExtra("SharedData", s);
+        setResult(RESULT_OK, i);
+        super.onBackPressed();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent i) {
+        super.onActivityResult(requestCode, resultCode, i);
+        if(resultCode == RESULT_OK){
+            s = i.getParcelableExtra("SharedData");
+        }
     }
 }
