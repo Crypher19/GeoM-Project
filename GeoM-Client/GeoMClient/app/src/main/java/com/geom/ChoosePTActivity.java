@@ -1,4 +1,4 @@
-package com.example.mattia.geom;
+package com.geom;
 
 import android.content.Intent;
 import android.os.Bundle;

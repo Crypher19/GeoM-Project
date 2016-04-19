@@ -3,7 +3,7 @@ package classes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.mattia.geom.R;
+import com.geom.R;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

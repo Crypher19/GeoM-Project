@@ -1,4 +1,4 @@
-package com.example.mattia.geom;
+package com.geom;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
+import classes.LoadingThread;
 import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
@@ -25,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
         s = new SharedData();
         f = new MyFile();
         i = new Intent(MainActivity.this, HomeActivity.class);
+
+        LoadingThread lt = new LoadingThread(s);
+        lt.start();
+
 
         List<PublicTransport> favList;
 

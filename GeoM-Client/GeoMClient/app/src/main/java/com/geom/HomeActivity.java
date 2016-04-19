@@ -1,4 +1,4 @@
-package com.example.mattia.geom;
+package com.geom;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import classes.MyFile;
 import classes.PublicTransport;

@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.mattia.geom.R;
+import com.geom.R;
 
 import java.util.ArrayList;
 

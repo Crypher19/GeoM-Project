@@ -1,5 +1,7 @@
 package classes;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +50,6 @@ public class Connessione {
 	public Connessione(String serverIP, int serverPort) {
 		this.serverIP = serverIP;
 		this.serverPort = serverPort;
-		startConn();		
 	}
 	
 	public void startConn() {
@@ -65,7 +66,7 @@ public class Connessione {
 			sIN = new BufferedReader(in);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("ERRORE", e.getMessage());
 		}
 	}
 	
@@ -73,11 +74,24 @@ public class Connessione {
 		connessione.close();
 	}
 	
-	public Document fileToDOCObject(String filename) throws SAXException, IOException, ParserConfigurationException {
+	public Document fileToDOMObject(String filename) throws SAXException, IOException, ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false); // non controllo un eventuale DTD associato
 		return factory.newDocumentBuilder().parse(new File(filename)); // ottengo il documento XML		
 	}
+
+    public Document getDOMType(String msg) throws ParserConfigurationException {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+        // root element
+        Element rootElement = doc.createElement("messaggio");
+        Element tipo = doc.createElement("tipo");
+        tipo.appendChild(doc.createTextNode(msg));
+        rootElement.appendChild(tipo);
+        doc.appendChild(rootElement);
+        return doc;
+    }
 	
 	public Document getDOMResponse(String msg) throws ParserConfigurationException {
 	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
