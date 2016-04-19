@@ -60,6 +60,7 @@ public class FavouritesActivity extends AppCompatActivity {
                 Intent i = new Intent(FavouritesActivity.this, MapActivity.class);
                 //invio la posizione del preferito selezionato
                 PublicTransport fav = s.favList.get(position);
+                i.putExtra("SharedData", s);
                 i.putExtra("favourite", (Parcelable) fav);
                 startActivityForResult(i, 4);
             }
@@ -173,7 +174,6 @@ public class FavouritesActivity extends AppCompatActivity {
                 }
             });
 
-
             builder.setNegativeButton("ANNULLA", null);
             builder.show();
         }
@@ -183,10 +183,10 @@ public class FavouritesActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        Intent i = new Intent();
+        Intent i = new Intent(FavouritesActivity.this, HomeActivity.class);
         i.putExtra("SharedData", s);
         setResult(RESULT_OK, i);
-        super.onBackPressed();
+        startActivity(i);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {

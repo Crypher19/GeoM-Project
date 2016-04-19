@@ -48,11 +48,17 @@ public class MapActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        Intent i = new Intent(MapActivity.this, HomeActivity.class);
+        Intent i;
+        if(getIntent().hasExtra("snackbarContent")){//l'activity precedente è ChoosePTActivity
+            i = new Intent(MapActivity.this, HomeActivity.class);
+        } else{//l'activity precedente è FavouritesActivity
+            i = new Intent(MapActivity.this, FavouritesActivity.class);
+        }
+
         i.putExtra("SharedData", s);
+        setResult(RESULT_OK, i);
         //pulisco la lista delle activity
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        setResult(RESULT_OK, i);
         startActivity(i);
     }
 }
