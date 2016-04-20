@@ -26,11 +26,11 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class Connessione {
+public class Connection {
 	private String serverIP;
 	private int serverPort;
 	
-	private Socket connessione;
+	private Socket connection;
 
 	private OutputStream out;
 	private PrintWriter sOUT;
@@ -47,7 +47,7 @@ public class Connessione {
 		nodelist.item(0).setTextContent("transport");
 	*/
 
-	public Connessione(String serverIP, int serverPort) {
+	public Connection(String serverIP, int serverPort) {
 		this.serverIP = serverIP;
 		this.serverPort = serverPort;
 	}
@@ -55,23 +55,22 @@ public class Connessione {
 	public void startConn() {
 		try {
 			// connessione con il server
-			connessione = new Socket(serverIP, serverPort);
-			
+            connection = new Socket(serverIP, serverPort);
+
 			// flusso in uscita su socket
-			out = connessione.getOutputStream();
+			out = connection.getOutputStream();
 			sOUT = new PrintWriter(out);
-			
+
 			// flusso in ingresso su socket
-			in = new InputStreamReader(connessione.getInputStream());
+			in = new InputStreamReader(connection.getInputStream());
 			sIN = new BufferedReader(in);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			Log.e("ERRORE", e.getMessage());
 		}
 	}
 	
 	public void closeConn() throws IOException {
-		connessione.close();
+        connection.close();
 	}
 	
 	public Document fileToDOMObject(String filename) throws SAXException, IOException, ParserConfigurationException {
@@ -142,20 +141,27 @@ public class Connessione {
         return doc;
 	}
 
-	public void sendMessage(String str) {		
+	public void sendMessage(String str) {
+        Log.i("sMESSAGE SENT", str);
 		sOUT.println(str);
 		sOUT.flush();
 	}
 	
 	public void sendMessage(Document doc) throws SAXException, IOException, ParserConfigurationException {			
 		// converto il Document in String e lo invio
+        Log.i("sMESSAGE SENT", convertDocumentToString(doc));
 		sOUT.println(convertDocumentToString(doc));
 		sOUT.flush();
 	}
 	
-	public String readMessage() throws IOException {
-		return sIN.readLine();
-	}	
+	public String readMessage() {
+        try {
+            return sIN.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 	// metodi statici per la conversione da Document a String e viceversa
 	public static String convertDocumentToString(Document doc) {

@@ -17,4 +17,5 @@
         android:layout_centerHorizontal="true"
         android:textSize="30sp"
         android:text="GeoM Logo"/>
+
 </RelativeLayout>

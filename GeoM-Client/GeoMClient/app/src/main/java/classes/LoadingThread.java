@@ -8,7 +8,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -17,33 +22,35 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class LoadingThread extends Thread {
     private SharedData sd;
-    private Connessione conn;
+    private Connection conn;
 
     public LoadingThread(SharedData sd) {
         this.sd = sd;
-        conn = new Connessione("87.9.118.203", 3333); // instanzio oggetto
+        conn = new Connection("192.168.1.110", 3333); // instanzio oggetto
     }
 
+    @Override
     public void run() {
         String msgRicevuto = null;
 
         conn.startConn(); // connessione con il server
 
-        /*try {
-            msgRicevuto = conn.readMessage(); // ricevo "Connected"
+        try {
             conn.sendMessage(conn.getDOMType("user")); // invio il tipo di utente
-            msgRicevuto = conn.readMessage(); // ricevo
-            System.out.println("Risposta: " + msgRicevuto);
+            msgRicevuto = conn.readMessage(); // ricevo "Connected"
+            Log.i("sMESSAGE RECEIVED", msgRicevuto);
 
             msgRicevuto = conn.readMessage(); // ricevo la lista dei trasporti
-            Document listaPT = Connessione.convertStringToDocument(msgRicevuto);
-            System.out.println("Risposta: " + msgRicevuto);
+            Document listaPT = Connection.convertStringToDocument(msgRicevuto);
+            Log.i("sMESSAGE RECEIVED", msgRicevuto);
 
+            // carico la lista in SharedData
             NodeList mezzi = null;
             NodeList chMezzo = null;
             Node mezzo = null;
-            String tipo, nome, tratta, attivo;
-            int ID, compagnia;
+            String tipo, nome, compagnia, tratta;
+            boolean attivo;
+            int id;
             // ottengo la lista di tutti gli elementi "mezzo"
             mezzi = listaPT.getElementsByTagName("mezzo");
 
@@ -51,27 +58,30 @@ public class LoadingThread extends Thread {
             // per ogni mezzo
             for (int i=0; i < mezzi.getLength(); i++) {
                 mezzo = mezzi.item(i);
-                chMezzo = mezzo.getChildNodes(); // ottengo la lista di tutti gli elementi figli
-                tipo = chMezzo.item(0).getTextContent(); // ottengo il tipo del mezzo (es. pullman o treno)
-                if ("pullman".equals(tipo)) {
-                    //PublicTransport pt = new PublicTransport(,);
-                    //sd.busList.add();
+                Element elMezzo = (Element) mezzo;
+                id = Integer.parseInt(elMezzo.getAttribute("id"));
+                tipo = elMezzo.getElementsByTagName("tipo").item(0).getTextContent(); // ottengo il tipo del mezzo (es. bus o treno)
+                compagnia = elMezzo.getElementsByTagName("compagnia").item(0).getTextContent(); // ottengo la compagnia
+                nome = elMezzo.getElementsByTagName("nome").item(0).getTextContent(); // ottengo il nome del mezzo
+                tratta = elMezzo.getElementsByTagName("tratta").item(0).getTextContent(); // ottengo la tratta del mezzo
+                attivo = Boolean.parseBoolean(elMezzo.getElementsByTagName("attivo").item(0).getTextContent()); // ottengo se il mezzo è attivo
+
+                if ("bus".equals(tipo)) {
+                    sd.busList.add(new PublicTransport(id, tipo, nome, compagnia, tratta, attivo));
                     Log.i("FUNZIONA", "tipo = " + tipo);
                 } else if ("treno".equals(tipo)) {
-
+                    sd.trainList.add(new PublicTransport(id, tipo, nome, compagnia, tratta, attivo));
+                    Log.i("FUNZIONA", "tipo = " + tipo);
                 } else {
                     Log.e("LoadingThread", "Tipo non corrispondente! tipo = " + tipo);
                 }
             }
-
-
-
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 }

@@ -16,15 +16,15 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class PublicTransport implements Serializable, Parcelable{
     //tipi di default (non final per problemi con Parcelable)
-    private String pt_type_bus = "Bus";
-    private String pt_type_train = "Treno";
+    private String pt_type_bus = "bus";
+    private String pt_type_train = "treno";
     private String pt_type_genericPT = "publictransport";
     private String pt_type_favourite = "favourite";
 
     private int pt_id;
     private String pt_type; //tipo
     private String pt_name; //nome
-    private int pt_company; //compagnia
+    private String pt_company; //compagnia
     private String pt_route; //tratta
     private String pt_info; //informazioni generali (solo per pt generico)
     private boolean pt_enabled; //attivo
@@ -33,7 +33,7 @@ public class PublicTransport implements Serializable, Parcelable{
     private double pt_coordY;
 
     //costruttore specifico
-    public PublicTransport(int pt_id, String pt_type, String pt_name, int pt_company,
+    public PublicTransport(int pt_id, String pt_type, String pt_name, String pt_company,
                            String pt_route, boolean pt_enabled, double pt_coordX, double pt_coordY){
         this.pt_id = pt_id;
         this.pt_type = pt_type;
@@ -43,6 +43,26 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_enabled = pt_enabled;
         this.pt_coordX = pt_coordX;
         this.pt_coordY = pt_coordY;
+
+        if(pt_type.equals(pt_type_bus)){
+            this.pt_image_id = R.mipmap.ic_material_bus_grey;//bus
+        } else if(pt_type.equals(pt_type_train)){
+            this.pt_image_id = R.mipmap.ic_material_train_grey;//treno
+        } else this.pt_image_id = R.mipmap.ic_material_no_image_grey;//sconosciuto
+
+        this.pt_info = null;//evito errori in fase di cancellazione preferito
+    }
+
+    public PublicTransport(int pt_id, String pt_type, String pt_name, String pt_company,
+                           String pt_route, boolean pt_enabled){
+        this.pt_id = pt_id;
+        this.pt_type = pt_type;
+        this.pt_name = pt_name;
+        this.pt_company = pt_company;
+        this.pt_route = pt_route;
+        this.pt_enabled = pt_enabled;
+        this.pt_coordX = 0.d;
+        this.pt_coordY = 0.d;
 
         if(pt_type.equals(pt_type_bus)){
             this.pt_image_id = R.mipmap.ic_material_bus_grey;//bus
@@ -74,7 +94,7 @@ public class PublicTransport implements Serializable, Parcelable{
         elMezzo.appendChild(elTipo); // aggiungo l'elemento al mezzo
 
         Element elCompagnia = doc.createElement("compagnia"); // creo l'elemento "compagnia"
-        elCompagnia.appendChild(doc.createTextNode(Integer.toString(pt_company))); //# aggiungo all'elemento un nodo di tipo testo contenente il valore della query
+        elCompagnia.appendChild(doc.createTextNode(pt_company)); //# aggiungo all'elemento un nodo di tipo testo contenente il valore della query
         elMezzo.appendChild(elCompagnia); // aggiungo l'elemento al mezzo
 
         Element elNome = doc.createElement("nome"); // creo l'elemento "nome"
@@ -150,11 +170,11 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_id = pt_id;
     }
 
-    public int getPt_company() {
+    public String getPt_company() {
         return pt_company;
     }
 
-    public void setPt_company(int pt_company) {
+    public void setPt_company(String pt_company) {
         this.pt_company = pt_company;
     }
 
@@ -207,7 +227,7 @@ public class PublicTransport implements Serializable, Parcelable{
         dest.writeInt(this.pt_id);
         dest.writeString(this.pt_type);
         dest.writeString(this.pt_name);
-        dest.writeInt(this.pt_company);
+        dest.writeString(this.pt_company);
         dest.writeString(this.pt_route);
         dest.writeString(this.pt_info);
         dest.writeByte(pt_enabled ? (byte) 1 : (byte) 0);
@@ -224,7 +244,7 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_id = in.readInt();
         this.pt_type = in.readString();
         this.pt_name = in.readString();
-        this.pt_company = in.readInt();
+        this.pt_company = in.readString();
         this.pt_route = in.readString();
         this.pt_info = in.readString();
         this.pt_enabled = in.readByte() != 0;

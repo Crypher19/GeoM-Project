@@ -70,7 +70,7 @@ public class MyFile {
 
         //pt_company
         Element pt_company = doc.createElement("pt_company");
-        pt_company.appendChild(doc.createTextNode(Integer.toString(pt.getPt_company())));
+        pt_company.appendChild(doc.createTextNode(pt.getPt_company()));
         favourite.appendChild(pt_company);
 
         //pt_route
@@ -304,14 +304,14 @@ public class MyFile {
                     Element element = (Element) node;//ottengo l'elemento nel nodo
 
                     //aggiungo un nuovo preferito
-                    ptList.add(new PublicTransport(Integer.parseInt(getValue("pt_id", element)),
+                    ptList.add(
+                        new PublicTransport(Integer.parseInt(getValue("pt_id", element)),
                             getValue("pt_type", element),
                             getValue("pt_name", element),
-                            Integer.parseInt(getValue("pt_company", element)),
+                            getValue("pt_company", element),
                             getValue("pt_route", element),
-                            Boolean.parseBoolean(getValue("pt_enabled", element)),
-                            Double.parseDouble(getValue("pt_coordX", element)),
-                            Double.parseDouble(getValue("pt_coordY", element))));
+                            Boolean.parseBoolean(getValue("pt_enabled", element)))
+                    );
                 }
             }
             return ptList;
@@ -327,7 +327,7 @@ public class MyFile {
         if(fileExistsAndNotEmpty(this.filePath, this.fileName) > 0) {//file esistente e pieno
             return toFavouritesList(this.filePath, this.fileName);
         }
-        return favouritesList;//file inesistente o vuoto
+        return null;//file inesistente o vuoto
     }
 }
 

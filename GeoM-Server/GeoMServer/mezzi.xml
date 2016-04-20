@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <mezzi>
     <mezzo id="8">
-        <tipo>pullman</tipo>
+        <tipo>bus</tipo>
         <compagnia>ASF</compagnia>
         <nome>C82</nome>
         <tratta>cantu - mariano</tratta>
