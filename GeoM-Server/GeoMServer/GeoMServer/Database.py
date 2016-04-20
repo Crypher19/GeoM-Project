@@ -50,7 +50,7 @@ class Database:
             print("leggo mezzi")
             for (ID,TipoMezzo,NomeMezzo,Tratta,Attivo,Compagnia) in cursor:
                 listResult.append(Transport(ID, TipoMezzo, NomeMezzo, Tratta, Attivo, Compagnia))
-                #print(listResult[-1].tipoMezzo + listResult[-1].nome)
+                print(listResult[-1].tipoMezzo + listResult[-1].nomeMezzo)
             return listResult
         return False
 

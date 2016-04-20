@@ -70,7 +70,7 @@ public class MyFile {
 
         //pt_company
         Element pt_company = doc.createElement("pt_company");
-        pt_company.appendChild(doc.createTextNode(Integer.toString(pt.getPt_company())));
+        pt_company.appendChild(doc.createTextNode(pt.getPt_company()));
         favourite.appendChild(pt_company);
 
         //pt_route
@@ -308,7 +308,7 @@ public class MyFile {
                         new PublicTransport(Integer.parseInt(getValue("pt_id", element)),
                             getValue("pt_type", element),
                             getValue("pt_name", element),
-                            Integer.parseInt(getValue("pt_company", element)),
+                            getValue("pt_company", element),
                             getValue("pt_route", element),
                             Boolean.parseBoolean(getValue("pt_enabled", element)))
                     );

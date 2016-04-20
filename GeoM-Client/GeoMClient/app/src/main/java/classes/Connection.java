@@ -54,22 +54,16 @@ public class Connection {
 	
 	public void startConn() {
 		try {
-            Log.e("CONNESSIONE", "connessione 1");
 			// connessione con il server
-            //Log.e("CONNESSIONE", "connessione=" + connection.toString());
-            Log.e("CONNESSIONE", serverIP + " " + serverPort);
             connection = new Socket(serverIP, serverPort);
 
-			
 			// flusso in uscita su socket
 			out = connection.getOutputStream();
 			sOUT = new PrintWriter(out);
-            Log.e("CONNESSIONE", "connessione output");
-			
+
 			// flusso in ingresso su socket
 			in = new InputStreamReader(connection.getInputStream());
 			sIN = new BufferedReader(in);
-            Log.e("CONNESSIONE", "connessione input");
 		} catch (IOException e) {
 			Log.e("ERRORE", e.getMessage());
 		}
@@ -147,13 +141,15 @@ public class Connection {
         return doc;
 	}
 
-	public void sendMessage(String str) {		
+	public void sendMessage(String str) {
+        Log.i("sMESSAGE SENT", str);
 		sOUT.println(str);
 		sOUT.flush();
 	}
 	
 	public void sendMessage(Document doc) throws SAXException, IOException, ParserConfigurationException {			
 		// converto il Document in String e lo invio
+        Log.i("sMESSAGE SENT", convertDocumentToString(doc));
 		sOUT.println(convertDocumentToString(doc));
 		sOUT.flush();
 	}
