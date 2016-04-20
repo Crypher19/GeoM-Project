@@ -53,6 +53,26 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_info = null;//evito errori in fase di cancellazione preferito
     }
 
+    public PublicTransport(int pt_id, String pt_type, String pt_name, int pt_company,
+                           String pt_route, boolean pt_enabled){
+        this.pt_id = pt_id;
+        this.pt_type = pt_type;
+        this.pt_name = pt_name;
+        this.pt_company = pt_company;
+        this.pt_route = pt_route;
+        this.pt_enabled = pt_enabled;
+        this.pt_coordX = 0.d;
+        this.pt_coordY = 0.d;
+
+        if(pt_type.equals(pt_type_bus)){
+            this.pt_image_id = R.mipmap.ic_material_bus_grey;//bus
+        } else if(pt_type.equals(pt_type_train)){
+            this.pt_image_id = R.mipmap.ic_material_train_grey;//treno
+        } else this.pt_image_id = R.mipmap.ic_material_no_image_grey;//sconosciuto
+
+        this.pt_info = null;//evito errori in fase di cancellazione preferito
+    }
+
     //costruttore generico
     public PublicTransport(String pt_type, String pt_info, int pt_image_id){
         this.pt_type = pt_type;

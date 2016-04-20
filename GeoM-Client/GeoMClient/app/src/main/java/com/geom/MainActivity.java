@@ -3,6 +3,7 @@ package com.geom;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         s = new SharedData();
         f = new MyFile();
         i = new Intent(MainActivity.this, HomeActivity.class);
@@ -30,12 +32,15 @@ public class MainActivity extends AppCompatActivity {
         LoadingThread lt = new LoadingThread(s);
         lt.start();
 
-
-        List<PublicTransport> favList;
+        try {
+            lt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //controllo e carico i preferiti
-        if ((favList = f.getFavouritesList()).size() > 0) {
-            s.favList = favList;
+        if (f.getFavouritesList() != null) {
+            s.favList = f.getFavouritesList();
         }
 
         //carico i mezzi di trasporto

@@ -2,32 +2,56 @@ package classes;
 
 import android.util.Log;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
+import java.io.BufferedReader;
 import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 /**
  * Created by cryph on 19/04/2016.
  */
 public class LoadingThread extends Thread {
     private SharedData sd;
-    private Connessione conn;
+    private Connection conn;
 
     public LoadingThread(SharedData sd) {
         this.sd = sd;
-        conn = new Connessione("87.9.118.203", 3333); // instanzio oggetto
+        conn = new Connection("192.168.1.110", 3333); // instanzio oggetto
     }
 
+    @Override
     public void run() {
+        Log.e("THREAD", "Prima della connessione");
         String msgRicevuto = null;
 
-        conn.startConn(); // connessione con il server
+        try {
+            Socket s = new Socket("192.168.1.110", 3333);
+            OutputStream out = s.getOutputStream();
+            PrintWriter sOUT = new PrintWriter(out);
+
+            // connessioni input del socket
+            InputStreamReader in = new InputStreamReader(s.getInputStream());
+            BufferedReader sIN = new BufferedReader(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //conn.startConn(); // connessione con il server
+        Log.e("THREAD", "Dopo la connessione");
+       /* try {
+            conn.readMessage();
+            conn.closeConn();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
         /*try {
             msgRicevuto = conn.readMessage(); // ricevo "Connected"
@@ -36,7 +60,7 @@ public class LoadingThread extends Thread {
             System.out.println("Risposta: " + msgRicevuto);
 
             msgRicevuto = conn.readMessage(); // ricevo la lista dei trasporti
-            Document listaPT = Connessione.convertStringToDocument(msgRicevuto);
+            Document listaPT = Connection.convertStringToDocument(msgRicevuto);
             System.out.println("Risposta: " + msgRicevuto);
 
             NodeList mezzi = null;
