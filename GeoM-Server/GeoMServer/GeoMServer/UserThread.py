@@ -19,13 +19,9 @@ class UserThread (threading.Thread):
             print("Connected by", self.addr)
             self.send("Connected")
 
-            msg = self.sd.getXMLTransportsList() # Creo lista mezzi     
-            self.send(msg)       
-            pxml = ParserXML()
-        
             while True: # TODO: esco quando il client si disconnette
                 # rimuovo timeout per ricezione mezzo
-                self.conn.settimeout( None ) 
+                self.conn.settimeout(None) 
 
                 # ricevo mezzo dell'utente
                 msg = self.conn.recv(1024).decode('utf-8').strip()

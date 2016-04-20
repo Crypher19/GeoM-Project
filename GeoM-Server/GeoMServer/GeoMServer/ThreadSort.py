@@ -4,6 +4,7 @@ from SharedData import SharedData
 from ParserXML import ParserXML
 from UserThread import UserThread
 from TransportThread import TransportThread
+from ListRequestThread import ListRequestThread
 
 class ThreadSort(threading.Thread):
 
@@ -33,4 +34,8 @@ class ThreadSort(threading.Thread):
             print("trasporto connesso")
             tt = TransportThread(self.sd, self.ID, self.conn, self.addr, self.index)
             self.index += 1
-            self.sd.addTransport(tt)
+            self.sd.addTransport(tt) # il thread parte in questo metodo, dopo averlo aggiunto nella lista
+        elif msg == "listRequest":
+            print("listRequest connesso")
+            lrt = ListRequestThread(self.sd, self.ID, self.conn, self.addr)
+            lrt.start()

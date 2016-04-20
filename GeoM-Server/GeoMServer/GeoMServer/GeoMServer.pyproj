@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ListRequestThread.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ParserXML.py">
       <SubType>Code</SubType>
     </Compile>

@@ -36,13 +36,15 @@ public class LoadingThread extends Thread {
         conn.startConn(); // connessione con il server
 
         try {
-            conn.sendMessage(conn.getDOMType("user")); // invio il tipo di utente
+            conn.sendMessage(conn.getDOMType("listRequest")); // invio il tipo di utente
             msgRicevuto = conn.readMessage(); // ricevo "Connected"
             Log.i("sMESSAGE RECEIVED", msgRicevuto);
 
             msgRicevuto = conn.readMessage(); // ricevo la lista dei trasporti
             Document listaPT = Connection.convertStringToDocument(msgRicevuto);
             Log.i("sMESSAGE RECEIVED", msgRicevuto);
+
+            //conn.closeConn(); // chiudo la connessione
 
             // carico la lista in SharedData
             NodeList mezzi = null;
