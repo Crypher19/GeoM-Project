@@ -1,8 +1,16 @@
 package com.example.ricevitore_gps;
 
-import android.support.v4.app.FragmentActivity;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -10,10 +18,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    double lat,lon;
+    double lat, lon;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +44,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bundle b = getIntent().getExtras();
         lat = b.getDouble("latitudine");
         lon = b.getDouble("longitudine");
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -43,9 +63,88 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
         LatLng pos = new LatLng(lat, lon);
         mMap.addMarker(new MarkerOptions().position(pos).title("Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+
+        updateAddress();
+    }
+
+    private void updateAddress() {
+        TextView myLocationText;
+        myLocationText = (TextView) findViewById(R.id.textView);
+
+        String addressString = "No address found";
+
+        if (lat != 0 && lon != 0) {
+            // Update the position overlay.
+            double latitude = lat;
+            double longitude = lon;
+            Geocoder gc = new Geocoder(this, Locale.getDefault());
+
+            if (!Geocoder.isPresent())
+                addressString = "No geocoder available";
+            else {
+                try {
+                    List<Address> addresses = gc.getFromLocation(latitude, longitude, 1);
+                    StringBuilder sb = new StringBuilder();
+                    if (addresses.size() > 0) {
+                        Address address = addresses.get(0);
+
+                        for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
+                            sb.append(address.getAddressLine(i)).append("\n");
+
+                        sb.append(address.getLocality()).append("\n");
+                        sb.append(address.getPostalCode()).append("\n");
+                        sb.append(address.getCountryName());
+                    }
+                    addressString = sb.toString();
+                } catch (IOException e) {
+                    Log.d("WHEREAMI", "IO Exception", e);
+                }
+            }
+        }
+
+        myLocationText.setText("Indirizzo:\n" + "\n" + addressString);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Maps Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.ricevitore_gps/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Maps Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.ricevitore_gps/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }
