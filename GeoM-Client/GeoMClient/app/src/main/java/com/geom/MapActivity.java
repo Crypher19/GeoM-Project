@@ -35,24 +35,23 @@ public class MapActivity extends AppCompatActivity {
         //ricevo extra
         Bundle b = getIntent().getExtras();
 
-        //extra ricevuto da ChooseBusActivity o ChooseTrainActivity o FavouritesActivity
+        //extra ricevuto da ChoosePTActivity o FavouritesActivity
         if (b.containsKey("PublicTransport")){
             PublicTransport pt = b.getParcelable("PublicTransport");
-        }
-
-        //messaggio preferiti
-        if(b.containsKey("snackbarContent")){
-            Snackbar.make(findViewById(R.id.activity_map), b.getString("snackbarContent"), Snackbar.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onBackPressed(){
+        String previousActivity = getIntent().getStringExtra("PreviousActivity");
+
         Intent i;
-        if(getIntent().hasExtra("snackbarContent")){//l'activity precedente è ChoosePTActivity
+        if(previousActivity.equals("ChoosePTActivity")){//l'activity precedente è ChoosePTActivity
             i = new Intent(MapActivity.this, HomeActivity.class);
-        } else{//l'activity precedente è FavouritesActivity
+        } else if (previousActivity.equals("FavouritesActivity")){//l'activity precedente è FavouritesActivity
             i = new Intent(MapActivity.this, FavouritesActivity.class);
+        } else{//default
+            i = new Intent(MapActivity.this, HomeActivity.class);
         }
 
         i.putExtra("SharedData", s);

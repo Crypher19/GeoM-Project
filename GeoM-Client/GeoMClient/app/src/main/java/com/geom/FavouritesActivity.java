@@ -62,6 +62,7 @@ public class FavouritesActivity extends AppCompatActivity {
                 PublicTransport fav = s.favList.get(position);
                 i.putExtra("SharedData", s);
                 i.putExtra("favourite", (Parcelable) fav);
+                i.putExtra("PreviousActivity", "FavouritesActivity");
                 startActivityForResult(i, 4);
             }
         });
@@ -186,6 +187,7 @@ public class FavouritesActivity extends AppCompatActivity {
         Intent i = new Intent(FavouritesActivity.this, HomeActivity.class);
         i.putExtra("SharedData", s);
         setResult(RESULT_OK, i);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
 

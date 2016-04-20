@@ -56,9 +56,10 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        Intent i = new Intent();
+        Intent i = new Intent(ChoosePTActivity.this, MainActivity.class);
         i.putExtra("SharedData", s);
+        //i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         setResult(RESULT_OK, i);
-        super.onBackPressed();
+        startActivityForResult(i, 8);
     }
 }

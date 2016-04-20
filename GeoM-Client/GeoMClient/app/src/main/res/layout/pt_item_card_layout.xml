@@ -35,6 +35,16 @@
             android:textSize="20sp"
             android:textColor="@color/customGrey"
             />
+
+        <ImageView
+            android:id="@+id/fav_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favourites_star_empty"
+            android:layout_below="@+id/pt_name"
+            android:layout_alignRight="@+id/pt_name"
+            android:layout_alignEnd="@+id/pt_name"
+            android:layout_marginRight="10dp"/>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

@@ -16,10 +16,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class PublicTransport implements Serializable, Parcelable{
     //tipi di default (non final per problemi con Parcelable)
-    private String pt_type_bus = "bus";
-    private String pt_type_train = "treno";
-    private String pt_type_genericPT = "publictransport";
-    private String pt_type_favourite = "favourite";
+    public static String pt_type_bus = "bus";
+    public static String pt_type_train = "treno";
+    public static String pt_type_genericPT = "publictransport";
+    public static String pt_type_favourite = "favourite";
 
     private int pt_id;
     private String pt_type; //tipo
@@ -220,10 +220,10 @@ public class PublicTransport implements Serializable, Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.pt_type_bus);
-        dest.writeString(this.pt_type_train);
-        dest.writeString(this.pt_type_genericPT);
-        dest.writeString(this.pt_type_favourite);
+        dest.writeString(pt_type_bus);
+        dest.writeString(pt_type_train);
+        dest.writeString(pt_type_genericPT);
+        dest.writeString(pt_type_favourite);
         dest.writeInt(this.pt_id);
         dest.writeString(this.pt_type);
         dest.writeString(this.pt_name);
@@ -237,10 +237,10 @@ public class PublicTransport implements Serializable, Parcelable{
     }
 
     protected PublicTransport(Parcel in) {
-        this.pt_type_bus = in.readString();
-        this.pt_type_train = in.readString();
-        this.pt_type_genericPT = in.readString();
-        this.pt_type_favourite = in.readString();
+        pt_type_bus = in.readString();
+        pt_type_train = in.readString();
+        pt_type_genericPT = in.readString();
+        pt_type_favourite = in.readString();
         this.pt_id = in.readInt();
         this.pt_type = in.readString();
         this.pt_name = in.readString();
