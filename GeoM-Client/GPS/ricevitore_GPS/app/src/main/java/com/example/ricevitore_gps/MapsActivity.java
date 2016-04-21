@@ -1,31 +1,28 @@
 package com.example.ricevitore_gps;
 
-import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    double lat, lon;
+    private Geocoder gc;
+    private TextView myLocationText;
+    private double lat, lon;
+    private Connessione c;
+    private boolean controlloThread = false; //serve a controllare se il thread è già stato avviato o no
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -62,50 +59,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        gc = new Geocoder(this, Locale.getDefault());
 
-        LatLng pos = new LatLng(lat, lon);
-        mMap.addMarker(new MarkerOptions().position(pos).title("Marker"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
-
-        updateAddress();
-    }
-
-    private void updateAddress() {
-        TextView myLocationText;
         myLocationText = (TextView) findViewById(R.id.textView);
 
-        String addressString = "No address found";
+        DatiCondivisi d = new DatiCondivisi(mMap,myLocationText,gc,lat, lon);
+        //start thread
+        c = new Connessione(d);
+        c.start();
+        controlloThread=true;
+        ;
 
-        if (lat != 0 && lon != 0) {
-            // Update the position overlay.
-            double latitude = lat;
-            double longitude = lon;
-            Geocoder gc = new Geocoder(this, Locale.getDefault());
-
-            if (!Geocoder.isPresent())
-                addressString = "No geocoder available";
-            else {
-                try {
-                    List<Address> addresses = gc.getFromLocation(latitude, longitude, 1);
-                    StringBuilder sb = new StringBuilder();
-                    if (addresses.size() > 0) {
-                        Address address = addresses.get(0);
-
-                        for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
-                            sb.append(address.getAddressLine(i)).append("\n");
-
-                        sb.append(address.getLocality()).append("\n");
-                        sb.append(address.getPostalCode()).append("\n");
-                        sb.append(address.getCountryName());
-                    }
-                    addressString = sb.toString();
-                } catch (IOException e) {
-                    Log.d("WHEREAMI", "IO Exception", e);
-                }
-            }
-        }
-
-        myLocationText.setText("Indirizzo:\n" + "\n" + addressString);
     }
 
     @Override
@@ -144,7 +108,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.example.ricevitore_gps/http/host/path")
         );
+
+        try //fermo il thread quando
+        {
+            c.join();
+            controlloThread = false;
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        //quando l'app viene riaperta riavvio il thread
+        if(controlloThread==false)
+        {
+            c.start();
+            controlloThread = true; //thread avviato
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        try //fermo il thread quando
+        {
+            c.join();
+            controlloThread = false;
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        //quando l'app viene riaperta riavvio il thread
+        if(controlloThread==false)
+        {
+            c.start();
+            controlloThread = true; //thread avviato
+        }
+    }
+
 }

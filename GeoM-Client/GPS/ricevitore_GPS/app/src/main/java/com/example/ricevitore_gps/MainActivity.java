@@ -24,25 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void openMap()
     {
-		/*Connessione c = new Connessione(d);
-		c.start();
-
-		TextView t1 = (TextView)findViewById(R.id.textView1);
-		t1.setText("caricamento in corso...");
-
-		try
-		{
-			c.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-        double lat = 10;
-        double lon = 10;
-        intent.putExtra("latitudine", lat);
-        intent.putExtra("longitudine", lon);
         startActivity(intent);
     }
 }
