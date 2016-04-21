@@ -51,20 +51,29 @@ public class Connessione extends Thread{
 	{
 	
 		try {
-			
+			String risposta= "";
+			double lat,lon;
 			//connesione al server
+
 			connect();
 
-			//ricevo esito
-			recived = sIN.readLine();
+			do {
+				//ricevo esito
+				recived = sIN.readLine();
+
+				//estrapolo coordinate dal messaggio ricevuto dal server
+				lat = Double.parseDouble(reader.getElement(recived, "latitudine"));
+				lon = Double.parseDouble(reader.getElement(recived, "longitudine"));
+				d.updateMap(lat,lon);
+
+				//ricevo risposta
+				risposta = sIN.readLine();
+			}while (risposta != "stop");
 
 			//chiusura canali
 			close();
 			
-			//estrapolo coordinate dal messaggio ricevuto dal server
-			
-			d.setLatitudine(Double.parseDouble(reader.getElement(recived, "latitudine")));
-			d.setLongitudine(Double.parseDouble(reader.getElement(recived, "longitudine")));
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
