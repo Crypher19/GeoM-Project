@@ -22,6 +22,7 @@ class ListRequestThread(threading.Thread):
             msg = self.sd.getXMLTransportsList() # Creo lista mezzi     
             self.send(msg)       
             self.conn.close()
+            print("Connessione chiusa correttamente")
         except ConnectionResetError:
             print("socked closed by client")
                 
