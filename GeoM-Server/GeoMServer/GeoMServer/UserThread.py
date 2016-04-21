@@ -49,6 +49,8 @@ class UserThread (threading.Thread):
                         print(self.sd.transportList[posI].coordX)
                         print(self.sd.transportList[posI].coordY)
                         # TODO: invio posizioni X-Y al client
+                        DOMofCoord = pxml.getDOMofCoord(self.sd.transportList[posI].coordX, self.sd.transportList[posI].coordY)
+                        self.send(DOMofCoord)
 
                     except IndexError:
                         loop = False
