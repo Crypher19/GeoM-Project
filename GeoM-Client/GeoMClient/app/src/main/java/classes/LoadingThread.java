@@ -44,7 +44,7 @@ public class LoadingThread extends Thread {
             Document listaPT = Connection.convertStringToDocument(msgRicevuto);
             Log.i("sMESSAGE RECEIVED", msgRicevuto);
 
-            //conn.closeConn(); // chiudo la connessione
+            conn.closeConn(); // chiudo la connessione
 
             // carico la lista in SharedData
             NodeList mezzi = null;

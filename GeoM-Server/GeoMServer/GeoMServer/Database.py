@@ -1,4 +1,4 @@
-from mysql.connector import MySQLConnection, Error 
+from mysql.connector import MySQLConnection, Error, RefreshOption 
 from Transport import Transport
 
 
@@ -24,6 +24,8 @@ class Database:
     def execQuery(self,query):
         # Execute query & give result    
         try:
+            refresh = RefreshOption.LOG | RefreshOption.THREADS
+            conn.cmd_refresh(refresh) # This method flushes tables or caches, or resets replication server information. 
             print(query)
             ris = cursor.execute(query)
             return True
