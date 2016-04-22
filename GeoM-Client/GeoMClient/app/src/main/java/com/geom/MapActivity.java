@@ -2,7 +2,6 @@ package com.geom;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -46,12 +45,16 @@ public class MapActivity extends AppCompatActivity {
         String previousActivity = getIntent().getStringExtra("PreviousActivity");
 
         Intent i;
-        if(previousActivity.equals("ChoosePTActivity")){//l'activity precedente è ChoosePTActivity
-            i = new Intent(MapActivity.this, HomeActivity.class);
-        } else if (previousActivity.equals("FavouritesActivity")){//l'activity precedente è FavouritesActivity
-            i = new Intent(MapActivity.this, FavouritesActivity.class);
-        } else{//default
-            i = new Intent(MapActivity.this, HomeActivity.class);
+        switch (previousActivity) {
+            case "ChoosePTActivity": //l'activity precedente è ChoosePTActivity
+                i = new Intent(MapActivity.this, HomeActivity.class);
+                break;
+            case "FavouritesActivity": //l'activity precedente è FavouritesActivity
+                i = new Intent(MapActivity.this, FavouritesActivity.class);
+                break;
+            default: //default
+                i = new Intent(MapActivity.this, HomeActivity.class);
+                break;
         }
 
         i.putExtra("SharedData", s);

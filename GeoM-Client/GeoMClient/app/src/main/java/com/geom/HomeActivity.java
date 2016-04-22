@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -37,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
 
         //quando passo da FavouritesActivity a HomeActivity avendo eliminato tutti i preferiti
         if(getIntent().hasExtra("snackbarContent")){
-            Snackbar.make(findViewById(R.id.home_activity),
+            Snackbar.make(findViewById(R.id.activity_home),
                 getIntent().getStringExtra("snackbarContent"),
                 Snackbar.LENGTH_SHORT)
                 .show();
@@ -78,6 +79,18 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //aggiorno tradcinando verso il basso
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+                swipeRefreshLayout.setRefreshing(false);//termino l'animazione
+                Snackbar.make(findViewById(R.id.activity_home), "Lista aggiornata", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -107,5 +120,9 @@ public class HomeActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK){
             s = i.getParcelableExtra("SharedData");
         }
+    }
+
+    public void refreshList(){
+        //aggiornamento lista PTList
     }
 }

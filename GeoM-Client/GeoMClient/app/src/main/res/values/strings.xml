@@ -9,4 +9,5 @@
     <string name="title_activity_map">Replace with map title</string>
     <string name="title_activity_favourite">Preferiti</string>
     <string name="title_activity_choose_pt">Nuovo </string>
+    <string name="image_description">This is a GeoM image</string>
 </resources>

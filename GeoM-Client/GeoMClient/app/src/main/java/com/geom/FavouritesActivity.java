@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -100,6 +102,22 @@ public class FavouritesActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //aggiorno tradcinando verso il basso
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                String message;
+                if(refresh()){
+                    message = "Preferiti aggiornati";
+                } else message = "ERRORE, preferiti non aggiornati";
+
+                Snackbar.make((findViewById(R.id.activity_favourites)), message, Snackbar.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);//termino l'animazione
+            }
+        });
     }
 
     public void refreshListContent(List<PublicTransport> favList){
@@ -137,15 +155,13 @@ public class FavouritesActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {//aggiorna lista preferiti
-            List<PublicTransport> favList;
-            MyFile f = new MyFile();
+        if (id == R.id.action_refresh) {//aggiorno i preferiti
+            String message;
+            if(refresh()){
+                message = "Preferiti aggiornati";
+            } else message = "ERRORE, preferiti non aggiornati";
 
-            favList = f.getFavouritesList();
-            s.favList = favList;
-            refreshListContent(favList);
-
-            Snackbar.make((findViewById(R.id.activity_favourites)), "Preferiti aggiornati", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make((findViewById(R.id.activity_favourites)), message, Snackbar.LENGTH_SHORT).show();
             return true;
         } else if(id == R.id.action_delete_all){//elimina tutti i preferiti
 
@@ -154,15 +170,10 @@ public class FavouritesActivity extends AppCompatActivity {
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int id) {
-                    List<PublicTransport> favList;
-                    MyFile f = new MyFile();
                     String snackbarContent;
                     Intent i;
 
-                    if (f.removeAllFavourites() > -1) {
-                        favList = new ArrayList<>();//lista vuota
-                        s.favList = favList;
-                        refreshListContent(favList);
+                    if(deleteAll()){
                         snackbarContent = "Preferiti eliminati";
                     } else snackbarContent = "ERRORE, preferiti non eliminati";
 
@@ -196,5 +207,28 @@ public class FavouritesActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK){
             s = i.getParcelableExtra("SharedData");
         }
+    }
+
+    public boolean refresh(){
+        List<PublicTransport> favList;
+        MyFile f = new MyFile();
+
+        if((favList = f.getFavouritesList()) != null){
+            s.favList = favList;
+            refreshListContent(favList);
+            return true;
+        } else return false;
+    }
+
+    public boolean deleteAll(){
+        List<PublicTransport> favList;
+        MyFile f = new MyFile();
+
+        if (f.removeAllFavourites() > -1) {
+            favList = new ArrayList<>();//lista vuota
+            s.favList = favList;
+            refreshListContent(favList);
+            return true;
+        } else return false;
     }
 }

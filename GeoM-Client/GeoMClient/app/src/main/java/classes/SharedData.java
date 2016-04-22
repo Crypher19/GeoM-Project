@@ -51,4 +51,13 @@ public class SharedData implements Parcelable{
         pc.readTypedList(trainList, PublicTransport.CREATOR);
         pc.readTypedList(favList, PublicTransport.CREATOR);
     }
+
+    public List<PublicTransport> getListType(String pt_type){
+        if(pt_type.equals(PublicTransport.pt_type_bus)){//cardview di Bus
+            return busList;
+        } else if(pt_type.equals(PublicTransport.pt_type_train)){//cardview di Train
+            return trainList;
+        }
+        return null;
+    }
 }

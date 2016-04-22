@@ -322,8 +322,6 @@ public class MyFile {
     }
 
     public List<PublicTransport> getFavouritesList(){
-        List<PublicTransport> favouritesList = new ArrayList<>();
-
         if(fileExistsAndNotEmpty(this.filePath, this.fileName) > 0) {//file esistente e pieno
             return toFavouritesList(this.filePath, this.fileName);
         }

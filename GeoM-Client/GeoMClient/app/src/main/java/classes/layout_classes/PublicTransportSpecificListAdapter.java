@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +68,11 @@ public class PublicTransportSpecificListAdapter
                 holder.fav_img.setImageResource(R.drawable.ic_favourites_star_full);
             }
         }
+
+        //mezzo disponibile - non disponibile (pallino verde - rosso)
+        if(pt_list.get(position).isPt_enabled()){
+            holder.pt_enabled.setImageResource(R.drawable.ic_enabled_green);//mezzo disponibile
+        } else holder.pt_enabled.setImageResource(R.drawable.ic_disabled_red);//mezzo non disponibile
     }
 
     @Override
@@ -110,21 +114,27 @@ public class PublicTransportSpecificListAdapter
         return holder;
     }
 
+    public void clear(){
+
+    }
+
     public static class PublicTransportSpecificViewHolder extends RecyclerView.ViewHolder {
         protected TextView pt_name;
         protected TextView pt_route;
         protected ImageView fav_img;
+        protected ImageView pt_enabled;
 
         public PublicTransportSpecificViewHolder(View v) {
             super(v);
             pt_name =  (TextView) v.findViewById(R.id.pt_name);
             pt_route = (TextView)  v.findViewById(R.id.pt_route);
             fav_img = (ImageView) v.findViewById(R.id.fav_img);
+            pt_enabled = (ImageView) v.findViewById(R.id.pt_enabled);
         }
     }
 
     public String removeFav(PublicTransport fav){
-        List<PublicTransport>favList = new ArrayList<>();
+        List<PublicTransport>favList = new ArrayList<>();//non eliminare!
         favList = s.favList;
         String _return;
 
