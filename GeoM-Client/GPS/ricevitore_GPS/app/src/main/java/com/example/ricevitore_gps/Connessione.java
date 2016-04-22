@@ -64,11 +64,12 @@ public class Connessione extends Thread{
 				//estrapolo coordinate dal messaggio ricevuto dal server
 				lat = Double.parseDouble(reader.getElement(recived, "latitudine"));
 				lon = Double.parseDouble(reader.getElement(recived, "longitudine"));
-				d.updateMap(lat,lon);
+				d.updateMap(lat, lon);
 
-				//ricevo risposta
-				risposta = sIN.readLine();
-			}while (risposta != "stop");
+			}while (d.isFermaConnessione() == false); //la connessione non deve essere fermata
+
+			//indico al server che voglio chiudere la connessione
+			sOUT.print("stop");
 
 			//chiusura canali
 			close();

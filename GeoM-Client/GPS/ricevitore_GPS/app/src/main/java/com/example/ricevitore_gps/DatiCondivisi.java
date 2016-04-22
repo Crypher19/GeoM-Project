@@ -20,6 +20,7 @@ public class DatiCondivisi {
 	private GoogleMap gMap;
 	private TextView tView;
 	private Geocoder gc;
+	private boolean fermaConnessione;
 
 	public DatiCondivisi(GoogleMap gMap, TextView t,Geocoder geoCod, double lat ,double lon)
 	{
@@ -28,6 +29,15 @@ public class DatiCondivisi {
 		gc = geoCod;
 		this.gMap = gMap;
 		tView = t;
+		fermaConnessione = false;
+	}
+
+	public boolean isFermaConnessione() {
+		return fermaConnessione;
+	}
+
+	public void setFermaConnessione(boolean fermaConnessione) {
+		this.fermaConnessione = fermaConnessione;
 	}
 
 	public TextView gettView() {
@@ -56,8 +66,7 @@ public class DatiCondivisi {
 		return lat;
 	}
 
-	public void updateMap(double latitudine,double longitudine)
-	{
+	public void updateMap(double latitudine,double longitudine) {
 		lat = latitudine;
 		lon = longitudine;
 		LatLng pos = new LatLng(lat, lon);
@@ -69,8 +78,7 @@ public class DatiCondivisi {
 
 	}
 
-	private void updateAddress()
-	{
+	private void updateAddress() {
 		String addressString = "No address found";
 
 		if (lat != 0 && lon != 0) {

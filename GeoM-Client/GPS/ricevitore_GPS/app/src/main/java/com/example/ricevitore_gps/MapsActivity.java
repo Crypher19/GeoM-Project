@@ -22,6 +22,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView myLocationText;
     private double lat, lon;
     private Connessione c;
+    private DatiCondivisi d;
     private boolean controlloThread = false; //serve a controllare se il thread è già stato avviato o no
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -63,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         myLocationText = (TextView) findViewById(R.id.textView);
 
-        DatiCondivisi d = new DatiCondivisi(mMap,myLocationText,gc,lat, lon);
+        d = new DatiCondivisi(mMap,myLocationText,gc,lat, lon);
         //start thread
         c = new Connessione(d);
         c.start();
@@ -109,6 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Uri.parse("android-app://com.example.ricevitore_gps/http/host/path")
         );
 
+        d.setFermaConnessione(true); //indico al thread che deve chiudere la connessione
         try //fermo il thread quando
         {
             c.join();
@@ -139,6 +141,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onPause()
     {
         super.onPause();
+
+        d.setFermaConnessione(true); //indico al thread che deve chiudere la connessione
         try //fermo il thread quando
         {
             c.join();
