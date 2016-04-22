@@ -41,7 +41,7 @@ class TransportThread (threading.Thread):
 
                 # ricevo il mezzo dell'autista
                 msg = self.conn.recv(1024).decode('utf-8').strip()
-                print(msg)
+                #print(msg)
                 doc = pxml.toDOMObject(msg)
                 self.mezzo = pxml.getTransportObj(doc)
 
@@ -65,7 +65,7 @@ class TransportThread (threading.Thread):
         except ConnectionResetError:
             print("socked closed by client")
         self.sd.delTransport(self.index)
-        print("transport deleted")
+        #print("transport deleted")
 
     def send(self, mex):
         # se il messaggio è di tipo Document, prima lo trasformo in una stringa XML

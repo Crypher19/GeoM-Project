@@ -26,11 +26,11 @@ class Database:
         try:
             refresh = RefreshOption.LOG | RefreshOption.THREADS
             conn.cmd_refresh(refresh) # This method flushes tables or caches, or resets replication server information. 
-            print(query)
+            #print(query)
             ris = cursor.execute(query)
             return True
         except Error as error:
-            print("errore")
+            #print("errore")
             print(error)
             return False
 
@@ -49,10 +49,10 @@ class Database:
         ris = self.execQuery("SELECT transports_table.ID,transports_table.TipoMezzo,transports_table.NomeMezzo,transports_table.Tratta,transports_table.Attivo,company_table.Nome FROM transports_table, company_table WHERE company_table.ID = transports_table.Compagnia")
         listResult = [] # Lista di Transport
         if ris != False:
-            print("leggo mezzi")
+            #print("leggo mezzi")
             for (ID,TipoMezzo,NomeMezzo,Tratta,Attivo,Compagnia) in cursor:
                 listResult.append(Transport(ID, TipoMezzo, NomeMezzo, Tratta, Attivo, Compagnia))
-                print(listResult[-1].tipoMezzo + listResult[-1].nomeMezzo)
+                #print(listResult[-1].tipoMezzo + listResult[-1].nomeMezzo)
             return listResult
         return False
 

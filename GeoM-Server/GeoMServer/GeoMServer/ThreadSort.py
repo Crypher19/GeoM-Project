@@ -1,10 +1,12 @@
 import threading
+import datetime
 from xml.dom import minidom
 from SharedData import SharedData
 from ParserXML import ParserXML
 from UserThread import UserThread
 from TransportThread import TransportThread
 from ListRequestThread import ListRequestThread
+
 
 class ThreadSort(threading.Thread):
 
@@ -30,11 +32,19 @@ class ThreadSort(threading.Thread):
             print("utente connesso")
             ut = UserThread(self.sd, self.ID, self.conn, self.addr)
             ut.start()
+            #scrivi file di log
+            with open("\log\log.txt", "a") as myfile:
+                myfile.write(datetime.date + " User connected with IP: " + self.addr)
+
         elif msg == "transport":
             print("trasporto connesso")
             tt = TransportThread(self.sd, self.ID, self.conn, self.addr, self.index)
             self.index += 1
             self.sd.addTransport(tt) # il thread parte in questo metodo, dopo averlo aggiunto nella lista
+            #scrivi file di log
+            with open("\log\log.txt", "a") as myfile:
+                myfile.write(datetime.date + " Transport connected with IP: " + self.addr)
+
         elif msg == "listRequest":
             print("listRequest connesso")
             lrt = ListRequestThread(self.sd, self.ID, self.conn, self.addr)

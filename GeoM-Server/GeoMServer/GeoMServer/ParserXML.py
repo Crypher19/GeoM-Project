@@ -116,7 +116,7 @@ class ParserXML:
             posizione = doc.getElementsByTagName("posizione")[0]
             coordX = posizione.getElementsByTagName("coordX")[0].firstChild.nodeValue
             coordY = posizione.getElementsByTagName("coordY")[0].firstChild.nodeValue
-            print(coordX + ":" + coordY)
+            #print(coordX + ":" + coordY)
             return (coordX, coordY)         
         except IndexError:
             return False
