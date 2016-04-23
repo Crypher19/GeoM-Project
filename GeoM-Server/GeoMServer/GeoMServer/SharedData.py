@@ -24,9 +24,7 @@ class SharedData:
         self.listaMezzi = self.db.getTransports()
         pxml = ParserXML()
         doc = pxml.getDOMOfTransportsList(self.listaMezzi)
-        msg = doc.toxml()
-        msg = msg.replace("\n", "")
-        return msg
+        return doc
 
     def getTransportI(self, nome, compagnia, tratta):
         for i, thMezzo in enumerate(self.transportList):
