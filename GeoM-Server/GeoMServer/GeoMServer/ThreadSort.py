@@ -33,8 +33,8 @@ class ThreadSort(threading.Thread):
             ut = UserThread(self.sd, self.ID, self.conn, self.addr)
             ut.start()
             #scrivi file di log
-            with open("\log\log.txt", "a") as myfile:
-                myfile.write(datetime.date + " User connected with IP: " + self.addr)
+            with open("log\log.txt", "a") as myfile:
+                myfile.write(datetime.datetime.now().ctime() + " User connected with IP: " + str(self.addr))
 
         elif msg == "transport":
             print("trasporto connesso")
@@ -42,10 +42,14 @@ class ThreadSort(threading.Thread):
             self.index += 1
             self.sd.addTransport(tt) # il thread parte in questo metodo, dopo averlo aggiunto nella lista
             #scrivi file di log
-            with open("\log\log.txt", "a") as myfile:
-                myfile.write(datetime.date + " Transport connected with IP: " + self.addr)
+            with open("log\log.txt", "a") as myfile:
+                myfile.write(datetime.datetime.now().ctime() + " User connected with IP: " + str(self.addr))
 
         elif msg == "listRequest":
             print("listRequest connesso")
             lrt = ListRequestThread(self.sd, self.ID, self.conn, self.addr)
             lrt.start()
+            print("Thread sort")
+            #scrivi file di log
+            with open("log\log.txt", "a") as myfile:
+                myfile.write(datetime.datetime.now().ctime() + " User connected with IP: " + str(self.addr))

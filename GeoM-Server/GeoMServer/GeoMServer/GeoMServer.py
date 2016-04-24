@@ -1,4 +1,5 @@
 import socket
+import os
 from SharedData import SharedData
 from UserThread import UserThread
 from ThreadSort import ThreadSort
@@ -13,7 +14,11 @@ def connection():
    
 
 if __name__ == "__main__":
-    connection()
+    # preparo le cartelle utilizzate in seguito
+    if not os.path.exists("log"):
+        os.makedirs("log")
+
+    connection() # apro la connessione
     ID = 0
     sd = SharedData()
     print('Ready')
