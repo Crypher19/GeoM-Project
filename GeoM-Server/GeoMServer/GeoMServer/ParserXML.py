@@ -29,6 +29,13 @@ class ParserXML:
         password = autenticazione.getElementsByTagName("password")[0].firstChild.nodeValue
         return (username, password)
 
+    def getNumAndPTtype(self, doc):
+        richiesta = doc.getElementsByTagName("richiesta")[0]
+        tipo = autenticazione.getElementsByTagName("tipo")[0].firstChild.nodeValue
+        limit = autenticazione.getElementsByTagName("limit")[0].firstChild.nodeValue
+        offset = autenticazione.getElementsByTagName("offset")[0].firstChild.nodeValue   
+        return (tipo, limit, offset)
+
     def getDOMOfTransportsList(self, listaMezzi):      
         DOMimpl = minidom.getDOMImplementation()
         xmldoc = DOMimpl.createDocument(None, "mezzi", None)

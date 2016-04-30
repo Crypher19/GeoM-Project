@@ -45,8 +45,19 @@ class Database:
             return True
         return False
         
-    def getTransports(self):
-        ris = self.execQuery("SELECT transports_table.ID,transports_table.TipoMezzo,transports_table.NomeMezzo,transports_table.Tratta,transports_table.Attivo,company_table.Nome FROM transports_table, company_table WHERE company_table.ID = transports_table.Compagnia")
+    def getTransports(self, tipoMezzo=None, limit=None, offset=None):
+        sql = """SELECT transports_table.ID,transports_table.TipoMezzo,transports_table.NomeMezzo,
+                        transports_table.Tratta,transports_table.Attivo,company_table.Nome
+                     FROM transports_table, company_table
+                     WHERE company_table.ID = transports_table.Compagnia"""
+        if tipoMezzo != None:
+            sql += " AND transports_table.TipoMezzo='"+tipoMezzo+"'"
+        if offset != None and limit != None:
+            sql += " LIMIT "+offset+", "+limit
+        elif limit != None:
+            sql += " LIMIT "+limit
+
+        ris = self.execQuery(sql)
         listResult = [] # Lista di Transport
         if ris != False:
             #print("leggo mezzi")
@@ -56,10 +67,19 @@ class Database:
             return listResult
         return False
 
-    #def setPosXY(Company, Name):
-
     def getUser(self, username):
         if self.execQuery("SELECT Username,Password FROM transport_users_table WHERE Username='"+username+"';"):
+            for u, p in cursor:
+                return (u, p)            
+        return False
+
+    def getNumTransports(self, tipoMezzo=None):
+        sql = "SELECT COUNT(*) FROM transports_table"
+
+        if tipoMezzo != None:
+           sql += " WHERE TipoMezzo='"+tipoMezzo+"'"
+
+        if self.execQuery(sql):
             for u, p in cursor:
                 return (u, p)            
         return False

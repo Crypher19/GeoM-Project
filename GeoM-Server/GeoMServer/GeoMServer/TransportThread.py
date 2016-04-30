@@ -36,8 +36,8 @@ class TransportThread (threading.Thread):
                 self.send(ack)
 
                 # invio lista dei mezzi
-                msg = self.sd.getXMLTransportsList()
-                self.send(msg)  
+                msg = self.sd.getDOMTransportsList()
+                self.send(msg)
 
                 # ricevo il mezzo dell'autista
                 msg = self.conn.recv(1024).decode('utf-8').strip()

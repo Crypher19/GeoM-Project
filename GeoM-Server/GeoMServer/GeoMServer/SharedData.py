@@ -10,8 +10,7 @@ class SharedData:
         self.db = Database()
         self.listaMezzi = [] # Lista di QueryResult
         self.transportList = [] # lista di thread transport attivi
-        self.fileMezziXML = "mezzi.xml"
-        
+        self.fileMezziXML = "mezzi.xml"     
 
     def addTransport(self, transport):        
         self.transportList.append(transport) # aggiungo un elemento ThreadTrasport nella lista
@@ -20,8 +19,8 @@ class SharedData:
     def delTransport(self, index):
         del self.transportList[index]
 
-    def getXMLTransportsList(self):
-        self.listaMezzi = self.db.getTransports()
+    def getDOMTransportsList(self, tipoMezzo=None, limit=None, offset=None):
+        self.listaMezzi = self.db.getTransports(tipoMezzo, limit, offset)
         pxml = ParserXML()
         doc = pxml.getDOMOfTransportsList(self.listaMezzi)
         return doc

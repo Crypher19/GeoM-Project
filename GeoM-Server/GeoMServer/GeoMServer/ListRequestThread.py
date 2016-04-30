@@ -17,9 +17,14 @@ class ListRequestThread(threading.Thread):
     def run(self):
         try:
             print("Connected by", self.addr)
-            self.send("Connected")
-
-            msg = self.sd.getXMLTransportsList() # Creo lista mezzi     
+            pxml = ParserXML()
+            self.send(pxml.getDOMResponse("Connected"))
+            msg = self.conn.recv(1024).decode('utf-8').strip() # ricevo numero di trasporti da inviare al client
+            doc = pxml.toDOMObject(msg)
+            richiesta = pxml.getLimitOffsetAndPTtype() # ottengo una tupla (tipo, limit, offset)
+            self.sd.getDOMTransportsList(richiesta[0], )
+            
+            msg = self.sd.getDOMTransportsList() # Creo lista mezzi     
             self.send(msg)       
             self.conn.close()
             print("Connessione chiusa correttamente")
