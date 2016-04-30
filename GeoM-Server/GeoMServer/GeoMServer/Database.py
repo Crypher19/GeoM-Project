@@ -53,9 +53,9 @@ class Database:
         if tipoMezzo != None:
             sql += " AND transports_table.TipoMezzo='"+tipoMezzo+"'"
         if offset != None and limit != None:
-            sql += " LIMIT "+offset+", "+limit
+            sql += " LIMIT "+str(offset)+", "+str(limit)
         elif limit != None:
-            sql += " LIMIT "+limit
+            sql += " LIMIT "+str(limit)
 
         ris = self.execQuery(sql)
         listResult = [] # Lista di Transport

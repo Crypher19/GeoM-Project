@@ -21,7 +21,7 @@ class ListRequestThread(threading.Thread):
             self.send(pxml.getDOMResponse("Connected"))
             msg = self.conn.recv(1024).decode('utf-8').strip() # ricevo dal client il numero di mezzi da inviare al client
             doc = pxml.toDOMObject(msg)
-            richiesta = pxml.getLimitOffsetAndPTtype() # ottengo una tupla (tipo, limit, offset)
+            richiesta = pxml.getLimitOffsetAndPTtype(doc) # ottengo una tupla (tipo, limit, offset)
             #totMezzi = self.sd.getNumTransports(richiesta[0]) # passo il tipoMezzo
 
 
