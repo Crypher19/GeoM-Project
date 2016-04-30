@@ -12,6 +12,7 @@ import android.view.View;
 
 import java.util.List;
 
+import classes.LoadingThread;
 import classes.PublicTransport;
 import classes.SharedData;
 import classes.layout_classes.PublicTransportSpecificListAdapter;
@@ -89,6 +90,15 @@ public class ChoosePTActivity extends AppCompatActivity {
 
         recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
         recList.invalidate();
+
+        LoadingThread lt = new LoadingThread(s);
+        lt.start();
+
+        try {
+            lt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return true;
     }

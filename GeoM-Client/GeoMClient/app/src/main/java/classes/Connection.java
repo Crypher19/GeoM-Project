@@ -91,9 +91,9 @@ public class Connection {
         doc.appendChild(rootElement);
         return doc;
     }
-	
-	public Document getDOMResponse(String msg) throws ParserConfigurationException {
-	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+
+    public Document getDOMResponse(String msg) throws ParserConfigurationException {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.newDocument();
         // root element
@@ -101,7 +101,30 @@ public class Connection {
         rootElement.appendChild(doc.createTextNode(msg));
         doc.appendChild(rootElement);
         return doc;
-	}
+    }
+
+    public Document getDOMRichiesta(String tipo, String limit, String offset) throws ParserConfigurationException {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+
+        Element rootElement = doc.createElement("richiesta"); // creo la radice "richiesta"
+
+        Element elTipo = doc.createElement("tipo"); // creo l'elemento "tipo"
+        elTipo.appendChild(doc.createTextNode(tipo)); // creo e inserisco il valore dell'elemento "tipo"
+        rootElement.appendChild(elTipo); // aggiungo l'elemento alla radice
+
+        Element elLimit = doc.createElement("limit"); // creo l'elemento "limit"
+        elLimit.appendChild(doc.createTextNode(limit)); // creo e inserisco il valore dell'elemento "limit"
+        rootElement.appendChild(elLimit); // aggiungo l'elemento alla
+
+        Element elOffset = doc.createElement("offset"); // creo l'elemento "offset"
+        elOffset.appendChild(doc.createTextNode(offset)); // creo e inserisco il valore dell'elemento "offset"
+        rootElement.appendChild(elOffset); // aggiungo l'elemento alla radice
+
+        doc.appendChild(rootElement); // aggiungo la radice al documento
+        return doc;
+    }
 	
 	public Document getDOMAutenticazione(String user, String pass) throws ParserConfigurationException {
 	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

@@ -40,6 +40,9 @@ public class LoadingThread extends Thread {
             msgRicevuto = conn.readMessage(); // ricevo "Connected"
             Log.i("sMESSAGE RECEIVED", msgRicevuto);
 
+            conn.sendMessage(conn.getDOMRichiesta("bus", "20", "0")); // invio il tipo di mezzo da caricare
+            Log.i("sMESSAGE SENT", Connection.convertDocumentToString(conn.getDOMRichiesta("bus", "20", "0")));
+
             msgRicevuto = conn.readMessage(); // ricevo la lista dei trasporti
             Document listaPT = Connection.convertStringToDocument(msgRicevuto);
             Log.i("sMESSAGE RECEIVED", msgRicevuto);

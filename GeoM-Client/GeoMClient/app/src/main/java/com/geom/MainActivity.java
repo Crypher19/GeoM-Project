@@ -29,20 +29,15 @@ public class MainActivity extends AppCompatActivity {
         f = new MyFile();
         i = new Intent(MainActivity.this, HomeActivity.class);
 
-        /*LoadingThread lt = new LoadingThread(s);
-        lt.start();
 
-        try {
-            lt.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
+
 
         s.busList.add(new PublicTransport(1, "bus", "c-81", "asf" ,"mariano-cantu", true, 12.5, 12.5));
         s.busList.add(new PublicTransport(2, "bus", "c-80", "asf" ,"mariano-arosio", false, 12.5, 12.5));
 
         s.trainList.add(new PublicTransport(3, "treno", "ff123", "trenord" ,"milano-asso", false, 12.5, 12.5));
         s.trainList.add(new PublicTransport(4, "treno", "ff456", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
+
 
         List<PublicTransport> temp;
         //controllo e carico i preferiti

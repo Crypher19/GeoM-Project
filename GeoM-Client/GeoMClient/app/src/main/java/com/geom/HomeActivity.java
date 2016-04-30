@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import classes.LoadingThread;
 import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
@@ -124,5 +125,6 @@ public class HomeActivity extends AppCompatActivity {
 
     public void refreshList(){
         //aggiornamento lista PTList
+
     }
 }
