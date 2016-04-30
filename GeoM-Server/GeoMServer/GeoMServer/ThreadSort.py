@@ -7,9 +7,7 @@ from UserThread import UserThread
 from TransportThread import TransportThread
 from ListRequestThread import ListRequestThread
 
-
 class ThreadSort(threading.Thread):
-
     def __init__(self, sd, ID, conn, addr):
         threading.Thread.__init__(self)
         self.sd = sd
@@ -17,7 +15,6 @@ class ThreadSort(threading.Thread):
         self.conn = conn
         self.addr = addr
         self.index = 0
-        
 
     def run(self):      
         # Controlla tipo di thread

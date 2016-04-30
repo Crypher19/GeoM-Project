@@ -19,17 +19,21 @@ class ListRequestThread(threading.Thread):
             print("Connected by", self.addr)
             pxml = ParserXML()
             self.send(pxml.getDOMResponse("Connected"))
-            msg = self.conn.recv(1024).decode('utf-8').strip() # ricevo numero di trasporti da inviare al client
+            msg = self.conn.recv(1024).decode('utf-8').strip() # ricevo dal client il numero di mezzi da inviare al client
             doc = pxml.toDOMObject(msg)
             richiesta = pxml.getLimitOffsetAndPTtype() # ottengo una tupla (tipo, limit, offset)
-            self.sd.getDOMTransportsList(richiesta[0], )
-            
-            msg = self.sd.getDOMTransportsList() # Creo lista mezzi     
+            #totMezzi = self.sd.getNumTransports(richiesta[0]) # passo il tipoMezzo
+
+
+            ### TODO: aggiungere eventuale controllo sul refresh per variare l'offset dei trasporti da inviare e TESTARE
+
+
+            msg = self.sd.getDOMTransportsList(richiesta[0], 20, richiesta[2]) # ottengo i primi 20 mezzi di tipo "richiesta[0]" a partire da "richiesta[2]"
             self.send(msg)       
             self.conn.close()
             print("Connessione chiusa correttamente")
         except ConnectionResetError:
-            print("socked closed by client")
+            print("Socked closed by client")
                 
 
     def send(self, mex):

@@ -19,6 +19,9 @@ class SharedData:
     def delTransport(self, index):
         del self.transportList[index]
 
+    def getNumTransports(self, tipoMezzo=None):
+        return self.db.getNumTransports(tipoMezzo)
+
     def getDOMTransportsList(self, tipoMezzo=None, limit=None, offset=None):
         self.listaMezzi = self.db.getTransports(tipoMezzo, limit, offset)
         pxml = ParserXML()

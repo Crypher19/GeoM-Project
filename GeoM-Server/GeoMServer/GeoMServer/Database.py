@@ -69,17 +69,17 @@ class Database:
 
     def getUser(self, username):
         if self.execQuery("SELECT Username,Password FROM transport_users_table WHERE Username='"+username+"';"):
-            for u, p in cursor:
-                return (u, p)            
+            res = cursor.fetchall()
+            return (res[0], res[1])                      
         return False
 
     def getNumTransports(self, tipoMezzo=None):
         sql = "SELECT COUNT(*) FROM transports_table"
 
         if tipoMezzo != None:
-           sql += " WHERE TipoMezzo='"+tipoMezzo+"'"
+            sql += " WHERE TipoMezzo='"+tipoMezzo+"'"
 
         if self.execQuery(sql):
-            for u, p in cursor:
-                return (u, p)            
+            res = cursor.fetchall()
+            return res[0] # restituisco il numero dei trasporti presenti nel DB
         return False
