@@ -66,10 +66,20 @@ public class Connessione extends Thread{
 				lon = Double.parseDouble(reader.getElement(recived, "longitudine"));
 				d.updateMap(lat, lon);
 
+				if(d.isFermaConnessione())
+				{
+					//indico al server che voglio chiudere la connessione
+					sOUT.print("stop");
+					sOUT.flush();
+				}
+				else
+				{
+					sOUT.print("continue");
+					sOUT.flush();
+				}
+
 			}while (d.isFermaConnessione() == false); //la connessione non deve essere fermata
 
-			//indico al server che voglio chiudere la connessione
-			sOUT.print("stop");
 
 			//chiusura canali
 			close();

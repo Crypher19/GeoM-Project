@@ -1,4 +1,4 @@
-package com.trasmettitoregps;
+package com.example.trasmettitore_gps;
 
 import org.junit.Test;
 

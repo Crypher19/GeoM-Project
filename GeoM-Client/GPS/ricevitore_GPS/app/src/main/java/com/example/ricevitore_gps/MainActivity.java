@@ -24,7 +24,10 @@ public class MainActivity extends AppCompatActivity {
 
     protected void openMap()
     {
+        double lat= 0,lon = 0;
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        intent.putExtra("latitudine", lat);
+        intent.putExtra("longitudine", lon);
         startActivity(intent);
     }
 }

@@ -69,7 +69,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         c = new Connessione(d);
         c.start();
         controlloThread=true;
-        ;
 
     }
 
@@ -110,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Uri.parse("android-app://com.example.ricevitore_gps/http/host/path")
         );
 
-        d.setFermaConnessione(true); //indico al thread che deve chiudere la connessione
+        /*d.setFermaConnessione(true); //indico al thread che deve chiudere la connessione
         try //fermo il thread quando
         {
             c.join();
@@ -118,20 +117,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
+        }*/
 
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
 
 
-    @Override
+    /*@Override
     public void onResume()
     {
         super.onResume();
         //quando l'app viene riaperta riavvio il thread
         if(controlloThread==false)
         {
+            c = new Connessione(d);
             c.start();
             controlloThread = true; //thread avviato
         }
@@ -159,9 +159,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //quando l'app viene riaperta riavvio il thread
         if(controlloThread==false)
         {
+            c = new Connessione(d);
             c.start();
             controlloThread = true; //thread avviato
         }
-    }
+    }*/
 
 }

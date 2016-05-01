@@ -1,4 +1,4 @@
-package com.twrasmettitoregps;
+package com.example.trasmettitore_gps;
 
 import android.Manifest;
 import android.content.Context;
@@ -17,7 +17,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-public class secondActivity extends AppCompatActivity {
+public class SecondActivity extends AppCompatActivity {
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -42,7 +42,6 @@ public class secondActivity extends AppCompatActivity {
         criteria.setSpeedRequired(false);
         criteria.setCostAllowed(true);
         String provider = locationManager.getBestProvider(criteria, true);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -57,10 +56,28 @@ public class secondActivity extends AppCompatActivity {
 
         updateWithNewLocation(l);
 
-        locationManager.requestLocationUpdates(provider, 2000, 10, locationListener);
+        locationManager.requestLocationUpdates(provider, 2000, 10, locationListener); //metodo per aggiornare la posizione periodicamente
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    private void updateWithNewLocation(Location location) {
+        TextView myLocationText;
+        myLocationText = (TextView) findViewById(R.id.textView);
+
+        String latLongString = "No location found";
+
+        if (location != null) {
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+            latLongString = "Lat:" + lat + "\nLong:" + lng;
+        }
+
+
+        myLocationText.setText("Your Current Position is:\n" +
+                latLongString);
     }
 
     @Override
@@ -72,13 +89,13 @@ public class secondActivity extends AppCompatActivity {
         client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
-                "second Page", // TODO: Define a title for the content shown.
+                "Second Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.twrasmettitoregps/http/host/path")
+                Uri.parse("android-app://com.example.trasmettitore_gps/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
     }
@@ -91,34 +108,17 @@ public class secondActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
-                "second Page", // TODO: Define a title for the content shown.
+                "Second Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.twrasmettitoregps/http/host/path")
+                Uri.parse("android-app://com.example.trasmettitore_gps/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
-
-    private void updateWithNewLocation(Location location) {
-        TextView myLocationText;
-        myLocationText = (TextView)findViewById(R.id.textView);
-
-        String latLongString = "No location found";
-
-        if (location != null) {
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            latLongString = "Lat:" + lat + "\nLong:" + lng;
-        }
-
-        myLocationText.setText("Your Current Position is:\n" +
-                latLongString);
-    }
-
 
     private final LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
@@ -130,5 +130,4 @@ public class secondActivity extends AppCompatActivity {
         public void onStatusChanged(String provider, int status,
                                     Bundle extras) {}
     };
-
 }

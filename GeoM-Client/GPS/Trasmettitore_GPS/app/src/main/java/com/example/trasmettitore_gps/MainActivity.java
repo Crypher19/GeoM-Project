@@ -1,9 +1,9 @@
-package com.twrasmettitoregps;
+package com.example.trasmettitore_gps;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
@@ -28,12 +28,10 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                Intent i = new Intent(MainActivity.this,secondActivity.class);
+                Intent i = new Intent(MainActivity.this, SecondActivity.class);
                 startActivity(i);
             }
         });
-
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.twrasmettitoregps/http/host/path")
+                Uri.parse("android-app://com.example.trasmettitore_gps/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
     }
@@ -73,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.twrasmettitoregps/http/host/path")
+                Uri.parse("android-app://com.example.trasmettitore_gps/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();

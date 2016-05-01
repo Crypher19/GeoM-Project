@@ -1,4 +1,4 @@
-package com.twrasmettitoregps;
+package com.example.trasmettitore_gps;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
