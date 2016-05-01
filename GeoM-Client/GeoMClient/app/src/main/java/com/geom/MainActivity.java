@@ -53,8 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("sMESSAGE SHAREDDATAMAIN", s.busList.get(0).getPt_id() + " " + s.busList.get(0).getPt_name());
 
-        //puntatore ai dati condivisi
-        i.putExtra("SharedData", s);
+        Bundle b = new Bundle();
+        b.putParcelable("SharedData", s); //puntatore ai dati condivisi
+        i.putExtra("bundle", b);
         startActivity(i);
         //mainActivity non deve essere raggiungibile dall'utente
         finish();

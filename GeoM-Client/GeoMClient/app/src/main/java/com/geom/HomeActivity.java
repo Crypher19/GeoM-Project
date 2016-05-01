@@ -26,6 +26,8 @@ public class HomeActivity extends AppCompatActivity {
 
     SharedData s;
     MyFile f;
+    Bundle b;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +36,8 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         f = new MyFile();
-
-        s = getIntent().getParcelableExtra("SharedData");
+        b = getIntent().getBundleExtra("bundle");
+        s = b.getParcelable("SharedData");
 
         //quando passo da FavouritesActivity a HomeActivity avendo eliminato tutti i preferiti
         if(getIntent().hasExtra("snackbarContent")){
@@ -119,7 +121,8 @@ public class HomeActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
         if(resultCode == RESULT_OK){
-            s = i.getParcelableExtra("SharedData");
+            Bundle b = i.getBundleExtra("bundle");
+            s = b.getParcelable("SharedData");
         }
     }
 

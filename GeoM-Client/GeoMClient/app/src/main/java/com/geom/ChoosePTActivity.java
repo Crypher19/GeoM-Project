@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -84,13 +85,10 @@ public class ChoosePTActivity extends AppCompatActivity {
     }
 
     public boolean refresh(){//aggiorno la lista
-        List<PublicTransport> temp = s.getListType(pt_type);
+        s.getListType(pt_type).clear(); // svuoto completamente la lista
+        Log.i("BUSLIST", Integer.toString(s.busList.get(0).getPt_id()));
 
-        /*aggiornamento lista*/
-
-        recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
-        recList.invalidate();
-
+        // parte il thread per ottenere la nuova lista dal server
         LoadingThread lt = new LoadingThread(s);
         lt.start();
 
@@ -99,6 +97,13 @@ public class ChoosePTActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        // costruisco la nuova lista
+        List<PublicTransport> temp = s.getListType(pt_type);
+
+        /*aggiornamento lista*/
+        recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
+        recList.invalidate();
 
         return true;
     }
