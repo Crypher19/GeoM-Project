@@ -71,11 +71,13 @@ public class SecondActivity extends AppCompatActivity {
         TextView textCount;
         textCount = (TextView) findViewById(R.id.textView2); //textView per contere il numero di refresh della posizione
 
+        double lat=-1,lng=-1; //il valore è negtivo in modo che il server possa copire se si è verificato un errore con il gps
+
         String latLongString = "No location found";
 
         if (location != null) {
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
+            lat = location.getLatitude();
+            lng = location.getLongitude();
             latLongString = "Lat:" + lat + "\nLong:" + lng;
         }
 
@@ -83,6 +85,21 @@ public class SecondActivity extends AppCompatActivity {
         count++;
         myLocationText.setText("Your Current Position is:\n" +
                 latLongString);
+
+        //creo il thread per la connessione
+        Connessione c = new Connessione(lat,lng);
+
+        c.start();
+
+        try
+        {
+            //attendo la fine del thread
+            c.join();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
