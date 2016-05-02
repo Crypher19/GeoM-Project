@@ -1,7 +1,7 @@
 MODIFICHE EFFETTUATE
 
 1. Da MapActivity tornare a ChoosePTActivity e non a HomeActivity
-2. Spostato aggiornamento liste dei mezzi di trasportoin in metodo onClick() in HomeActivity
+2. Spostato aggiornamento liste dei mezzi di trasporto in metodo onClick() in HomeActivity
 3. Tolto metodo di aggiornamento in HomeActivity
 4. Aggiunto FAB preferiti in ChoosePTActivity
 5. Passaggio extra tramite Bundle

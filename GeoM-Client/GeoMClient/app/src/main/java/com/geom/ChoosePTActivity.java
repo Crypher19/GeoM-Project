@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class ChoosePTActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_pt);
 
-        s = getIntent().getParcelableExtra("SharedData");
+        s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
         pt_type = s.pt_type;
 
         //Toolbar
@@ -84,8 +83,9 @@ public class ChoosePTActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!s.favList.isEmpty()) {
                     Intent i = new Intent(ChoosePTActivity.this, FavouritesActivity.class);
-                    i.putExtra("SharedData", s);
-                    i.putExtra("PreviousActivity", "ChoosePTActivity");
+                    Bundle b = new Bundle();
+                    b.putParcelable("SharedData", s);
+                    i.putExtra("bundle", b);
                     startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
@@ -100,7 +100,6 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     public boolean refresh(){//aggiorno la lista
         s.getListType(pt_type).clear(); // svuoto completamente la lista
-        Log.i("BUSLIST", Integer.toString(s.busList.get(0).getPt_id()));
 
         // parte il thread per ottenere la nuova lista dal server
         LoadingThread lt = new LoadingThread(s);
@@ -126,7 +125,7 @@ public class ChoosePTActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
         if(resultCode == RESULT_OK){
-            s = i.getParcelableExtra("SharedData");
+            s = i.getBundleExtra("bundle").getParcelable("SharedData");
         }
     }
 }

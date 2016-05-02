@@ -2,7 +2,7 @@ package classes.layout_classes;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Parcelable;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -56,9 +56,10 @@ public class PublicTransportSpecificListAdapter
 
                 //lancio MapActivity
                 Intent i = new Intent(v.getContext(), MapActivity.class);
-                i.putExtra("PublicTransport", (Parcelable)pt);
-                i.putExtra("SharedData", s);
-                i.putExtra("PreviousActivity", "ChoosePTActivity");
+                Bundle b = new Bundle();
+                b.putParcelable("PublicTransport", pt);
+                b.putParcelable("SharedData", s);
+                i.putExtra("bundle", b);
                 v.getContext().startActivity(i);
             }
         });
@@ -79,8 +80,8 @@ public class PublicTransportSpecificListAdapter
     @Override
     public PublicTransportSpecificViewHolder onCreateViewHolder(final ViewGroup viewGroup, int i) {
         f = new MyFile();
-        s = ((Activity) viewGroup.getRootView().getContext()).getIntent()
-                .getParcelableExtra("SharedData");
+        s = ((Activity) viewGroup.getRootView().getContext()).getIntent().getBundleExtra("bundle").
+                getParcelable("SharedData");
 
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).

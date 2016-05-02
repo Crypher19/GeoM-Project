@@ -33,13 +33,12 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         f = new MyFile();
-
-        s = getIntent().getParcelableExtra("SharedData");
+        s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
 
         //quando passo da FavouritesActivity a HomeActivity avendo eliminato tutti i preferiti
-        if(getIntent().hasExtra("snackbarContent")){
+        if(getIntent().getBundleExtra("bundle").containsKey("snackbarContent")){
             Snackbar.make(findViewById(R.id.activity_home),
-                getIntent().getStringExtra("snackbarContent"),
+                getIntent().getBundleExtra("bundle").getString("snackbarContent"),
                 Snackbar.LENGTH_SHORT)
                 .show();
         }
@@ -65,8 +64,9 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!s.favList.isEmpty()) {
                     Intent i = new Intent(HomeActivity.this, FavouritesActivity.class);
-                    i.putExtra("SharedData", s);
-                    i.putExtra("PreviousActiviy", "HomeActivity");
+                    Bundle b = new Bundle();
+                    b.putParcelable("SharedData", s);
+                    i.putExtra("bundle", b);
                     startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
@@ -104,6 +104,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void initNewActivity(String pt_type){
         Intent i = new Intent(HomeActivity.this, ChoosePTActivity.class);
+        Bundle b = new Bundle();
 
         //DA SOSTITUIRE CON QUERY SERVER
 
@@ -122,14 +123,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
-        i.putExtra("SharedData", s);
+        b.putParcelable("SharedData", s);
+        i.putExtra("bundle", b);
         startActivityForResult(i, 1);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
         if(resultCode == RESULT_OK){
-            s = i.getParcelableExtra("SharedData");
+            s = i.getBundleExtra("bundle").getParcelable("SharedData");
         }
     }
 }

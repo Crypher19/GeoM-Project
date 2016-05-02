@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         s = new SharedData();
         f = new MyFile();
         i = new Intent(MainActivity.this, HomeActivity.class);
+        Bundle b = new Bundle();
 
         List<PublicTransport> temp;
         //controllo e carico i preferiti
@@ -40,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
                 R.mipmap.ic_material_train_grey));
         s.PTList = PTList;
 
-        i.putExtra("SharedData", s); //puntatore ai dati condivisi
+        b.putParcelable("SharedData", s); //puntatore ai dati condivisi
+        i.putExtra("bundle", b);
         startActivity(i);
         //mainActivity non deve essere raggiungibile dall'utente
         finish();

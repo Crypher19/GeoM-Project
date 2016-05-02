@@ -3,7 +3,6 @@ package com.geom;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -34,7 +33,7 @@ public class FavouritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourites);
 
-        s = (getIntent().getParcelableExtra("SharedData"));
+        s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
 
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -59,11 +58,12 @@ public class FavouritesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(FavouritesActivity.this, MapActivity.class);
+                Bundle b = new Bundle();
                 //invio la posizione del preferito selezionato
                 PublicTransport fav = s.favList.get(position);
-                i.putExtra("SharedData", s);
-                i.putExtra("favourite", (Parcelable) fav);
-                i.putExtra("PreviousActivity", "FavouritesActivity");
+                b.putParcelable("SharedData", s);
+                b.putParcelable("favourite", fav);
+                i.putExtra("bundle", b);
                 startActivityForResult(i, 4);
             }
         });
@@ -88,10 +88,10 @@ public class FavouritesActivity extends AppCompatActivity {
 
                         if(s.favList.size() == 0){//ultimo preferito rimasto
                             Intent i = new Intent(FavouritesActivity.this, HomeActivity.class);
-                            i.putExtra("snackbarContent", snackbarContent);
-                            i.putExtra("SharedData", s);
-                            //elimino la lista delle activity
-                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            Bundle b = new Bundle();
+                            b.putString("snackbarContent", snackbarContent);
+                            b.putParcelable("SharedData", s);
+                            i.putExtra("bundle", b);
                             startActivity(i);
                         } else{//non è l'ultimo preferito
                             Snackbar.make(view, snackbarContent, Snackbar.LENGTH_SHORT).show();
@@ -178,16 +178,17 @@ public class FavouritesActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     String snackbarContent;
                     Intent i;
+                    Bundle b = new Bundle();
 
                     if(deleteAll()){
                         snackbarContent = "Preferiti eliminati";
                     } else snackbarContent = "ERRORE, preferiti non eliminati";
 
                     i = new Intent(FavouritesActivity.this, HomeActivity.class);
-                    i.putExtra("snackbarContent", snackbarContent);
-                    i.putExtra("SharedData", s);
-                    //elimino la lista delle activity
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                    b.putString("snackbarContent", snackbarContent);
+                    b.putParcelable("SharedData", s);
+                    i.putExtra("bundle", b);
                     startActivityForResult(i, 3);
                 }
             });
@@ -202,7 +203,7 @@ public class FavouritesActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
         if(resultCode == RESULT_OK){
-            s = i.getParcelableExtra("SharedData");
+            s = i.getBundleExtra("bundle").getParcelable("SharedData");
         }
     }
 

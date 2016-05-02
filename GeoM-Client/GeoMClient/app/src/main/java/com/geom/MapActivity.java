@@ -16,7 +16,7 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        s = getIntent().getExtras().getParcelable("SharedData");
+        s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
 
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -31,8 +31,8 @@ public class MapActivity extends AppCompatActivity {
         });
 
         //extra ricevuto da ChoosePTActivity o FavouritesActivity
-        if (getIntent().hasExtra("PublicTransport")){
-            PublicTransport pt = getIntent().getParcelableExtra("PublicTransport");
+        if (getIntent().getBundleExtra("bundle").containsKey("PublicTransport")){
+            PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("PublicTransport");
         }
     }
 }
