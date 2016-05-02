@@ -1,0 +1,27 @@
+MODIFICHE EFFETTUATE
+
+1. Da MapActivity tornare a ChoosePTActivity e non a HomeActivity
+2. Spostato aggiornamento liste dei mezzi di trasportoin in metodo onClick() in HomeActivity
+3. Tolto metodo di aggiornamento in HomeActivity
+4. Aggiunto FAB preferiti in ChoosePTActivity
+5. Passaggio extra tramite Bundle
+7. Aggiornata versione SDK Build Tools a 23.0.3
+
+
+SOLUZIONE TEMPORANEA
+
+8. Quando scelgo il mezzo controllo se la lista da caricare è vuota: 
+	se sì allora effettuo richiesta al server;
+	se no allora non faccio richiesta (finchè non aggiorno manualmente, la lista non si aggiorna);
+
+
+PROSSIME MODIFICHE
+
+- Quando premo sulla lista scarico dal server i mezzi (solo i primi N).
+  Quando arrivo in fondo alla lista ne richiedo altri (almeno per due-tre pagine). 
+  Quando aggiorno manualmente svuoto la lista e visualizzo solo i primi N (di partenza)
+
+- impostazioni: possibilità di aggiornare lista solo con wifi
+		cambio colore
+		reset dati/preferiti
+- informazioni + logo in MainActivity

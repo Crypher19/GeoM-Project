@@ -20,7 +20,9 @@ public class FavouritesListAdapter extends ArrayAdapter<PublicTransport> {
     private ArrayList<PublicTransport> favList;
     private LayoutInflater inflater = null;
 
-    public FavouritesListAdapter(Activity activity, int textViewResourceId, ArrayList<PublicTransport> favList) {
+    public FavouritesListAdapter(Activity activity, int textViewResourceId,
+                                 ArrayList<PublicTransport> favList) {
+
         super(activity, textViewResourceId, favList);
         try {
             //this.activity = activity;

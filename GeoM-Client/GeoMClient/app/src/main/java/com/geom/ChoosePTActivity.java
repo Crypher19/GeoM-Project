@@ -2,8 +2,10 @@ package com.geom;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,9 +23,9 @@ import classes.layout_classes.PublicTransportSpecificListAdapter;
 /*implementazione metodi onClick di cardview in PublicTransportSpecificListAdapter*/
 public class ChoosePTActivity extends AppCompatActivity {
     SharedData s;
-    String pt_type;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recList;
+    String pt_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +33,15 @@ public class ChoosePTActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_pt);
 
         s = getIntent().getParcelableExtra("SharedData");
-
-        pt_type = getIntent().getStringExtra("pt_type");//tipo di lista da visualizzare
+        pt_type = s.pt_type;
 
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Nuovo " + pt_type);//il titolo varia in base alla lista visualizzata
+        //il titolo varia in base alla lista visualizzata
+        getSupportActionBar().setTitle("Nuovo " + pt_type);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +57,8 @@ public class ChoosePTActivity extends AppCompatActivity {
 
         //CardView
         //in base al mezzo selezionato visualizzo la lista corrispondente
-        PublicTransportSpecificListAdapter publicTransportSpecificListAdapter = new PublicTransportSpecificListAdapter(s.getListType(pt_type));
+        PublicTransportSpecificListAdapter publicTransportSpecificListAdapter
+                = new PublicTransportSpecificListAdapter(s.getListType(pt_type));
         recList.setAdapter(publicTransportSpecificListAdapter);
 
         //aggiorno tradcinando verso il basso
@@ -73,15 +76,26 @@ public class ChoosePTActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);//termino l'animazione
             }
         });
-    }
 
-    @Override
-    public void onBackPressed(){
-        Intent i = new Intent(ChoosePTActivity.this, HomeActivity.class);
-        i.putExtra("SharedData", s);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        setResult(RESULT_OK, i);
-        startActivityForResult(i, 8);
+        //pulsante preferiti
+        FloatingActionButton favourites_fab = (FloatingActionButton) findViewById(R.id.favourites_fab);
+        favourites_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!s.favList.isEmpty()) {
+                    Intent i = new Intent(ChoosePTActivity.this, FavouritesActivity.class);
+                    i.putExtra("SharedData", s);
+                    i.putExtra("PreviousActivity", "ChoosePTActivity");
+                    startActivityForResult(i, 2);
+                }//se non ci sono preferiti
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ChoosePTActivity.this, R.style.AppCompatAlertDialogStyleLight);
+                    builder.setTitle("Nessun preferito trovato");
+                    builder.setPositiveButton("OK", null);
+                    builder.show();
+                }
+            }
+        });
     }
 
     public boolean refresh(){//aggiorno la lista
@@ -102,9 +116,17 @@ public class ChoosePTActivity extends AppCompatActivity {
         List<PublicTransport> temp = s.getListType(pt_type);
 
         /*aggiornamento lista*/
+
         recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
         recList.invalidate();
 
         return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent i) {
+        super.onActivityResult(requestCode, resultCode, i);
+        if(resultCode == RESULT_OK){
+            s = i.getParcelableExtra("SharedData");
+        }
     }
 }

@@ -20,7 +20,9 @@ public class PublicTransportGenericListAdapter extends ArrayAdapter<PublicTransp
     private ArrayList<PublicTransport> PTList;
     private LayoutInflater inflater = null;
 
-    public PublicTransportGenericListAdapter(Activity activity, int textViewResourceId, ArrayList<PublicTransport> PTList) {
+    public PublicTransportGenericListAdapter(Activity activity, int textViewResourceId,
+                                             ArrayList<PublicTransport> PTList) {
+
         super(activity, textViewResourceId, PTList);
         try {
             //this.activity = activity;

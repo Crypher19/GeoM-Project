@@ -23,7 +23,8 @@ import classes.PublicTransport;
 import classes.SharedData;
 
 public class PublicTransportSpecificListAdapter
-        extends RecyclerView.Adapter<PublicTransportSpecificListAdapter.PublicTransportSpecificViewHolder> {
+        extends RecyclerView.Adapter
+                    <PublicTransportSpecificListAdapter.PublicTransportSpecificViewHolder> {
 
     private List<PublicTransport> pt_list;
     private MyFile f;
@@ -78,13 +79,15 @@ public class PublicTransportSpecificListAdapter
     @Override
     public PublicTransportSpecificViewHolder onCreateViewHolder(final ViewGroup viewGroup, int i) {
         f = new MyFile();
-        s = ((Activity) viewGroup.getRootView().getContext()).getIntent().getParcelableExtra("SharedData");
+        s = ((Activity) viewGroup.getRootView().getContext()).getIntent()
+                .getParcelableExtra("SharedData");
 
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.pt_item_card_layout, viewGroup, false);
 
-        final PublicTransportSpecificViewHolder holder = new PublicTransportSpecificViewHolder(itemView);//nuovo ViewHolder
+        final PublicTransportSpecificViewHolder holder
+                = new PublicTransportSpecificViewHolder(itemView);//nuovo ViewHolder
 
         //salvo - elimino i preferiti cliccando sulla stella
         holder.fav_img.setOnClickListener(new View.OnClickListener() {
@@ -95,27 +98,26 @@ public class PublicTransportSpecificListAdapter
                 //ottengo l'elemento in posizion "pos"
                 PublicTransport pt = pt_list.get(pos);
 
-                if (holder.fav_img.getDrawable().getConstantState().equals(
-                        ContextCompat.getDrawable(v.getContext(), R.drawable.ic_favourites_star_empty).getConstantState())) {//non è un preferito
+                if (holder.fav_img.getDrawable().getConstantState().equals(//non è un preferito
+                        ContextCompat.getDrawable(v.getContext(),
+                                R.drawable.ic_favourites_star_empty).getConstantState())) {
                     //cambio immagine
                     holder.fav_img.setImageResource(R.drawable.ic_favourites_star_full);
                     //notifico il salvataggio all'utente
-                    Snackbar.make(viewGroup.getRootView(), addFav(pt), Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(viewGroup.getRootView().findViewById(R.id.activity_choose_pt),
+                            addFav(pt), Snackbar.LENGTH_SHORT).show();
                 }
                 else {//è un preferito
                     //cambio immagine
                     holder.fav_img.setImageResource(R.drawable.ic_favourites_star_empty);
                     //notifico l'eliminazione all'utente
-                    Snackbar.make(viewGroup.getRootView(), removeFav(pt), Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(viewGroup.getRootView().findViewById(R.id.activity_choose_pt),
+                            removeFav(pt), Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
 
         return holder;
-    }
-
-    public void clear(){
-
     }
 
     public static class PublicTransportSpecificViewHolder extends RecyclerView.ViewHolder {

@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.DrawableRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -73,7 +72,8 @@ public class FavouritesActivity extends AppCompatActivity {
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this, R.style.AppCompatAlertDialogStyleLight);
+                AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this,
+                        R.style.AppCompatAlertDialogStyleLight);
                 builder.setTitle("Eliminare questo preferito?");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
@@ -93,7 +93,9 @@ public class FavouritesActivity extends AppCompatActivity {
                             //elimino la lista delle activity
                             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
-                        } else Snackbar.make(view, snackbarContent, Snackbar.LENGTH_SHORT).show();//non è l'ultimo preferito
+                        } else{//non è l'ultimo preferito
+                            Snackbar.make(view, snackbarContent, Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 builder.setNegativeButton("ANNULLA", null);
@@ -104,7 +106,8 @@ public class FavouritesActivity extends AppCompatActivity {
         });
 
         //aggiorno tradcinando verso il basso
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        final SwipeRefreshLayout swipeRefreshLayout
+                = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -114,7 +117,8 @@ public class FavouritesActivity extends AppCompatActivity {
                     message = "Preferiti aggiornati";
                 } else message = "ERRORE, preferiti non aggiornati";
 
-                Snackbar.make((findViewById(R.id.activity_favourites)), message, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make((findViewById(R.id.activity_favourites)), message,
+                        Snackbar.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);//termino l'animazione
             }
         });
@@ -161,11 +165,13 @@ public class FavouritesActivity extends AppCompatActivity {
                 message = "Preferiti aggiornati";
             } else message = "ERRORE, preferiti non aggiornati";
 
-            Snackbar.make((findViewById(R.id.activity_favourites)), message, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make((findViewById(R.id.activity_favourites)), message,
+                    Snackbar.LENGTH_SHORT).show();
             return true;
         } else if(id == R.id.action_delete_all){//elimina tutti i preferiti
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this, R.style.AppCompatAlertDialogStyleLight);
+            AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this,
+                    R.style.AppCompatAlertDialogStyleLight);
             builder.setTitle("Eliminare tutti i preferiti?");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
@@ -191,15 +197,6 @@ public class FavouritesActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed(){
-        Intent i = new Intent(FavouritesActivity.this, HomeActivity.class);
-        i.putExtra("SharedData", s);
-        setResult(RESULT_OK, i);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {

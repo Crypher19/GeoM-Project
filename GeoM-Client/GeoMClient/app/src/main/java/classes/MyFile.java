@@ -106,7 +106,8 @@ public class MyFile {
             if(folderExistsAndNotEmpty(this.folderPath, this.folderName) > -1){//cartella ok
                 int i;
                 if((i = fileExistsAndNotEmpty(this.filePath, this.fileName)) == 0){//file vuoto
-                    Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                    Document doc
+                            = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
                     Element root = doc.createElement("favourites");
                     doc.appendChild(root);
@@ -202,7 +203,8 @@ public class MyFile {
         try{
             if(folderExistsAndNotEmpty(this.folderPath, this.folderName) > -1) {//cartella ok
                 if (fileExistsAndNotEmpty(this.filePath, this.fileName) > -1) {//file ok
-                    Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                    Document doc
+                            = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
                     return toFile(doc);
                 }
             }
@@ -230,7 +232,8 @@ public class MyFile {
                         favList.remove(pos);
 
                         //creo un nuovo documento
-                        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                        Document doc
+                                = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
                         if(!favList.isEmpty()){//se ci sono altri preferiti
                             //creo l'elemento radice

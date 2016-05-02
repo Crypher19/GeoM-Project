@@ -12,12 +12,18 @@ public class SharedData implements Parcelable{
     public List<PublicTransport> busList;
     public List<PublicTransport> trainList;
     public List<PublicTransport> favList;
+    public boolean firstTimeQueryBus;
+    public boolean firstTimeQueryTrain;
+    public String pt_type;//lista mezzi da visualizzare
 
     public SharedData(){
         PTList = new ArrayList<>();
         busList = new ArrayList<>();
         trainList = new ArrayList<>();
         favList = new ArrayList<>();
+        firstTimeQueryBus = true;
+        firstTimeQueryTrain = true;
+        pt_type = null;
     }
 
     public List<PublicTransport> getListType(String pt_type){
@@ -28,7 +34,6 @@ public class SharedData implements Parcelable{
         }
         return null;
     }
-
 
     @Override
     public int describeContents() {
@@ -41,6 +46,9 @@ public class SharedData implements Parcelable{
         dest.writeTypedList(busList);
         dest.writeTypedList(trainList);
         dest.writeTypedList(favList);
+        dest.writeByte(firstTimeQueryBus ? (byte) 1 : (byte) 0);
+        dest.writeByte(firstTimeQueryTrain ? (byte) 1 : (byte) 0);
+        dest.writeString(this.pt_type);
     }
 
     protected SharedData(Parcel in) {
@@ -48,6 +56,9 @@ public class SharedData implements Parcelable{
         this.busList = in.createTypedArrayList(PublicTransport.CREATOR);
         this.trainList = in.createTypedArrayList(PublicTransport.CREATOR);
         this.favList = in.createTypedArrayList(PublicTransport.CREATOR);
+        this.firstTimeQueryBus = in.readByte() != 0;
+        this.firstTimeQueryTrain = in.readByte() != 0;
+        this.pt_type = in.readString();
     }
 
     public static final Creator<SharedData> CREATOR = new Creator<SharedData>() {
