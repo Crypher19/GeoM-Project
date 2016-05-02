@@ -2,6 +2,7 @@ package com.geom;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,6 +26,8 @@ public class ChoosePTActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recList;
     String pt_type;
+    Handler handler = new Handler();
+    String message = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +69,13 @@ public class ChoosePTActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                String message;
-                if(refresh()){
-                    message = "Preferiti aggiornati";
-                } else message = "ERRORE, preferiti non aggiornati";
-
-                Snackbar.make((findViewById(R.id.activity_choose_pt)), message, Snackbar.LENGTH_SHORT).show();
-                swipeRefreshLayout.setRefreshing(false);//termino l'animazione
+                handler.post(refreshing);
             }
         });
+
+        if(message != null){//risultato dell'aggiornamento
+            Snackbar.make((findViewById(R.id.activity_choose_pt)), message, Snackbar.LENGTH_SHORT).show();
+        }
 
         //pulsante preferiti
         FloatingActionButton favourites_fab = (FloatingActionButton) findViewById(R.id.favourites_fab);
@@ -98,29 +99,33 @@ public class ChoosePTActivity extends AppCompatActivity {
         });
     }
 
-    public boolean refresh(){//aggiorno la lista
-        s.getListType(pt_type).clear(); // svuoto completamente la lista
+    private final Runnable refreshing = new Runnable() {
+        public void run() {
+            try {
+                swipeRefreshLayout.setRefreshing(true);
+                s.getListType(pt_type).clear(); // svuoto completamente la lista
 
-        // parte il thread per ottenere la nuova lista dal server
-        LoadingThread lt = new LoadingThread(s);
-        lt.start();
+                // parte il thread per ottenere la nuova lista dal server
+                LoadingThread lt = new LoadingThread(s);
+                lt.start();
+                lt.join();
+                //termino l'animazione
+                swipeRefreshLayout.setRefreshing(false);
 
-        try {
-            lt.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+                // costruisco la nuova lista
+                List<PublicTransport> temp = s.getListType(pt_type);
+
+                /*aggiornamento lista*/
+                recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
+                recList.invalidate();
+
+                message = "Preferiti aggiornati";
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = "ERRORE, preferiti non aggiornati";
+            }
         }
-
-        // costruisco la nuova lista
-        List<PublicTransport> temp = s.getListType(pt_type);
-
-        /*aggiornamento lista*/
-
-        recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
-        recList.invalidate();
-
-        return true;
-    }
+    };
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
