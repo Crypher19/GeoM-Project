@@ -24,6 +24,7 @@ public class SecondActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,9 @@ public class SecondActivity extends AppCompatActivity {
         TextView myLocationText;
         myLocationText = (TextView) findViewById(R.id.textView);
 
+        TextView textCount;
+        textCount = (TextView) findViewById(R.id.textView2); //textView per contere il numero di refresh della posizione
+
         String latLongString = "No location found";
 
         if (location != null) {
@@ -75,7 +79,8 @@ public class SecondActivity extends AppCompatActivity {
             latLongString = "Lat:" + lat + "\nLong:" + lng;
         }
 
-
+        textCount.setText("number of refresh: "+ count);
+        count++;
         myLocationText.setText("Your Current Position is:\n" +
                 latLongString);
     }
