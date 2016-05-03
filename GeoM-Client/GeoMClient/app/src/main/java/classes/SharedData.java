@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SharedData implements Parcelable{
+public class SharedData implements Parcelable {
 
     public List<PublicTransport> PTList;
     public List<PublicTransport> busList;
@@ -15,8 +15,9 @@ public class SharedData implements Parcelable{
     public boolean firstTimeQueryBus;
     public boolean firstTimeQueryTrain;
     public String pt_type;//lista mezzi da visualizzare
+    public int offset; // id del prossimo mezzo di trasporto da chiedere
 
-    public SharedData(){
+    public SharedData() {
         PTList = new ArrayList<>();
         busList = new ArrayList<>();
         trainList = new ArrayList<>();
@@ -24,15 +25,24 @@ public class SharedData implements Parcelable{
         firstTimeQueryBus = true;
         firstTimeQueryTrain = true;
         pt_type = null;
+        offset = 0;
     }
 
-    public List<PublicTransport> getListType(String pt_type){
-        if(pt_type.equals(PublicTransport.pt_type_bus)){//cardview di Bus
+    public List<PublicTransport> getListType(String pt_type) {
+        if (pt_type.equals(PublicTransport.pt_type_bus)) {//cardview di Bus
             return busList;
-        } else if(pt_type.equals(PublicTransport.pt_type_train)){//cardview di Train
+        } else if (pt_type.equals(PublicTransport.pt_type_train)) {//cardview di Train
             return trainList;
         }
         return null;
+    }
+
+    public void clearList(String pt_type) {
+        if (pt_type.equals(PublicTransport.pt_type_bus)) {//cardview di Bus
+            busList.clear();
+        } else if (pt_type.equals(PublicTransport.pt_type_train)) {//cardview di Train
+            trainList.clear();
+        }
     }
 
     @Override
@@ -49,6 +59,7 @@ public class SharedData implements Parcelable{
         dest.writeByte(firstTimeQueryBus ? (byte) 1 : (byte) 0);
         dest.writeByte(firstTimeQueryTrain ? (byte) 1 : (byte) 0);
         dest.writeString(this.pt_type);
+        dest.writeInt(this.offset);
     }
 
     protected SharedData(Parcel in) {
@@ -59,6 +70,7 @@ public class SharedData implements Parcelable{
         this.firstTimeQueryBus = in.readByte() != 0;
         this.firstTimeQueryTrain = in.readByte() != 0;
         this.pt_type = in.readString();
+        this.offset = in.readInt();
     }
 
     public static final Creator<SharedData> CREATOR = new Creator<SharedData>() {

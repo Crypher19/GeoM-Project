@@ -95,37 +95,43 @@ public class ChoosePTActivity extends AppCompatActivity {
                     builder.setPositiveButton("OK", null);
                     builder.show();
                 }
-            }
+}
         });
-    }
-
-    private final Runnable refreshing = new Runnable() {
-        public void run() {
-            try {
-                swipeRefreshLayout.setRefreshing(true);
-                s.getListType(pt_type).clear(); // svuoto completamente la lista
-
-                // parte il thread per ottenere la nuova lista dal server
-                LoadingThread lt = new LoadingThread(s);
-                lt.start();
-                lt.join();
-                //termino l'animazione
-                swipeRefreshLayout.setRefreshing(false);
-
-                // costruisco la nuova lista
-                List<PublicTransport> temp = s.getListType(pt_type);
-
-                /*aggiornamento lista*/
-                recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
-                recList.invalidate();
-
-                message = "Preferiti aggiornati";
-            } catch (Exception e) {
-                e.printStackTrace();
-                message = "ERRORE, preferiti non aggiornati";
-            }
         }
-    };
+
+private final Runnable refreshing = new Runnable() {
+    public void run() {
+        try {
+        swipeRefreshLayout.setRefreshing(true);
+        s.clearList(pt_type); // svuoto completamente la lista
+
+
+
+        // parte il thread per ottenere la nuova lista dal server
+        LoadingThread lt = new LoadingThread(s);
+        lt.start();
+        lt.join();
+
+
+
+
+        // costruisco la nuova lista
+        List<PublicTransport> temp = s.getListType(pt_type);
+
+        /* aggiornamento lista */
+        recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
+        recList.invalidate();
+
+        //termino l'animazione
+        swipeRefreshLayout.setRefreshing(false);
+
+        message = "Lista aggiornata";
+        } catch (Exception e) {
+        e.printStackTrace();
+        message = "ERRORE, lista non aggiornata";
+        }
+    }
+};
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
