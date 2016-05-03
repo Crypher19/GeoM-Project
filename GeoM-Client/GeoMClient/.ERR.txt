@@ -6,22 +6,22 @@ MODIFICHE EFFETTUATE
 4. Aggiunto FAB preferiti in ChoosePTActivity
 5. Passaggio extra tramite Bundle
 7. Aggiornata versione SDK Build Tools a 23.0.3
+8. Quando premo sulla lista scarico dal server i mezzi (solo i primi N).
+9. Quando aggiorno manualmente svuoto la lista e visualizzo solo i primi N (di partenza)
 
 
 SOLUZIONE TEMPORANEA
 
-8. Quando scelgo il mezzo controllo se la lista da caricare Ë vuota: 
-	se sÏ allora effettuo richiesta al server;
-	se no allora non faccio richiesta (finchË non aggiorno manualmente, la lista non si aggiorna);
+- Quando scelgo il mezzo controllo se la lista da caricare √® vuota: 
+	se s√¨ allora effettuo richiesta al server;
+	se no allora non faccio richiesta (finch√® non aggiorno manualmente, la lista non si aggiorna);
 
 
 PROSSIME MODIFICHE
 
-- Quando premo sulla lista scarico dal server i mezzi (solo i primi N).
-  Quando arrivo in fondo alla lista ne richiedo altri (almeno per due-tre pagine). 
-  Quando aggiorno manualmente svuoto la lista e visualizzo solo i primi N (di partenza)
+- Quando arrivo in fondo alla lista ne richiedo altri (almeno per due-tre pagine). 
 
-- impostazioni: possibilit‡ di aggiornare lista solo con wifi
+- impostazioni: possibilit√† di aggiornare lista solo con wifi
 		cambio colore
 		reset dati/preferiti
 - informazioni + logo in MainActivity
