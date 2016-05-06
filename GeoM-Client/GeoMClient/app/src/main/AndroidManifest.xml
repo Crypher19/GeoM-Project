@@ -14,18 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.geom.HomeActivity"
+            android:name=".HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.geom.MapActivity"
+            android:name=".MapActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.geom.FavouritesActivity"
+            android:name=".FavouritesActivity"
             android:label="@string/title_activity_favourite"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.geom.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,11 +33,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.geom.ChoosePTActivity"
+            android:name=".ChoosePTActivity"
             android:label="@string/title_activity_choose_pt"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -4,10 +4,15 @@
     <string name="action_refresh">Aggiorna</string>
     <string name="action_delete_all">Elimina tutto</string>
     <string name="title_activity_main">@string/app_name</string>
-
-    <!-- custom strings -->
     <string name="title_activity_map">Replace with map title</string>
     <string name="title_activity_favourite">Preferiti</string>
     <string name="title_activity_choose_pt">Nuovo </string>
-    <string name="image_description">This is a GeoM image</string>
+    <string name="title_activity_settings">Impostazioni</string>
+
+    <!-- preferences strings -->
+    <string name="pref_wifi_only_title">Solo Wi-Fi</string>
+    <string name="pref_wifi_only_summary">Scarica aggiornamenti solo quando connesso ad una rete Wi-Fi.</string>
+    <string name="pref_reset_title">Predefinite</string>
+    <string name="pref_reset_summary">Ripristina le impostazioni predefinite ed elimina tutti i preferiti.</string>
+
 </resources>

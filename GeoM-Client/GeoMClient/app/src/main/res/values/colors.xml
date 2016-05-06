@@ -5,7 +5,7 @@
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#FFFFFF</color>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorAccent">#125688</color>
     <color name="customGrey">#858585</color>
     <color name="customGreyBackground">#EEEEEE</color>
 </resources>
