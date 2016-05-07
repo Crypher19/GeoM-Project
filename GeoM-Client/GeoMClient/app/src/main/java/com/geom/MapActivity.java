@@ -1,5 +1,6 @@
 package com.geom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,7 +27,7 @@ public class MapActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                goBack();
             }
         });
 
@@ -34,5 +35,28 @@ public class MapActivity extends AppCompatActivity {
         if (getIntent().getBundleExtra("bundle").containsKey("PublicTransport")){
             PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("PublicTransport");
         }
+    }
+
+    public void goBack(){
+        Intent i;
+        Bundle b = new Bundle();
+
+        if(s.goToChoosePTActivity && !s.goToFavouritesActivity){//devo tornare a ChoosePTActivity
+            i = new Intent(MapActivity.this, ChoosePTActivity.class);
+            s.goToChoosePTActivity = false;
+        } else{//devo tornare a FavouritesActivity
+            i = new Intent(MapActivity.this, FavouritesActivity.class);
+            s.goToFavouritesActivity = false;
+        }
+
+        b.putParcelable("SharedData", s);
+        i.putExtra("bundle", b);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed(){
+        goBack();
     }
 }

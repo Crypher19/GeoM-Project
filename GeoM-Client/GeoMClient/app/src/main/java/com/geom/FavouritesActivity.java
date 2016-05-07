@@ -43,7 +43,7 @@ public class FavouritesActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                goBack();
             }
         });
 
@@ -61,6 +61,9 @@ public class FavouritesActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 //invio la posizione del preferito selezionato
                 PublicTransport fav = s.favList.get(position);
+
+                s.goToFavouritesActivity = true;//devo tornare a FavouritesActivity
+
                 b.putParcelable("SharedData", s);
                 b.putParcelable("favourite", fav);
                 i.putExtra("bundle", b);
@@ -94,7 +97,7 @@ public class FavouritesActivity extends AppCompatActivity {
                             i.putExtra("bundle", b);
                             startActivity(i);
                         } else{//non è l'ultimo preferito
-                            Snackbar.make(view, snackbarContent, Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(view, snackbarContent, Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -140,8 +143,8 @@ public class FavouritesActivity extends AppCompatActivity {
             //se va tutto bene aggiorno la lista da visualizzare
             refreshListContent(s.favList);
             return true;
-        } else
-            return false;
+        }
+        return false;
     }
 
     @Override
@@ -158,7 +161,6 @@ public class FavouritesActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {//aggiorno i preferiti
             String message;
             if(refresh()){
@@ -166,7 +168,7 @@ public class FavouritesActivity extends AppCompatActivity {
             } else message = "ERRORE, preferiti non aggiornati";
 
             Snackbar.make((findViewById(R.id.activity_favourites)), message,
-                    Snackbar.LENGTH_SHORT).show();
+                    Snackbar.LENGTH_LONG).show();
             return true;
         } else if(id == R.id.action_delete_all){//elimina tutti i preferiti
 
@@ -200,13 +202,6 @@ public class FavouritesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent i) {
-        super.onActivityResult(requestCode, resultCode, i);
-        if(resultCode == RESULT_OK){
-            s = i.getBundleExtra("bundle").getParcelable("SharedData");
-        }
-    }
-
     public boolean refresh(){
         List<PublicTransport> favList;
         MyFile f = new MyFile();
@@ -215,18 +210,50 @@ public class FavouritesActivity extends AppCompatActivity {
             s.favList = favList;
             refreshListContent(favList);
             return true;
-        } else return false;
+        }
+
+        return false;
     }
 
     public boolean deleteAll(){
-        List<PublicTransport> favList;
         MyFile f = new MyFile();
 
         if (f.removeAllFavourites() > -1) {
-            favList = new ArrayList<>();//lista vuota
-            s.favList = favList;
+            s.favList = new ArrayList<>();//lista vuota
             refreshListContent(favList);
             return true;
-        } else return false;
+        }
+        return false;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent i) {
+        super.onActivityResult(requestCode, resultCode, i);
+        if(resultCode == RESULT_OK){
+            s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
+        }
+    }
+
+    public void goBack(){
+        Intent i;
+        Bundle b = new Bundle();
+
+        if(s.goToHomeActivity && !s.goToChoosePTActivity){//da FavouritesActivity a HomeActivity
+            i = new Intent(FavouritesActivity.this, HomeActivity.class);
+            s.goToHomeActivity = false;
+        } else{//da FavouritesActivity a ChoosePTActivity
+            i = new Intent(FavouritesActivity.this, ChoosePTActivity.class);
+            s.goToChoosePTActivity = false;
+        }
+
+        b.putParcelable("SharedData", s);
+        i.putExtra("bundle", b);
+        setResult(RESULT_OK);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed(){
+        goBack();
     }
 }

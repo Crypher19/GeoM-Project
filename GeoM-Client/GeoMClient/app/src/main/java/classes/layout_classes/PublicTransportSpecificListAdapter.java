@@ -57,10 +57,13 @@ public class PublicTransportSpecificListAdapter
                 //lancio MapActivity
                 Intent i = new Intent(v.getContext(), MapActivity.class);
                 Bundle b = new Bundle();
+
+                s.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity
+
                 b.putParcelable("PublicTransport", pt);
                 b.putParcelable("SharedData", s);
                 i.putExtra("bundle", b);
-                v.getContext().startActivity(i);
+                ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
             }
         });
 
@@ -106,14 +109,14 @@ public class PublicTransportSpecificListAdapter
                     holder.fav_img.setImageResource(R.drawable.ic_favourites_star_full);
                     //notifico il salvataggio all'utente
                     Snackbar.make(viewGroup.getRootView().findViewById(R.id.activity_choose_pt),
-                            addFav(pt), Snackbar.LENGTH_SHORT).show();
+                            addFav(pt), Snackbar.LENGTH_LONG).show();
                 }
                 else {//è un preferito
                     //cambio immagine
                     holder.fav_img.setImageResource(R.drawable.ic_favourites_star_empty);
                     //notifico l'eliminazione all'utente
                     Snackbar.make(viewGroup.getRootView().findViewById(R.id.activity_choose_pt),
-                            removeFav(pt), Snackbar.LENGTH_SHORT).show();
+                            removeFav(pt), Snackbar.LENGTH_LONG).show();
                 }
             }
         });

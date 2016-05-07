@@ -35,11 +35,16 @@ public class HomeActivity extends AppCompatActivity {
         f = new MyFile();
         s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
 
+        //reset di tutte le variabili per il goBack()
+        s.goToHomeActivity = false;
+        s.goToChoosePTActivity = false;
+        s.goToFavouritesActivity = false;
+
         //quando passo da FavouritesActivity a HomeActivity avendo eliminato tutti i preferiti
         if(getIntent().getBundleExtra("bundle").containsKey("snackbarContent")){
             Snackbar.make(findViewById(R.id.activity_home),
                 getIntent().getBundleExtra("bundle").getString("snackbarContent"),
-                Snackbar.LENGTH_SHORT)
+                Snackbar.LENGTH_LONG)
                 .show();
         }
 
@@ -63,8 +68,11 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!s.favList.isEmpty()) {
+                    s.goToHomeActivity = true;//activity alla quale devo ritornare
+
                     Intent i = new Intent(HomeActivity.this, FavouritesActivity.class);
                     Bundle b = new Bundle();
+
                     b.putParcelable("SharedData", s);
                     i.putExtra("bundle", b);
                     startActivityForResult(i, 2);
@@ -97,7 +105,12 @@ public class HomeActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
-            startActivity(i);
+            Bundle b = new Bundle();
+
+            s.goToHomeActivity = true;//torno alla HomeActivity
+            b.putParcelable("SharedData", s);
+            i.putExtra("bundle", b);
+            startActivityForResult(i, 3);
         }
 
         return super.onOptionsItemSelected(item);
@@ -124,6 +137,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
+        s.goToHomeActivity = true;//torno alla HomeActivity
+
         b.putParcelable("SharedData", s);
         i.putExtra("bundle", b);
         startActivityForResult(i, 1);
@@ -132,7 +147,7 @@ public class HomeActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
         if(resultCode == RESULT_OK){
-            s = i.getBundleExtra("bundle").getParcelable("SharedData");
+            s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
         }
     }
 }

@@ -16,6 +16,10 @@ public class SharedData implements Parcelable {
     public boolean firstTimeQueryTrain;
     public String pt_type;//lista mezzi da visualizzare
     public int offset; // id del prossimo mezzo di trasporto da chiedere
+    //variabili per goBack()
+    public boolean goToHomeActivity;
+    public boolean goToChoosePTActivity;
+    public boolean goToFavouritesActivity;
 
     public SharedData() {
         PTList = new ArrayList<>();
@@ -26,6 +30,9 @@ public class SharedData implements Parcelable {
         firstTimeQueryTrain = true;
         pt_type = null;
         offset = 0;
+        goToHomeActivity = false;
+        goToChoosePTActivity = false;
+        goToFavouritesActivity = false;
     }
 
     public List<PublicTransport> getListType(String pt_type) {
@@ -60,6 +67,9 @@ public class SharedData implements Parcelable {
         dest.writeByte(firstTimeQueryTrain ? (byte) 1 : (byte) 0);
         dest.writeString(this.pt_type);
         dest.writeInt(this.offset);
+        dest.writeByte(goToHomeActivity ? (byte) 1 : (byte) 0);
+        dest.writeByte(goToChoosePTActivity ? (byte) 1 : (byte) 0);
+        dest.writeByte(goToFavouritesActivity ? (byte) 1 : (byte) 0);
     }
 
     protected SharedData(Parcel in) {
@@ -71,6 +81,9 @@ public class SharedData implements Parcelable {
         this.firstTimeQueryTrain = in.readByte() != 0;
         this.pt_type = in.readString();
         this.offset = in.readInt();
+        this.goToHomeActivity = in.readByte() != 0;
+        this.goToChoosePTActivity = in.readByte() != 0;
+        this.goToFavouritesActivity = in.readByte() != 0;
     }
 
     public static final Creator<SharedData> CREATOR = new Creator<SharedData>() {

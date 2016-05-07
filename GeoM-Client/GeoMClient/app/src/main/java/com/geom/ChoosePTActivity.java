@@ -47,7 +47,7 @@ public class ChoosePTActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                goBack();
             }
         });
 
@@ -74,7 +74,7 @@ public class ChoosePTActivity extends AppCompatActivity {
         });
 
         if(message != null){//risultato dell'aggiornamento
-            Snackbar.make((findViewById(R.id.activity_choose_pt)), message, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make((findViewById(R.id.activity_choose_pt)), message, Snackbar.LENGTH_LONG).show();
         }
 
         //pulsante preferiti
@@ -85,6 +85,9 @@ public class ChoosePTActivity extends AppCompatActivity {
                 if (!s.favList.isEmpty()) {
                     Intent i = new Intent(ChoosePTActivity.this, FavouritesActivity.class);
                     Bundle b = new Bundle();
+
+                    s.goToChoosePTActivity = true;
+
                     b.putParcelable("SharedData", s);
                     i.putExtra("bundle", b);
                     startActivityForResult(i, 2);
@@ -136,7 +139,24 @@ private final Runnable refreshing = new Runnable() {
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
         if(resultCode == RESULT_OK){
-            s = i.getBundleExtra("bundle").getParcelable("SharedData");
+            s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
         }
+    }
+
+    public void goBack(){//da ChoosePTActivity a HomeActivity
+        Intent i = new Intent(ChoosePTActivity.this, HomeActivity.class);
+        Bundle b = new Bundle();
+
+        s.goToHomeActivity = false;
+
+        b.putParcelable("SharedData", s);
+        i.putExtra("bundle", b);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed(){
+        goBack();
     }
 }
