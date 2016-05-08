@@ -36,7 +36,9 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
+        if(getIntent().getBundleExtra("bundle").containsKey("SharedData")){//quando arrivo da InfoActivity l'Intent non contiene SharedData
+            s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
+        }
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, new CustomPreferenceFragment()).commit();
     }
@@ -54,41 +56,50 @@ public class SettingsActivity extends AppCompatActivity {
 
             Preference resetPref = findPreference("resetAll");
             resetPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                public boolean onPreferenceClick(Preference preference) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
-                            R.style.AppCompatAlertDialogStyleLight);
-                    builder.setTitle("Ripristinare le impostazioni predefinite?");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public boolean onPreferenceClick(Preference preference) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
+                                    R.style.AppCompatAlertDialogStyleLight);
+                            builder.setTitle("Ripristinare le impostazioni predefinite?");
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-                        //riporto impostazioni al valore di default
-                        public void onClick(DialogInterface dialog, int id) {
-                            String snackbarContent;
+                                //riporto impostazioni al valore di default
+                                public void onClick(DialogInterface dialog, int id) {
+                                    String snackbarContent;
 
-                            if(deleteAll()){//elimino i preferiti
-                                //wifiOnly
-                                CheckBoxPreference wifiOnly = (CheckBoxPreference) findPreference("wifiOnly");
-                                if(wifiOnly.isChecked()){
-                                    wifiOnly.setChecked(false);
+                                    if(deleteAll()){//elimino i preferiti
+                                        //wifiOnly
+                                        CheckBoxPreference wifiOnly = (CheckBoxPreference) findPreference("wifiOnly");
+                                        if(wifiOnly.isChecked()){
+                                            wifiOnly.setChecked(false);
+                                        }
+
+                                        //UIColor
+                                        //...
+
+                                        //notifico esito dell'operazione
+                                        snackbarContent = "Impostazioni ripristinate";
+                                        _return = true;
+                                    } else {
+                                        snackbarContent = "ERRORE durante il ripristino delle impostazioni";
+                                        _return = false;
+                                    }
+
+                                    Snackbar.make(getView(), snackbarContent, Snackbar.LENGTH_LONG).show();
                                 }
-
-                                //UIColor
-                                //...
-
-                                //notifico esito dell'operazione
-                                snackbarContent = "Impostazioni ripristinate";
-                                _return = true;
-                            } else {
-                                snackbarContent = "ERRORE durante il ripristino delle impostazioni";
-                                _return = false;
-                            }
-
-                            Snackbar.make(getView(), snackbarContent, Snackbar.LENGTH_LONG).show();
-                        }
-                    });
+                            });
 
                     builder.setNegativeButton("ANNULLA", null);
                     builder.show();
 
+                    return _return;
+                }
+            });
+
+            Preference prefInfo = findPreference("info");
+            prefInfo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent i = new Intent(getActivity(), InfoActivity.class);
+                    startActivity(i);
                     return _return;
                 }
             });

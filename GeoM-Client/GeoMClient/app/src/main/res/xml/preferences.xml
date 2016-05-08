@@ -5,15 +5,11 @@
         android:defaultValue="false"
         android:summary="@string/pref_wifi_only_summary"
         android:key="wifiOnly" />
-    <ListPreference
-        android:title="Download Details"
-        android:summary="Select the kind of data that you would like to download"
-        android:key="downloadType"
-        android:defaultValue="1"
-        android:entries="@array/listArray"
-        android:entryValues="@array/listValues" />
     <Preference
         android:title="@string/pref_reset_title"
         android:summary="@string/pref_reset_summary"
         android:key="resetAll"/>
+    <Preference
+        android:title="@string/pref_info_title"
+        android:key="info"/>
 </PreferenceScreen>

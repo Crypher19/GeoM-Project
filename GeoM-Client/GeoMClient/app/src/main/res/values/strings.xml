@@ -14,5 +14,6 @@
     <string name="pref_wifi_only_summary">Scarica aggiornamenti solo quando connesso ad una rete Wi-Fi.</string>
     <string name="pref_reset_title">Predefinite</string>
     <string name="pref_reset_summary">Ripristina le impostazioni predefinite ed elimina tutti i preferiti.</string>
+    <string name="pref_info_title">Informazioni applicazione</string>
 
 </resources>
