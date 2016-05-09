@@ -65,7 +65,7 @@ public class FavouritesActivity extends AppCompatActivity {
                 s.goToFavouritesActivity = true;//devo tornare a FavouritesActivity
 
                 b.putParcelable("SharedData", s);
-                b.putParcelable("favourite", fav);
+                b.putParcelable("PublicTransport", fav);
                 i.putExtra("bundle", b);
                 startActivityForResult(i, 4);
             }

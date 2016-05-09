@@ -1,18 +1,25 @@
 package com.example.ricevitore_gps;
 
+import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -21,13 +28,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Geocoder gc;
     private TextView myLocationText;
     private double lat, lon;
-    private Connessione c;
-    private DatiCondivisi d;
-    private boolean controlloThread = false; //serve a controllare se il thread è già stato avviato o no
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     private GoogleApiClient client;
 
     @Override
@@ -39,24 +40,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Bundle b = getIntent().getExtras();
+        Bundle b = getIntent().getBundleExtra("bundle");
         lat = b.getDouble("latitudine");
         lon = b.getDouble("longitudine");
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -64,11 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         myLocationText = (TextView) findViewById(R.id.textView);
 
-        d = new DatiCondivisi(mMap,myLocationText,gc,lat, lon);
-        //start thread
-        c = new Connessione(d);
-        c.start();
-        controlloThread=true;
+        updateMap(lat, lon);
 
     }
 
@@ -80,13 +66,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Maps Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "Maps Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.example.ricevitore_gps/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
@@ -95,74 +77,60 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Maps Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "Maps Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.example.ricevitore_gps/http/host/path")
         );
-
-        /*d.setFermaConnessione(true); //indico al thread che deve chiudere la connessione
-        try //fermo il thread quando
-        {
-            c.join();
-            controlloThread = false;
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
 
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
 
+    public void updateMap(double latitudine,double longitudine) {
+        lat = latitudine;
+        lon = longitudine;
+        LatLng pos = new LatLng(lat, lon);
+        mMap.addMarker(new MarkerOptions().position(pos).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
 
-    /*@Override
-    public void onResume()
-    {
-        super.onResume();
-        //quando l'app viene riaperta riavvio il thread
-        if(controlloThread==false)
-        {
-            c = new Connessione(d);
-            c.start();
-            controlloThread = true; //thread avviato
-        }
+        updateAddress(); //aggiorno la textView che contiene l'indirizzo
     }
 
-    @Override
-    public void onPause()
-    {
-        super.onPause();
+    private void updateAddress() {
+        String addressString = "No address found";
 
-        d.setFermaConnessione(true); //indico al thread che deve chiudere la connessione
-        try //fermo il thread quando
-        {
-            c.join();
-            controlloThread = false;
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (lat != 0 && lon != 0) {
+            // Update the position overlay.
+            double latitude = lat;
+            double longitude = lon;
+
+
+            if (!Geocoder.isPresent())
+                addressString = "No geocoder available";
+            else {
+                try {
+                    List<Address> addresses = gc.getFromLocation(latitude, longitude, 1);
+                    StringBuilder sb = new StringBuilder();
+                    if (addresses.size() > 0) {
+                        Address address = addresses.get(0);
+
+                        for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
+                            sb.append(address.getAddressLine(i)).append("\n");
+
+                        sb.append(address.getLocality()).append("\n");
+                        sb.append(address.getPostalCode()).append("\n");
+                        sb.append(address.getCountryName());
+                    }
+                    addressString = sb.toString();
+                } catch (IOException e) {
+                    Log.d("WHEREAMI", "IO Exception", e);
+                }
+            }
         }
+
+        myLocationText.setText("Indirizzo:\n" + "\n" + addressString);
     }
-    @Override
-    public void onRestart()
-    {
-        super.onRestart();
-        //quando l'app viene riaperta riavvio il thread
-        if(controlloThread==false)
-        {
-            c = new Connessione(d);
-            c.start();
-            controlloThread = true; //thread avviato
-        }
-    }*/
 
 }

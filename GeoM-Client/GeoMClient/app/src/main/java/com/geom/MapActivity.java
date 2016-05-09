@@ -32,9 +32,8 @@ public class MapActivity extends AppCompatActivity {
         });
 
         //extra ricevuto da ChoosePTActivity o FavouritesActivity
-        if (getIntent().getBundleExtra("bundle").containsKey("PublicTransport")){
-            PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("PublicTransport");
-        }
+        PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("PublicTransport");
+
     }
 
     public void goBack(){
