@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
-import classes.layout_classes.PublicTransportGenericListAdapter;
+import classes.layout_classes.PublicTransportListViewAdapter;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -50,8 +50,8 @@ public class HomeActivity extends AppCompatActivity {
 
         //lista di mezzi di trasporto
         ListView lv = (ListView) findViewById(R.id.pt_listview);
-        lv.setAdapter(new PublicTransportGenericListAdapter(HomeActivity.this,
-                R.layout.pt_generic_item_list_layout, new ArrayList<>(s.PTList)));
+        lv.setAdapter(new PublicTransportListViewAdapter(HomeActivity.this,
+                R.layout.pt_item_list_layout, new ArrayList<>(s.PTList)));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, final View components, int pos, long id) {
@@ -90,20 +90,16 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        //costruisco il menù
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        int id = item.getItemId();//opzione selezionata
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) {//scelgo impostazioni
             Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
             Bundle b = new Bundle();
 
@@ -125,15 +121,27 @@ public class HomeActivity extends AppCompatActivity {
         if (pt_type.equals(PublicTransport.pt_type_bus)) {
             if(s.firstTimeQueryBus) {//evito di ricaricare gli elementi se sono gia presenti (SOLUZIONE TEMPORANEA)
                 s.firstTimeQueryBus = false;
-                s.busList.add(new PublicTransport(1, "bus", "c-81", "asf", "mariano-cantu", true, 12.5, 12.5));
-                s.busList.add(new PublicTransport(2, "bus", "c-80", "asf", "mariano-arosio", false, 12.5, 12.5));
+                s.busList.add(new PublicTransport(1, "bus", "1", "asf", "mariano-cantu", true, 12.5, 12.5));
+                s.busList.add(new PublicTransport(2, "bus", "2", "asf", "mariano-arosio", false, 12.5, 12.5));
+                s.busList.add(new PublicTransport(3, "bus", "3", "asf", "mariano-cantu", true, 12.5, 12.5));
+                s.busList.add(new PublicTransport(4, "bus", "4", "asf", "mariano-arosio", false, 12.5, 12.5));
+                s.busList.add(new PublicTransport(5, "bus", "5", "asf", "mariano-cantu", true, 12.5, 12.5));
+                s.busList.add(new PublicTransport(6, "bus", "6", "asf", "mariano-arosio", false, 12.5, 12.5));
+                s.busList.add(new PublicTransport(7, "bus", "7", "asf", "mariano-cantu", true, 12.5, 12.5));
+                s.busList.add(new PublicTransport(8, "bus", "8", "asf", "mariano-arosio", false, 12.5, 12.5));
             }
 
         } else if(pt_type.equals(PublicTransport.pt_type_train)){
             if(s.firstTimeQueryTrain){//evito di ricaricare gli elementi se sono gia presenti (SOLUZIONE TEMPORANEA)
                 s.firstTimeQueryTrain = false;
-                s.trainList.add(new PublicTransport(3, "treno", "ff123", "trenord" ,"milano-asso", false, 12.5, 12.5));
-                s.trainList.add(new PublicTransport(4, "treno", "ff456", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
+                s.trainList.add(new PublicTransport(1, "treno", "1", "trenord" ,"milano-asso", false, 12.5, 12.5));
+                s.trainList.add(new PublicTransport(2, "treno", "2", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
+                s.trainList.add(new PublicTransport(3, "treno", "3", "trenord" ,"milano-asso", false, 12.5, 12.5));
+                s.trainList.add(new PublicTransport(4, "treno", "4", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
+                s.trainList.add(new PublicTransport(5, "treno", "5", "trenord" ,"milano-asso", false, 12.5, 12.5));
+                s.trainList.add(new PublicTransport(6, "treno", "6", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
+                s.trainList.add(new PublicTransport(7, "treno", "7", "trenord" ,"milano-asso", false, 12.5, 12.5));
+                s.trainList.add(new PublicTransport(8, "treno", "8", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
             }
         }
 

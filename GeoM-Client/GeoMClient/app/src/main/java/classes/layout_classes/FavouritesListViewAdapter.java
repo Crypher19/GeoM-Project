@@ -15,13 +15,13 @@ import java.util.ArrayList;
 
 import classes.PublicTransport;
 
-public class FavouritesListAdapter extends ArrayAdapter<PublicTransport> {
+public class FavouritesListViewAdapter extends ArrayAdapter<PublicTransport> {
     //private Activity activity;
     private ArrayList<PublicTransport> favList;
     private LayoutInflater inflater = null;
 
-    public FavouritesListAdapter(Activity activity, int textViewResourceId,
-                                 ArrayList<PublicTransport> favList) {
+    public FavouritesListViewAdapter(Activity activity, int textViewResourceId,
+                                     ArrayList<PublicTransport> favList) {
 
         super(activity, textViewResourceId, favList);
         try {

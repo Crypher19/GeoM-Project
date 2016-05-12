@@ -1,4 +1,4 @@
-MODIFICHE EFFETTUATE
+﻿MODIFICHE EFFETTUATE
 
 1. Da MapActivity tornare a ChoosePTActivity e non a HomeActivity
 2. Spostato aggiornamento liste dei mezzi di trasporto in metodo onClick() in HomeActivity
@@ -7,7 +7,12 @@ MODIFICHE EFFETTUATE
 5. Passaggio extra tramite Bundle
 7. Aggiornata versione SDK Build Tools a 23.0.3
 8. Quando premo sulla lista scarico dal server i mezzi (solo i primi N).
-9. Quando aggiorno manualmente svuoto la lista e visualizzo solo i primi N (di partenza)
+9. Quando aggiorno manualmente svuoto la lista e visualizzo solo i primi N elementi (di partenza)
+10. Quando arrivo in fondo alla lista ne richiedo altri (almeno per due-tre pagine). 
+11. impostazioni: 
+	- possibilità di aggiornare lista solo con wifi
+	- reset dati/preferiti
+	- pagina informazioni
 
 
 SOLUZIONE TEMPORANEA
@@ -19,9 +24,5 @@ SOLUZIONE TEMPORANEA
 
 PROSSIME MODIFICHE
 
-- Quando arrivo in fondo alla lista ne richiedo altri (almeno per due-tre pagine). 
-
-- impostazioni: possibilità di aggiornare lista solo con wifi
-		cambio colore
-		reset dati/preferiti
-- informazioni + logo in MainActivity
+- Logo in MainActivity
+- Ricerca mezzi di trasporto in ChoosePTActivity

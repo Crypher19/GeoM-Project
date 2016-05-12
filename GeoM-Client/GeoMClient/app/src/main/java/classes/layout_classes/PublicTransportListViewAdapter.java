@@ -15,13 +15,13 @@ import java.util.ArrayList;
 
 import classes.PublicTransport;
 //lista di oggetti PublicTransport
-public class PublicTransportGenericListAdapter extends ArrayAdapter<PublicTransport> {
+public class PublicTransportListViewAdapter extends ArrayAdapter<PublicTransport> {
     //private Activity activity;
     private ArrayList<PublicTransport> PTList;
     private LayoutInflater inflater = null;
 
-    public PublicTransportGenericListAdapter(Activity activity, int textViewResourceId,
-                                             ArrayList<PublicTransport> PTList) {
+    public PublicTransportListViewAdapter(Activity activity, int textViewResourceId,
+                                          ArrayList<PublicTransport> PTList) {
 
         super(activity, textViewResourceId, PTList);
         try {
@@ -58,7 +58,7 @@ public class PublicTransportGenericListAdapter extends ArrayAdapter<PublicTransp
         final ViewHolder holder;
         try {
             if (convertView == null) {
-                vi = inflater.inflate(R.layout.pt_generic_item_list_layout, null);
+                vi = inflater.inflate(R.layout.pt_item_list_layout, null);
                 holder = new ViewHolder();
 
                 holder.pt_image_id = (ImageView) vi.findViewById(R.id.pt_image);

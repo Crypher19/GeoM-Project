@@ -20,12 +20,12 @@ import java.util.List;
 import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
-import classes.layout_classes.FavouritesListAdapter;
+import classes.layout_classes.FavouritesListViewAdapter;
 
 public class FavouritesActivity extends AppCompatActivity {
     SharedData s;
     ListView lv;
-    FavouritesListAdapter fla;
+    FavouritesListViewAdapter fla;
     List<PublicTransport> favList;
 
     @Override
@@ -49,7 +49,7 @@ public class FavouritesActivity extends AppCompatActivity {
 
         //costruisco e visualizzo la lista nell'activity
         lv = (ListView) findViewById(R.id.favListView);
-        fla = new FavouritesListAdapter(
+        fla = new FavouritesListViewAdapter(
                 FavouritesActivity.this, R.layout.pt_specific_item_list_layout,
                 new ArrayList<>(s.favList));
         lv.setAdapter(fla);

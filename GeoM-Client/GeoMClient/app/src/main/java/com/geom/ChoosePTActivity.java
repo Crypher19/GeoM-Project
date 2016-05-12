@@ -13,17 +13,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import java.util.List;
-
-import classes.LoadingThread;
 import classes.PublicTransport;
 import classes.SharedData;
-import classes.layout_classes.PublicTransportSpecificListAdapter;
+import classes.layout_classes.OnLoadMoreListener;
+import classes.layout_classes.PublicTransportCardViewAdapter;
 
-/*implementazione metodi onClick di cardview in PublicTransportSpecificListAdapter*/
+/*implementazione metodi onClick di cardview in PublicTransportCardViewAdapter*/
 public class ChoosePTActivity extends AppCompatActivity {
     SharedData s;
     SwipeRefreshLayout swipeRefreshLayout;
+    PublicTransportCardViewAdapter publicTransportCardViewAdapter;
     RecyclerView recList;
     String pt_type;
     Handler handler = new Handler();
@@ -51,19 +50,46 @@ public class ChoosePTActivity extends AppCompatActivity {
             }
         });
 
+        //CardView
         recList = (RecyclerView) findViewById(R.id.pt_recycler_view);
         recList.setHasFixedSize(true);
+
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
-        //CardView
-        //in base al mezzo selezionato visualizzo la lista corrispondente
-        PublicTransportSpecificListAdapter publicTransportSpecificListAdapter
-                = new PublicTransportSpecificListAdapter(s.getListType(pt_type));
-        recList.setAdapter(publicTransportSpecificListAdapter);
+        publicTransportCardViewAdapter
+                = new PublicTransportCardViewAdapter(s.getListType(pt_type), recList);
+        recList.setAdapter(publicTransportCardViewAdapter);
 
-        //aggiorno tradcinando verso il basso
+        //ProgressBar (scorro in basso per caricare più elementi)
+        publicTransportCardViewAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                s.getListType(pt_type).add(null);
+                publicTransportCardViewAdapter.notifyItemInserted(s.getListType(pt_type).size() - 1);
+
+                //Carico più elementi in RecyclerView
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        //Tolgo la Progressbar dalla CardView
+                        s.getListType(pt_type).remove(s.getListType(pt_type).size() - 1);
+                        publicTransportCardViewAdapter.notifyItemRemoved(s.getListType(pt_type).size());
+
+                        //carico più elementi
+                        loadMore();
+
+                        //notifico cambiamenti
+                        publicTransportCardViewAdapter.notifyDataSetChanged();
+                        publicTransportCardViewAdapter.setLoaded();
+                    }
+                }, 2000);
+            }
+        });
+
+        //SwipeRefreshLayout (aggiorno trascinando verso il basso)
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -77,7 +103,7 @@ public class ChoosePTActivity extends AppCompatActivity {
             Snackbar.make((findViewById(R.id.activity_choose_pt)), message, Snackbar.LENGTH_LONG).show();
         }
 
-        //pulsante preferiti
+        //FloatingActionButton per i preferiti
         FloatingActionButton favourites_fab = (FloatingActionButton) findViewById(R.id.favourites_fab);
         favourites_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,41 +126,49 @@ public class ChoosePTActivity extends AppCompatActivity {
                 }
 }
         });
+    }
+
+    //Aggiorno quando trascino verso il basso
+    private final Runnable refreshing = new Runnable() {
+        public void run() {
+            try {
+            swipeRefreshLayout.setRefreshing(true);
+            /*s.clearList(pt_type); // svuoto completamente la lista
+
+            // parte il thread per ottenere la nuova lista dal server
+            LoadingThread lt = new LoadingThread(s);
+            lt.start();
+            lt.join();*/
+
+            // costruisco la nuova lista
+            //List<PublicTransport> temp = s.getListType(pt_type);
+
+            /* aggiornamento lista */
+            /*recList.setAdapter(new PublicTransportCardViewAdapter(temp));
+            recList.invalidate();
+            */
+            //termino l'animazione
+            swipeRefreshLayout.setRefreshing(false);
+
+            message = "Lista aggiornata";
+            } catch (Exception e) {
+            e.printStackTrace();
+            message = "ERRORE, lista non aggiornata";
+            }
         }
+    };
 
-private final Runnable refreshing = new Runnable() {
-    public void run() {
-        try {
-        swipeRefreshLayout.setRefreshing(true);
-        s.clearList(pt_type); // svuoto completamente la lista
+    //Carico più elementi quando arrivo alla fine della lista
+    public void loadMore(){
+        //DA SOSTITUIRE CON QUERY SERVER
+        if (pt_type.equals(PublicTransport.pt_type_bus)) {
 
+            s.busList.add(new PublicTransport(21, "TESTBUS", "TEST", "TEST", "TEST", false, 12.5, 12.5));
 
-
-        // parte il thread per ottenere la nuova lista dal server
-        LoadingThread lt = new LoadingThread(s);
-        lt.start();
-        lt.join();
-
-
-
-
-        // costruisco la nuova lista
-        List<PublicTransport> temp = s.getListType(pt_type);
-
-        /* aggiornamento lista */
-        recList.setAdapter(new PublicTransportSpecificListAdapter(temp));
-        recList.invalidate();
-
-        //termino l'animazione
-        swipeRefreshLayout.setRefreshing(false);
-
-        message = "Lista aggiornata";
-        } catch (Exception e) {
-        e.printStackTrace();
-        message = "ERRORE, lista non aggiornata";
+        } else if(pt_type.equals(PublicTransport.pt_type_train)){
+            s.trainList.add(new PublicTransport(21, "TESTTRAIN", "TEST", "TEST", "TEST", false, 12.5, 12.5));
         }
     }
-};
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
         super.onActivityResult(requestCode, resultCode, i);
@@ -144,6 +178,10 @@ private final Runnable refreshing = new Runnable() {
     }
 
     public void goBack(){//da ChoosePTActivity a HomeActivity
+
+        //termino la ProgressBar
+        publicTransportCardViewAdapter.setOnLoadMoreListener(null);
+
         Intent i = new Intent(ChoosePTActivity.this, HomeActivity.class);
         Bundle b = new Bundle();
 
@@ -152,6 +190,7 @@ private final Runnable refreshing = new Runnable() {
         b.putParcelable("SharedData", s);
         i.putExtra("bundle", b);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         startActivity(i);
     }
 
