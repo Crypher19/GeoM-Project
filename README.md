@@ -1,6 +1,6 @@
 ﻿# GeoM-Project
 - L'archivio di questo progetto è stato spostato <a href="https://drive.google.com/open?id=0B6BkIbrqE7vcVnNZQlhxcnlpUXM" >QUI</a><br/>
-- Presentazione "Idee creative per l'innovazione imprenditoriale" <a href="https://drive.google.com/open?id=0ByCUeE-gfZ5UaW9HNjdvZGp2Rnc">LINK</a>
+- Presentazione "Idee creative per l'innovazione imprenditoriale" <a href="https://drive.google.com/open?id=0ByCUeE-gfZ5UdFVHdUEyWDd0c00">LINK</a>
 
 <hr>
 
