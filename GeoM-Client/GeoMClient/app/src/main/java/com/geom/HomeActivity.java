@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import classes.LoadingThread;
 import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
@@ -115,34 +116,12 @@ public class HomeActivity extends AppCompatActivity {
     public void initNewActivity(String pt_type){
         Intent i = new Intent(HomeActivity.this, ChoosePTActivity.class);
         Bundle b = new Bundle();
-
-        //DA SOSTITUIRE CON QUERY SERVER
-
-        if (pt_type.equals(PublicTransport.pt_type_bus)) {
-            if(s.firstTimeQueryBus) {//evito di ricaricare gli elementi se sono gia presenti (SOLUZIONE TEMPORANEA)
-                s.firstTimeQueryBus = false;
-                s.busList.add(new PublicTransport(1, "bus", "1", "asf", "mariano-cantu", true, 12.5, 12.5));
-                s.busList.add(new PublicTransport(2, "bus", "2", "asf", "mariano-arosio", false, 12.5, 12.5));
-                s.busList.add(new PublicTransport(3, "bus", "3", "asf", "mariano-cantu", true, 12.5, 12.5));
-                s.busList.add(new PublicTransport(4, "bus", "4", "asf", "mariano-arosio", false, 12.5, 12.5));
-                s.busList.add(new PublicTransport(5, "bus", "5", "asf", "mariano-cantu", true, 12.5, 12.5));
-                s.busList.add(new PublicTransport(6, "bus", "6", "asf", "mariano-arosio", false, 12.5, 12.5));
-                s.busList.add(new PublicTransport(7, "bus", "7", "asf", "mariano-cantu", true, 12.5, 12.5));
-                s.busList.add(new PublicTransport(8, "bus", "8", "asf", "mariano-arosio", false, 12.5, 12.5));
-            }
-
-        } else if(pt_type.equals(PublicTransport.pt_type_train)){
-            if(s.firstTimeQueryTrain){//evito di ricaricare gli elementi se sono gia presenti (SOLUZIONE TEMPORANEA)
-                s.firstTimeQueryTrain = false;
-                s.trainList.add(new PublicTransport(1, "treno", "1", "trenord" ,"milano-asso", false, 12.5, 12.5));
-                s.trainList.add(new PublicTransport(2, "treno", "2", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
-                s.trainList.add(new PublicTransport(3, "treno", "3", "trenord" ,"milano-asso", false, 12.5, 12.5));
-                s.trainList.add(new PublicTransport(4, "treno", "4", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
-                s.trainList.add(new PublicTransport(5, "treno", "5", "trenord" ,"milano-asso", false, 12.5, 12.5));
-                s.trainList.add(new PublicTransport(6, "treno", "6", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
-                s.trainList.add(new PublicTransport(7, "treno", "7", "trenord" ,"milano-asso", false, 12.5, 12.5));
-                s.trainList.add(new PublicTransport(8, "treno", "8", "trenitalia" ,"milano-modena", true, 12.5, 12.5));
-            }
+        LoadingThread lt = new LoadingThread(s);
+        lt.start();
+        try {
+            lt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         s.goToHomeActivity = true;//torno alla HomeActivity

@@ -153,6 +153,7 @@ public class PublicTransportCardViewAdapter extends RecyclerView.Adapter<Recycle
                     b.putParcelable("PublicTransport", pt);
                     b.putParcelable("SharedData", s);
                     i.putExtra("bundle", b);
+                    ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
                     ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
                 }
             });

@@ -8,12 +8,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -26,7 +21,7 @@ public class LoadingThread extends Thread {
 
     public LoadingThread(SharedData sd) {
         this.sd = sd;
-        conn = new Connection("192.168.1.110", 3333); // instanzio oggetto
+        conn = new Connection("172.22.109.93", 3333); // instanzio oggetto
     }
 
     @Override

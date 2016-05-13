@@ -13,6 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.util.List;
+
+import classes.LoadingThread;
 import classes.PublicTransport;
 import classes.SharedData;
 import classes.layout_classes.OnLoadMoreListener;
@@ -73,13 +76,12 @@ public class ChoosePTActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        //carico più elementi
+                        loadMore();
 
                         //Tolgo la Progressbar dalla CardView
                         s.getListType(pt_type).remove(s.getListType(pt_type).size() - 1);
                         publicTransportCardViewAdapter.notifyItemRemoved(s.getListType(pt_type).size());
-
-                        //carico più elementi
-                        loadMore();
 
                         //notifico cambiamenti
                         publicTransportCardViewAdapter.notifyDataSetChanged();
@@ -128,25 +130,25 @@ public class ChoosePTActivity extends AppCompatActivity {
         });
     }
 
-    //Aggiorno quando trascino verso il basso
+    //Aggiorno quando trascino verso il basso (DA INSERIRE IN ASYNCTASK)
     private final Runnable refreshing = new Runnable() {
         public void run() {
             try {
             swipeRefreshLayout.setRefreshing(true);
-            /*s.clearList(pt_type); // svuoto completamente la lista
+            s.getListType(pt_type).clear(); // svuoto completamente la lista
 
             // parte il thread per ottenere la nuova lista dal server
             LoadingThread lt = new LoadingThread(s);
             lt.start();
-            lt.join();*/
+            lt.join();
 
             // costruisco la nuova lista
-            //List<PublicTransport> temp = s.getListType(pt_type);
+            List<PublicTransport> temp = s.getListType(pt_type);
 
             /* aggiornamento lista */
-            /*recList.setAdapter(new PublicTransportCardViewAdapter(temp));
+            recList.setAdapter(new PublicTransportCardViewAdapter(temp, recList));
             recList.invalidate();
-            */
+
             //termino l'animazione
             swipeRefreshLayout.setRefreshing(false);
 
@@ -160,14 +162,24 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     //Carico più elementi quando arrivo alla fine della lista
     public void loadMore(){
-        //DA SOSTITUIRE CON QUERY SERVER
-        if (pt_type.equals(PublicTransport.pt_type_bus)) {
+        s.offset = s.getListType(pt_type).size()+1;
 
-            s.busList.add(new PublicTransport(21, "TESTBUS", "TEST", "TEST", "TEST", false, 12.5, 12.5));
-
-        } else if(pt_type.equals(PublicTransport.pt_type_train)){
-            s.trainList.add(new PublicTransport(21, "TESTTRAIN", "TEST", "TEST", "TEST", false, 12.5, 12.5));
+        LoadingThread lt = new LoadingThread(s);
+        lt.start();
+        try {
+            lt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        List<PublicTransport> temp = s.getListType(pt_type);
+
+        /* aggiornamento lista */
+        recList.setAdapter(new PublicTransportCardViewAdapter(temp, recList));
+        recList.invalidate();
+
+        //termino l'animazione
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
@@ -179,6 +191,9 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     public void goBack(){//da ChoosePTActivity a HomeActivity
 
+        //rimuovo la ProgressBar dalla CardView
+        s.getListType(pt_type).remove(s.getListType(pt_type).size() - 1);
+        publicTransportCardViewAdapter.notifyItemRemoved(s.getListType(pt_type).size());
         //termino la ProgressBar
         publicTransportCardViewAdapter.setOnLoadMoreListener(null);
 

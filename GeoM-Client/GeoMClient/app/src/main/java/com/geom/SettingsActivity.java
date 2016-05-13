@@ -71,10 +71,10 @@ public class SettingsActivity extends AppCompatActivity {
                                         CheckBoxPreference wifiOnly = (CheckBoxPreference) findPreference("wifiOnly");
                                         if(wifiOnly.isChecked()){
                                             wifiOnly.setChecked(false);
-                                        }
 
-                                        //UIColor
-                                        //...
+                                            //cambio valori
+                                            //...
+                                        }
 
                                         //notifico esito dell'operazione
                                         snackbarContent = "Impostazioni ripristinate";

@@ -44,14 +44,6 @@ public class SharedData implements Parcelable {
         return null;
     }
 
-    public void clearList(String pt_type) {
-        if (pt_type.equals(PublicTransport.pt_type_bus)) {//cardview di Bus
-            busList.clear();
-        } else if (pt_type.equals(PublicTransport.pt_type_train)) {//cardview di Train
-            trainList.clear();
-        }
-    }
-
     @Override
     public int describeContents() {
         return 0;
