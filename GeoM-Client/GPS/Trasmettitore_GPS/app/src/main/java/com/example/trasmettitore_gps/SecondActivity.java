@@ -17,6 +17,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.lang.*;
+
 public class SecondActivity extends AppCompatActivity {
 
     /**
@@ -26,12 +28,12 @@ public class SecondActivity extends AppCompatActivity {
     private GoogleApiClient client;
     int count = 0;
 
+    private LocationManager locationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        LocationManager locationManager;
         String svcName = Context.LOCATION_SERVICE;
         locationManager = (LocationManager) getSystemService(svcName);
 
@@ -55,13 +57,20 @@ public class SecondActivity extends AppCompatActivity {
         }
         Location l = locationManager.getLastKnownLocation(provider);
 
-        updateWithNewLocation(l);
+        TextView myLocationText;
+        myLocationText = (TextView) findViewById(R.id.textView);
+
+        ThreadLocation tl = new ThreadLocation(locationManager,provider,getApplicationContext(),myLocationText);
+
+        tl.start();
+
+        /*updateWithNewLocation(l);
 
         locationManager.requestLocationUpdates(provider, 2000, 10, locationListener); //metodo per aggiornare la posizione periodicamente
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();*/
     }
 
     private void updateWithNewLocation(Location location) {
@@ -86,8 +95,9 @@ public class SecondActivity extends AppCompatActivity {
         myLocationText.setText("Your Current Position is:\n" +
                 latLongString);
 
-        //creo il thread per la connessione
-        Connessione c = new Connessione(lat,lng);
+
+       //creo il thread per la connessione
+        /*Connessione c = new Connessione(lat,lng);
 
         c.start();
 
@@ -99,7 +109,7 @@ public class SecondActivity extends AppCompatActivity {
         catch(Exception e)
         {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -144,7 +154,7 @@ public class SecondActivity extends AppCompatActivity {
 
     private final LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-            updateWithNewLocation(location);
+            //updateWithNewLocation(location);
         }
 
         public void onProviderDisabled(String provider) {}
