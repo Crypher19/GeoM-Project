@@ -23,12 +23,8 @@ class ListRequestThread(threading.Thread):
             doc = pxml.toDOMObject(msg)
             richiesta = pxml.getLimitOffsetAndPTtype(doc) # ottengo una tupla (tipo, limit, offset)
             #totMezzi = self.sd.getNumTransports(richiesta[0]) # passo il tipoMezzo
-
-
-            ### TODO: aggiungere eventuale controllo sul refresh per variare l'offset dei trasporti da inviare e TESTARE
-
-
-            msg = self.sd.getDOMTransportsList(richiesta[0], 20, richiesta[2]) # ottengo i primi 20 mezzi di tipo "richiesta[0]" a partire da "richiesta[2]"
+            print("TYPE:" + richiesta[0] + " LIMIT:" + richiesta[1] + " OFFSET:" + richiesta[2])
+            msg = self.sd.getDOMTransportsList(richiesta[0], richiesta[1], richiesta[2]) # ottengo i primi "richiesta[1]" mezzi di tipo "richiesta[0]" a partire da "richiesta[2]"
             self.send(msg)       
             self.conn.close()
             print("Connessione chiusa correttamente")
