@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
                 //ottengo il tipo di mezzo di trasporto
                 String pt_type = ((PublicTransport) adapter.getItemAtPosition(pos)).getPt_type();
                 s.pt_type = pt_type;//tipo di lista da visualizzare
-                initNewActivity(pt_type);
+                initNewActivity();
             }
         });
 
@@ -113,9 +114,12 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void initNewActivity(String pt_type){
+    public void initNewActivity(){
         Intent i = new Intent(HomeActivity.this, ChoosePTActivity.class);
         Bundle b = new Bundle();
+
+        s.offset = 0;
+
         LoadingThread lt = new LoadingThread(s);
         lt.start();
         try {

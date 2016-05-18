@@ -21,7 +21,7 @@ public class LoadingThread extends Thread {
 
     public LoadingThread(SharedData sd) {
         this.sd = sd;
-        conn = new Connection("172.22.109.93", 3333); // instanzio oggetto
+        conn = new Connection("local.tegamino.net", 3333); // instanzio oggetto
     }
 
     @Override
@@ -53,7 +53,6 @@ public class LoadingThread extends Thread {
             int id;
             // ottengo la lista di tutti gli elementi "mezzo"
             mezzi = listaPT.getElementsByTagName("mezzo");
-
 
             // per ogni mezzo
             for (int i=0; i < mezzi.getLength(); i++) {
