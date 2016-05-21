@@ -40,10 +40,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Bundle b = getIntent().getBundleExtra("bundle");
-        lat = b.getDouble("latitudine");
-        lon = b.getDouble("longitudine");
-
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
@@ -54,7 +50,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         myLocationText = (TextView) findViewById(R.id.textView);
 
-        updateMap(lat, lon);
+        new Thread() {
+            public void run() {
+                int i = 0;
+                while (i++ < 100) {
+                    double latitudine = (i/10)+44;
+                    double longitudine = (i/10)+8;
+                    ThreadRunnable t = new ThreadRunnable(getApplicationContext(),mMap,latitudine,longitudine,i);
+                    try {
+                        runOnUiThread(t);
+                        Thread.sleep(1000);
+                    }catch(InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
 
     }
 

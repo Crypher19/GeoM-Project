@@ -29,6 +29,8 @@ public class SecondActivity extends AppCompatActivity {
     int count = 0;
 
     private LocationManager locationManager;
+    TextView myLocationText, locationRefresh;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,35 @@ public class SecondActivity extends AppCompatActivity {
         criteria.setBearingRequired(false);
         criteria.setSpeedRequired(false);
         criteria.setCostAllowed(true);
-        String provider = locationManager.getBestProvider(criteria, true);
+        final String provider = locationManager.getBestProvider(criteria, true);
+
+        myLocationText = (TextView) findViewById(R.id.textView);
+        locationRefresh = (TextView) findViewById(R.id.textView2);
+
+        new Thread() {
+            public void run() {
+                int i = 0;
+                while (i++ < 1000) {
+                    Location l = searchLocation(provider);
+                    ThreadRunnable t = new ThreadRunnable(l,locationRefresh,myLocationText,i);
+                    try {
+                        runOnUiThread(t);
+                        Thread.sleep(1000);
+                    }catch(InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+
+        //locationManager.requestLocationUpdates(provider, 2000, 10, locationListener); //metodo per aggiornare la posizione periodicamente
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    public Location searchLocation(String p) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -53,63 +83,10 @@ public class SecondActivity extends AppCompatActivity {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
+
         }
-        Location l = locationManager.getLastKnownLocation(provider);
-
-        TextView myLocationText;
-        myLocationText = (TextView) findViewById(R.id.textView);
-
-        ThreadLocation tl = new ThreadLocation(locationManager,provider,getApplicationContext(),myLocationText);
-
-        tl.start();
-
-        /*updateWithNewLocation(l);
-
-        locationManager.requestLocationUpdates(provider, 2000, 10, locationListener); //metodo per aggiornare la posizione periodicamente
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();*/
-    }
-
-    private void updateWithNewLocation(Location location) {
-        TextView myLocationText;
-        myLocationText = (TextView) findViewById(R.id.textView);
-
-        TextView textCount;
-        textCount = (TextView) findViewById(R.id.textView2); //textView per contere il numero di refresh della posizione
-
-        double lat=-1,lng=-1; //il valore è negtivo in modo che il server possa copire se si è verificato un errore con il gps
-
-        String latLongString = "No location found";
-
-        if (location != null) {
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-            latLongString = "Lat:" + lat + "\nLong:" + lng;
-        }
-
-        textCount.setText("number of refresh: "+ count);
-        count++;
-        myLocationText.setText("Your Current Position is:\n" +
-                latLongString);
-
-
-       //creo il thread per la connessione
-        /*Connessione c = new Connessione(lat,lng);
-
-        c.start();
-
-        try
-        {
-            //attendo la fine del thread
-            c.join();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }*/
+        Location l = locationManager.getLastKnownLocation(p);
+        return l;
     }
 
     @Override

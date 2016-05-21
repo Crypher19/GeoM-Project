@@ -25,11 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void openMap()
     {
         double lat= 14,lon = 16;
-        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-        Bundle b = new Bundle();
-        b.putDouble("latitudine", lat);
-        b.putDouble("longitudine", lon);
-        intent.putExtra("bundle", b);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 }
