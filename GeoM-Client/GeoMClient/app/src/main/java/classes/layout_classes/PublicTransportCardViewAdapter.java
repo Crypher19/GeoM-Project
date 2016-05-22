@@ -43,7 +43,6 @@ public class PublicTransportCardViewAdapter extends RecyclerView.Adapter<Recycle
 
         final LinearLayoutManager linearLayoutManager
                 = (LinearLayoutManager) recyclerView.getLayoutManager();
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -79,6 +78,7 @@ public class PublicTransportCardViewAdapter extends RecyclerView.Adapter<Recycle
             f = new MyFile();
             s = ((Activity) viewGroup.getRootView().getContext()).getIntent()
                     .getBundleExtra("bundle").getParcelable("SharedData");
+
 
             View itemView = LayoutInflater.
                     from(viewGroup.getContext()).
@@ -168,7 +168,7 @@ public class PublicTransportCardViewAdapter extends RecyclerView.Adapter<Recycle
             //mezzo disponibile - non disponibile (pallino verde - rosso)
             if(pt_list.get(position).isPt_enabled()){
                 holder.pt_enabled.setImageResource(R.drawable.ic_enabled_green);//mezzo disponibile
-            } else holder.pt_enabled.setImageResource(R.drawable.ic_disabled_red);//mezzo non disponibile
+            } else holder.pt_enabled.setImageResource(R.drawable.ic_disabled_red);//mezzo non disponibile*/
 
         } else if (viewHolder instanceof LoadingViewHolder) {//eseguo solo se in OnCreateViewHolder ho scelto la ProgressBar
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) viewHolder;

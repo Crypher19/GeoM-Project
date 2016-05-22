@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 
 import classes.LoadingThread;
@@ -124,8 +125,10 @@ public class HomeActivity extends AppCompatActivity {
         lt.start();
         try {
             lt.join();
+            Log.i("THREAD EXCEPTION", "JOIN ESEGUITA");
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Log.i("THREAD EXCEPTION", "TREAD TERMINATO PER TIMEOUT");
         }
 
         s.goToHomeActivity = true;//torno alla HomeActivity

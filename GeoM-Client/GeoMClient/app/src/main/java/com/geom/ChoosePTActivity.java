@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -28,8 +29,9 @@ public class ChoosePTActivity extends AppCompatActivity {
     PublicTransportCardViewAdapter publicTransportCardViewAdapter;
     RecyclerView recList;
     String pt_type;
+    List<PublicTransport> pt_list;
     Handler handler = new Handler();
-    String message = null;
+    String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +40,15 @@ public class ChoosePTActivity extends AppCompatActivity {
 
         s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
         pt_type = s.pt_type;
+        pt_list = s.getListType(pt_type);
 
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //il titolo varia in base alla lista visualizzata
+        toolbar.setTitle("Nuovo " + pt_type);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //il titolo varia in base alla lista visualizzata
-        getSupportActionBar().setTitle("Nuovo " + pt_type);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,33 +58,29 @@ public class ChoosePTActivity extends AppCompatActivity {
 
         //CardView
         recList = (RecyclerView) findViewById(R.id.pt_recycler_view);
-        recList.setHasFixedSize(true);
-
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recList.setLayoutManager(llm);
-
+        recList.setLayoutManager(new LinearLayoutManager(this));
         publicTransportCardViewAdapter
-                = new PublicTransportCardViewAdapter(s.getListType(pt_type), recList);
+                = new PublicTransportCardViewAdapter(pt_list, recList);
         recList.setAdapter(publicTransportCardViewAdapter);
-
         //ProgressBar (scorro in basso per caricare più elementi)
         publicTransportCardViewAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
+                Log.i("sMESSAGE", "PROGRESSBAR VISUALIZZATA");
                 s.getListType(pt_type).add(null);
-                publicTransportCardViewAdapter.notifyItemInserted(s.getListType(pt_type).size() - 1);
+                publicTransportCardViewAdapter.notifyItemInserted(pt_list.size() - 1);
 
                 //Carico più elementi in RecyclerView
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        //Tolgo la Progressbar dalla CardView
+                        Log.i("sMESSAGE", "PROGRESSBAR NASCOSTA");
+                        pt_list.remove(pt_list.size() - 1);
+                        publicTransportCardViewAdapter.notifyItemRemoved(pt_list.size());
+
                         //carico più elementi
                         loadMore();
-
-                        //Tolgo la Progressbar dalla CardView
-                        s.getListType(pt_type).remove(s.getListType(pt_type).size() - 1);
-                        publicTransportCardViewAdapter.notifyItemRemoved(s.getListType(pt_type).size());
 
                         //notifico cambiamenti
                         publicTransportCardViewAdapter.notifyDataSetChanged();
@@ -91,10 +90,11 @@ public class ChoosePTActivity extends AppCompatActivity {
             }
         });
 
-        //SwipeRefreshLayout (aggiorno trascinando verso il basso)
+        //SwypeRefreshLayout (trascino verso il basso per aggiornare)
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
             @Override
             public void onRefresh() {
                 handler.post(refreshing);
@@ -102,7 +102,8 @@ public class ChoosePTActivity extends AppCompatActivity {
         });
 
         if(message != null){//risultato dell'aggiornamento
-            Snackbar.make((findViewById(R.id.activity_choose_pt)), message, Snackbar.LENGTH_LONG).show();
+            Snackbar.make((findViewById(R.id.activity_choose_pt)), message,
+                            Snackbar.LENGTH_LONG).show();
         }
 
         //FloatingActionButton per i preferiti
@@ -135,18 +136,15 @@ public class ChoosePTActivity extends AppCompatActivity {
         public void run() {
             try {
             swipeRefreshLayout.setRefreshing(true);
-            s.getListType(pt_type).clear(); // svuoto completamente la lista
+           pt_list.clear(); // svuoto completamente la lista
 
             // parte il thread per ottenere la nuova lista dal server
             LoadingThread lt = new LoadingThread(s);
             lt.start();
             lt.join();
 
-            // costruisco la nuova lista
-            List<PublicTransport> temp = s.getListType(pt_type);
-
             /* aggiornamento lista */
-            recList.setAdapter(new PublicTransportCardViewAdapter(temp, recList));
+            recList.setAdapter(new PublicTransportCardViewAdapter(pt_list, recList));
             recList.invalidate();
 
             //termino l'animazione
@@ -160,9 +158,10 @@ public class ChoosePTActivity extends AppCompatActivity {
         }
     };
 
+
     //Carico più elementi quando arrivo alla fine della lista
     public void loadMore(){
-        s.offset = s.getListType(pt_type).size()+1;
+        s.offset = pt_list.size()+1;
 
         LoadingThread lt = new LoadingThread(s);
         lt.start();
@@ -171,15 +170,6 @@ public class ChoosePTActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        List<PublicTransport> temp = s.getListType(pt_type);
-
-        /* aggiornamento lista */
-        recList.setAdapter(new PublicTransportCardViewAdapter(temp, recList));
-        recList.invalidate();
-
-        //termino l'animazione
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
@@ -191,22 +181,15 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     public void goBack(){//da ChoosePTActivity a HomeActivity
 
-        //rimuovo la ProgressBar dalla CardView
-        s.getListType(pt_type).remove(s.getListType(pt_type).size() - 1);
-        publicTransportCardViewAdapter.notifyItemRemoved(s.getListType(pt_type).size());
-        //termino la ProgressBar
-        publicTransportCardViewAdapter.setOnLoadMoreListener(null);
-
-        Intent i = new Intent(ChoosePTActivity.this, HomeActivity.class);
+        Intent i = new Intent();
         Bundle b = new Bundle();
 
         s.goToHomeActivity = false;
 
         b.putParcelable("SharedData", s);
         i.putExtra("bundle", b);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        startActivity(i);
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override

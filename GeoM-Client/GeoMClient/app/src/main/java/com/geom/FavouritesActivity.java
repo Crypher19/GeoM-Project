@@ -156,9 +156,6 @@ public class FavouritesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {//aggiorno i preferiti
@@ -247,8 +244,8 @@ public class FavouritesActivity extends AppCompatActivity {
 
         b.putParcelable("SharedData", s);
         i.putExtra("bundle", b);
-        setResult(RESULT_OK);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        setResult(RESULT_OK);
         startActivity(i);
     }
 

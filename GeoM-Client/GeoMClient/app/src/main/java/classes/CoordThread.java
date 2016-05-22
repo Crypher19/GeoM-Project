@@ -7,7 +7,7 @@ public class CoordThread extends Thread {
     private Connection conn;
 
     public CoordThread() {
-        conn = new Connection("192.168.1.110", 3333);
+        conn = new Connection("51.254.127.27", 3333);
     }
 
     @Override

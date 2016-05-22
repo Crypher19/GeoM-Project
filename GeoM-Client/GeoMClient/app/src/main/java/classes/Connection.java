@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -67,7 +68,7 @@ public class Connection {
 		} catch (IOException e) {
 			Log.e("ERRORE", e.getMessage());
 		}
-	}
+    }
 	
 	public void closeConn() throws IOException {
         connection.close();

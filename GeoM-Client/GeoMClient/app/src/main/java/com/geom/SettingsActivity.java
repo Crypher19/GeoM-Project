@@ -95,6 +95,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
+            //vado a InfoActivity
             Preference prefInfo = findPreference("info");
             prefInfo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
@@ -117,15 +118,16 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void goBack(){
-        Intent i = new Intent(SettingsActivity.this, HomeActivity.class);
+        Intent i = new Intent();
         Bundle b = new Bundle();
 
         s.goToHomeActivity = false;
 
         b.putParcelable("SharedData", s);
         i.putExtra("bundle", b);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        setResult(RESULT_OK);
         startActivity(i);
+        finish();
     }
 
     @Override
