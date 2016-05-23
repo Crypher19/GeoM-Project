@@ -84,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
                                         _return = false;
                                     }
 
-                                    Snackbar.make(getView(), snackbarContent, Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(getActivity().findViewById(R.id.activity_settings), snackbarContent, Snackbar.LENGTH_LONG).show();
                                 }
                             });
 
@@ -118,7 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void goBack(){
-        Intent i = new Intent();
+        Intent i = new Intent(SettingsActivity.this, HomeActivity.class);
         Bundle b = new Bundle();
 
         s.goToHomeActivity = false;

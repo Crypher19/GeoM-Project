@@ -158,7 +158,6 @@ public class ChoosePTActivity extends AppCompatActivity {
         }
     };
 
-
     //Carico più elementi quando arrivo alla fine della lista
     public void loadMore(){
         s.offset = pt_list.size()+1;

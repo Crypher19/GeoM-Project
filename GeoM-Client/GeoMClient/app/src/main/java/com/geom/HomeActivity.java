@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.io.InterruptedIOException;
 import java.util.ArrayList;
 
 import classes.LoadingThread;
@@ -59,8 +58,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapter, final View components, int pos, long id) {
                 //ottengo il tipo di mezzo di trasporto
-                String pt_type = ((PublicTransport) adapter.getItemAtPosition(pos)).getPt_type();
-                s.pt_type = pt_type;//tipo di lista da visualizzare
+                s.pt_type = ((PublicTransport) adapter.getItemAtPosition(pos)).getPt_type();//tipo di lista da visualizzare
                 initNewActivity();
             }
         });
