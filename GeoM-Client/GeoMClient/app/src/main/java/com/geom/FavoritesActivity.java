@@ -7,31 +7,34 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
-import classes.layout_classes.FavouritesListViewAdapter;
+import classes.layout_classes.FavoritesListAdapter;
+import classes.layout_classes.ListViewDivider;
+import classes.layout_classes.RecyclerItemClickListener;
 
-public class FavouritesActivity extends AppCompatActivity {
-    SharedData s;
-    ListView lv;
-    FavouritesListViewAdapter fla;
-    List<PublicTransport> favList;
+public class FavoritesActivity extends AppCompatActivity {
+    private SharedData s;
+
+    private RecyclerView recyclerView;
+    FavoritesListAdapter favouritesListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favourites);
+        setContentView(R.layout.activity_favorites);
 
         s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
 
@@ -47,66 +50,66 @@ public class FavouritesActivity extends AppCompatActivity {
             }
         });
 
-        //costruisco e visualizzo la lista nell'activity
-        lv = (ListView) findViewById(R.id.favListView);
-        fla = new FavouritesListViewAdapter(
-                FavouritesActivity.this, R.layout.pt_specific_item_list_layout,
-                new ArrayList<>(s.favList));
-        lv.setAdapter(fla);
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(FavouritesActivity.this, MapActivity.class);
-                Bundle b = new Bundle();
-                //invio la posizione del preferito selezionato
-                PublicTransport fav = s.favList.get(position);
+        //lista di mezzi di trasporto
+        recyclerView = (RecyclerView) findViewById(R.id.fav_recycler_view);
+        //divider
+        recyclerView.addItemDecoration(new ListViewDivider(this, ListViewDivider.VERTICAL_LIST));
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                s.goToFavouritesActivity = true;//devo tornare a FavouritesActivity
+        favouritesListAdapter = new FavoritesListAdapter(s);
+        recyclerView.setAdapter(favouritesListAdapter);
 
-                b.putParcelable("SharedData", s);
-                b.putParcelable("PublicTransport", fav);
-                i.putExtra("bundle", b);
-                startActivityForResult(i, 4);
-            }
-        });
+        recyclerView.addOnItemTouchListener( new RecyclerItemClickListener(this,recyclerView,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent i = new Intent(FavoritesActivity.this, MapActivity.class);
+                        Bundle b = new Bundle();
+                        //invio la posizione del preferito selezionato
+                        PublicTransport fav = s.favList.get(position);
 
-        //pressione lunga sul preferito (per eliminare)
-        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this,
-                        R.style.AppCompatAlertDialogStyleLight);
-                builder.setTitle("Eliminare questo preferito?");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        s.goToFavouritesActivity = true;//devo tornare a FavoritesActivity
 
-                    public void onClick(DialogInterface dialog, int id) {
-                        String snackbarContent;
-
-                        //ottengo il preferito
-                        PublicTransport fav = (PublicTransport) parent.getItemAtPosition(position);
-                        if(removeListItem(fav)){
-                            snackbarContent = "Preferito eliminato";
-                        } else snackbarContent = "ERRORE, preferito non eliminato";
-
-                        if(s.favList.size() == 0){//ultimo preferito rimasto
-                            Intent i = new Intent(FavouritesActivity.this, HomeActivity.class);
-                            Bundle b = new Bundle();
-                            b.putString("snackbarContent", snackbarContent);
-                            b.putParcelable("SharedData", s);
-                            i.putExtra("bundle", b);
-                            startActivity(i);
-                        } else{//non è l'ultimo preferito
-                            Snackbar.make(view, snackbarContent, Snackbar.LENGTH_LONG).show();
-                        }
+                        b.putParcelable("SharedData", s);
+                        b.putParcelable("PublicTransport", fav);
+                        i.putExtra("bundle", b);
+                        startActivityForResult(i, 4);
                     }
-                });
-                builder.setNegativeButton("ANNULLA", null);
-                builder.show();
 
-                return true;
-            }
-        });
+                    @Override
+                    public void onLongItemClick(View view, final int position) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(FavoritesActivity.this,
+                                R.style.AppCompatAlertDialogStyleLight);
+                        builder.setTitle("Eliminare questo preferito?");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int id) {
+                                String snackbarContent;
+
+                                if(removeListItem(position)){
+                                    snackbarContent = "Preferito eliminato";
+                                } else snackbarContent = "ERRORE, preferito non eliminato";
+
+                                if(s.favList.size() == 0){//ultimo preferito rimasto
+                                    Intent i = new Intent(FavoritesActivity.this, HomeActivity.class);
+                                    Bundle b = new Bundle();
+                                    b.putString("snackbarContent", snackbarContent);
+                                    b.putParcelable("SharedData", s);
+                                    i.putExtra("bundle", b);
+                                    startActivity(i);
+                                } else{//non è l'ultimo preferito
+                                    Snackbar.make(findViewById(R.id.activity_favourites), snackbarContent, Snackbar.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                        builder.setNegativeButton("ANNULLA", null);
+                        builder.show();
+                    }
+                })
+        );
 
         //aggiorno tradcinando verso il basso
         final SwipeRefreshLayout swipeRefreshLayout
@@ -127,21 +130,11 @@ public class FavouritesActivity extends AppCompatActivity {
         });
     }
 
-    public void refreshListContent(List<PublicTransport> favList){
-        fla.clear();
-        fla.addAll(favList);
-        fla.notifyDataSetChanged();
-    }
+    public boolean removeListItem(int position){
 
-    public boolean removeListItem(PublicTransport fav){
-        MyFile f = new MyFile();
-        //rimuovo il preferito dalla lista e dal file xml
-        favList = s.favList;
-
-        if (favList.remove(fav) && f.removeFavourite(fav) == 0) {
-            s.favList = favList;
+        if (s.removeFav(position)) {
             //se va tutto bene aggiorno la lista da visualizzare
-            refreshListContent(s.favList);
+            favouritesListAdapter.removeItem(position);
             return true;
         }
         return false;
@@ -150,7 +143,7 @@ public class FavouritesActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.fav_activity_menu, menu);
+        getMenuInflater().inflate(R.menu.favorites_menu, menu);
         return true;
     }
 
@@ -169,7 +162,7 @@ public class FavouritesActivity extends AppCompatActivity {
             return true;
         } else if(id == R.id.action_delete_all){//elimina tutti i preferiti
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(FavouritesActivity.this,
+            AlertDialog.Builder builder = new AlertDialog.Builder(FavoritesActivity.this,
                     R.style.AppCompatAlertDialogStyleLight);
             builder.setTitle("Eliminare tutti i preferiti?");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -183,7 +176,7 @@ public class FavouritesActivity extends AppCompatActivity {
                         snackbarContent = "Preferiti eliminati";
                     } else snackbarContent = "ERRORE, preferiti non eliminati";
 
-                    i = new Intent(FavouritesActivity.this, HomeActivity.class);
+                    i = new Intent(FavoritesActivity.this, HomeActivity.class);
 
                     b.putString("snackbarContent", snackbarContent);
                     b.putParcelable("SharedData", s);
@@ -201,11 +194,10 @@ public class FavouritesActivity extends AppCompatActivity {
 
     public boolean refresh(){
         List<PublicTransport> favList;
-        MyFile f = new MyFile();
 
-        if((favList = f.getFavouritesList()) != null){
+        if((favList = s.getFavsListFromFile()) != null){
             s.favList = favList;
-            refreshListContent(favList);
+            favouritesListAdapter.notifyDataSetChanged();
             return true;
         }
 
@@ -213,11 +205,10 @@ public class FavouritesActivity extends AppCompatActivity {
     }
 
     public boolean deleteAll(){
-        MyFile f = new MyFile();
 
-        if (f.removeAllFavourites() > -1) {
+        if (s.removeAllFavs()) {
             s.favList = new ArrayList<>();//lista vuota
-            refreshListContent(favList);
+            //refreshListContent(favList);
             return true;
         }
         return false;
@@ -234,11 +225,11 @@ public class FavouritesActivity extends AppCompatActivity {
         Intent i;
         Bundle b = new Bundle();
 
-        if(s.goToHomeActivity && !s.goToChoosePTActivity){//da FavouritesActivity a HomeActivity
-            i = new Intent(FavouritesActivity.this, HomeActivity.class);
+        if(s.goToHomeActivity && !s.goToChoosePTActivity){//da FavoritesActivity a HomeActivity
+            i = new Intent(FavoritesActivity.this, HomeActivity.class);
             s.goToHomeActivity = false;
-        } else{//da FavouritesActivity a ChoosePTActivity
-            i = new Intent(FavouritesActivity.this, ChoosePTActivity.class);
+        } else{//da FavoritesActivity a ChoosePTActivity
+            i = new Intent(FavoritesActivity.this, ChoosePTActivity.class);
             s.goToChoosePTActivity = false;
         }
 

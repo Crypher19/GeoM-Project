@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.util.Map;
+
 import classes.PublicTransport;
 import classes.SharedData;
 
@@ -32,7 +34,7 @@ public class MapActivity extends AppCompatActivity {
             }
         });
 
-        //extra ricevuto da ChoosePTActivity o FavouritesActivity
+        //extra ricevuto da ChoosePTActivity o FavoritesActivity
         PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("PublicTransport");
 
     }
@@ -42,16 +44,16 @@ public class MapActivity extends AppCompatActivity {
         Bundle b = new Bundle();
 
         if(s.goToChoosePTActivity && !s.goToFavouritesActivity){//devo tornare a ChoosePTActivity
-            i = new Intent();
+            i = new Intent(MapActivity.this, ChoosePTActivity.class);
             b.putParcelable("SharedData", s);
             i.putExtra("bundle", b);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             setResult(Activity.RESULT_OK, i);
-            finish();
+            startActivity(i);
 
             s.goToChoosePTActivity = false;
-        } else{//devo tornare a FavouritesActivity
-            i = new Intent(MapActivity.this, FavouritesActivity.class);
+        } else{//devo tornare a FavoritesActivity
+            i = new Intent(MapActivity.this, FavoritesActivity.class);
             s.goToFavouritesActivity = false;
 
             b.putParcelable("SharedData", s);

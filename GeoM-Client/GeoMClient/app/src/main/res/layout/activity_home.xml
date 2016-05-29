@@ -22,14 +22,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ListView
-        android:id="@+id/pt_listview"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/generic_pt_recycler_view"
         android:layout_width="match_parent"
-        android:dividerHeight="50dp"
-        android:divider="#00000000"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    </ListView>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/favourites_fab"

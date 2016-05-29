@@ -29,7 +29,7 @@
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FavouritesActivity"
+            android:name=".FavoritesActivity"
             android:label="@string/title_activity_favourite"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity">
@@ -42,7 +42,11 @@
         <activity
             android:name=".ChoosePTActivity"
             android:label="@string/title_activity_choose_pt"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"

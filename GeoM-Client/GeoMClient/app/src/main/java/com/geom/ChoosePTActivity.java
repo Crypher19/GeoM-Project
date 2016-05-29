@@ -1,37 +1,49 @@
 package com.geom;
 
+
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import classes.LoadingThread;
 import classes.PublicTransport;
 import classes.SharedData;
+import classes.layout_classes.ListViewDivider;
 import classes.layout_classes.OnLoadMoreListener;
-import classes.layout_classes.PublicTransportCardViewAdapter;
+import classes.layout_classes.PublicTransportListAdapter;
 
-/*implementazione metodi onClick di cardview in PublicTransportCardViewAdapter*/
+/*implementazione metodi onClick di cardview in PublicTransportListAdapter*/
 public class ChoosePTActivity extends AppCompatActivity {
     SharedData s;
     SwipeRefreshLayout swipeRefreshLayout;
-    PublicTransportCardViewAdapter publicTransportCardViewAdapter;
-    RecyclerView recList;
-    String pt_type;
+    PublicTransportListAdapter publicTransportListAdapter;
+    RecyclerView recyclerView;
     List<PublicTransport> pt_list;
     Handler handler = new Handler();
     String message;
+    //List<PublicTransport> search_pt_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +51,14 @@ public class ChoosePTActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_pt);
 
         s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
-        pt_type = s.pt_type;
-        pt_list = s.getListType(pt_type);
+
+        //ottengo la lista di mezzi da visualizzare
+        pt_list = s.getCurrentPTList();
 
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //il titolo varia in base alla lista visualizzata
-        toolbar.setTitle("Nuovo " + pt_type);
+        toolbar.setTitle("Nuovo " + s.pt_type);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -57,34 +70,37 @@ public class ChoosePTActivity extends AppCompatActivity {
         });
 
         //CardView
-        recList = (RecyclerView) findViewById(R.id.pt_recycler_view);
-        recList.setLayoutManager(new LinearLayoutManager(this));
-        publicTransportCardViewAdapter
-                = new PublicTransportCardViewAdapter(pt_list, recList);
-        recList.setAdapter(publicTransportCardViewAdapter);
+        recyclerView = (RecyclerView) findViewById(R.id.pt_recycler_view);
+        //divider
+        recyclerView.addItemDecoration(new ListViewDivider(this, ListViewDivider.VERTICAL_LIST));
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        publicTransportListAdapter
+                = new PublicTransportListAdapter(s, recyclerView);
+        recyclerView.setAdapter(publicTransportListAdapter);
+
         //ProgressBar (scorro in basso per caricare più elementi)
-        publicTransportCardViewAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+        publicTransportListAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                Log.i("sMESSAGE", "PROGRESSBAR VISUALIZZATA");
-                s.getListType(pt_type).add(null);
-                publicTransportCardViewAdapter.notifyItemInserted(pt_list.size() - 1);
+                //add ProgressBar to RecyclerView
+                pt_list.add(null);
+                publicTransportListAdapter.notifyItemInserted(pt_list.size() - 1);
 
-                //Carico più elementi in RecyclerView
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //Tolgo la Progressbar dalla CardView
-                        Log.i("sMESSAGE", "PROGRESSBAR NASCOSTA");
-                        pt_list.remove(pt_list.size() - 1);
-                        publicTransportCardViewAdapter.notifyItemRemoved(pt_list.size());
 
-                        //carico più elementi
+                        //rimuovo la ProgressBar da RecyclerView
+                        pt_list.remove(pt_list.size() - 1);
+                        publicTransportListAdapter.notifyItemRemoved(pt_list.size());
+
+                        //carico piu elementi
                         loadMore();
 
-                        //notifico cambiamenti
-                        publicTransportCardViewAdapter.notifyDataSetChanged();
-                        publicTransportCardViewAdapter.setLoaded();
+                        publicTransportListAdapter.notifyDataSetChanged();
+                        publicTransportListAdapter.setLoaded();
                     }
                 }, 2000);
             }
@@ -107,12 +123,13 @@ public class ChoosePTActivity extends AppCompatActivity {
         }
 
         //FloatingActionButton per i preferiti
-        FloatingActionButton favourites_fab = (FloatingActionButton) findViewById(R.id.favourites_fab);
+        FloatingActionButton favourites_fab
+                = (FloatingActionButton) findViewById(R.id.favourites_fab);
         favourites_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!s.favList.isEmpty()) {
-                    Intent i = new Intent(ChoosePTActivity.this, FavouritesActivity.class);
+                    Intent i = new Intent(ChoosePTActivity.this, FavoritesActivity.class);
                     Bundle b = new Bundle();
 
                     s.goToChoosePTActivity = true;
@@ -122,7 +139,9 @@ public class ChoosePTActivity extends AppCompatActivity {
                     startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ChoosePTActivity.this, R.style.AppCompatAlertDialogStyleLight);
+                    AlertDialog.Builder builder
+                            = new AlertDialog.Builder(ChoosePTActivity.this,
+                                                        R.style.AppCompatAlertDialogStyleLight);
                     builder.setTitle("Nessun preferito trovato");
                     builder.setPositiveButton("OK", null);
                     builder.show();
@@ -131,29 +150,106 @@ public class ChoosePTActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.choose_pt_menu, menu);
+
+        // Retrieve the SearchView and plug it into SearchManager
+        final SearchView searchView
+                = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+
+        SearchManager searchManager
+                = (SearchManager) getSystemService(SEARCH_SERVICE);
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        AutoCompleteTextView searchTextView
+                = (AutoCompleteTextView) searchView.findViewById(
+                    android.support.v7.appcompat.R.id.search_src_text);
+
+        //imposto il colore del cursore
+        try {
+            Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
+            mCursorDrawableRes.setAccessible(true);
+            mCursorDrawableRes.set(searchTextView, R.drawable.cursor);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+
+        //listener per la query di ricerca
+        SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+
+            @Override //metodo richiamato quando si preme sul tasto cerca
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override //metodo richiamato ogni volta che il testo cambia
+            public boolean onQueryTextChange(String newText) {
+
+                /*for(int i = 0; i < pt_list.size(); i++){
+                    //null = ProgressBar
+                    if(pt_list.get(i) != null){
+                        //cerco per nome e tratta
+                        if(pt_list.get(i).getPt_name().contains(newText)
+                                || pt_list.get(i).getPt_route().contains(newText)){
+
+                            search_pt_list.add(pt_list.get(i));
+                            publicTransportListAdapter
+                                    = new PublicTransportListAdapter(search_pt_list, recyclerView);
+                            recyclerView.setAdapter(publicTransportListAdapter);
+                        }
+                    }
+                }*/
+                return false;
+            }
+        };
+        //aggiungo il listener a SearchView
+        searchView.setOnQueryTextListener(listener);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        /*if(item.getItemId() == R.id.search){
+            search_pt_list = new ArrayList<>();
+
+            publicTransportListAdapter
+                    = new PublicTransportListAdapter(search_pt_list, recyclerView);
+            recyclerView.setAdapter(publicTransportListAdapter);
+        }*/
+        return super.onOptionsItemSelected(item);
+    }
+
     //Aggiorno quando trascino verso il basso (DA INSERIRE IN ASYNCTASK)
     private final Runnable refreshing = new Runnable() {
         public void run() {
             try {
-            swipeRefreshLayout.setRefreshing(true);
-           pt_list.clear(); // svuoto completamente la lista
+                swipeRefreshLayout.setRefreshing(true);
+                pt_list.clear(); // svuoto completamente la lista
 
-            // parte il thread per ottenere la nuova lista dal server
-            LoadingThread lt = new LoadingThread(s);
-            lt.start();
-            lt.join();
+                // parte il thread per ottenere la nuova lista dal server
+                LoadingThread lt = new LoadingThread(s);
+                lt.start();
+                lt.join();
 
-            /* aggiornamento lista */
-            recList.setAdapter(new PublicTransportCardViewAdapter(pt_list, recList));
-            recList.invalidate();
+                /* aggiornamento lista */
+                recyclerView.setAdapter(new PublicTransportListAdapter(s, recyclerView));
+                recyclerView.invalidate();
 
-            //termino l'animazione
-            swipeRefreshLayout.setRefreshing(false);
+                //termino l'animazione
+                swipeRefreshLayout.setRefreshing(false);
 
-            message = "Lista aggiornata";
+                message = "Lista aggiornata";
             } catch (Exception e) {
-            e.printStackTrace();
-            message = "ERRORE, lista non aggiornata";
+                e.printStackTrace();
+                message = "ERRORE, lista non aggiornata";
             }
         }
     };
@@ -180,15 +276,16 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     public void goBack(){//da ChoosePTActivity a HomeActivity
 
-        Intent i = new Intent();
+        Intent i = new Intent(ChoosePTActivity.this, HomeActivity.class);
         Bundle b = new Bundle();
 
         s.goToHomeActivity = false;
 
         b.putParcelable("SharedData", s);
         i.putExtra("bundle", b);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         setResult(RESULT_OK);
-        finish();
+        startActivity(i);
     }
 
     @Override

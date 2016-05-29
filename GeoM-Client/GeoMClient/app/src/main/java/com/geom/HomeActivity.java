@@ -6,35 +6,33 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.View;;
 
-import java.util.ArrayList;
-
-import classes.LoadingThread;
-import classes.MyFile;
 import classes.PublicTransport;
 import classes.SharedData;
-import classes.layout_classes.PublicTransportListViewAdapter;
+import classes.layout_classes.ListViewDivider;
+import classes.layout_classes.PublicTransportGenericListAdapter;
+import classes.layout_classes.RecyclerItemClickListener;
 
 public class HomeActivity extends AppCompatActivity {
 
-    SharedData s;
-    MyFile f;
+    private SharedData s;
+    private RecyclerView recyclerView;
+    private PublicTransportGenericListAdapter publicTransportGenericListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        f = new MyFile();
         s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
 
         //reset di tutte le variabili per il goBack()
@@ -42,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         s.goToChoosePTActivity = false;
         s.goToFavouritesActivity = false;
 
-        //quando passo da FavouritesActivity a HomeActivity avendo eliminato tutti i preferiti
+        //quando passo da FavoritesActivity a HomeActivity avendo eliminato tutti i preferiti
         if(getIntent().getBundleExtra("bundle").containsKey("snackbarContent")){
             Snackbar.make(findViewById(R.id.activity_home),
                 getIntent().getBundleExtra("bundle").getString("snackbarContent"),
@@ -51,17 +49,29 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         //lista di mezzi di trasporto
-        ListView lv = (ListView) findViewById(R.id.pt_listview);
-        lv.setAdapter(new PublicTransportListViewAdapter(HomeActivity.this,
-                R.layout.pt_item_list_layout, new ArrayList<>(s.PTList)));
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, final View components, int pos, long id) {
-                //ottengo il tipo di mezzo di trasporto
-                s.pt_type = ((PublicTransport) adapter.getItemAtPosition(pos)).getPt_type();//tipo di lista da visualizzare
-                initNewActivity();
-            }
-        });
+        recyclerView = (RecyclerView) findViewById(R.id.generic_pt_recycler_view);
+        //divider
+        recyclerView.addItemDecoration(new ListViewDivider(this, ListViewDivider.VERTICAL_LIST));
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        publicTransportGenericListAdapter = new PublicTransportGenericListAdapter(s.PTList);
+        recyclerView.setAdapter(publicTransportGenericListAdapter);
+
+        recyclerView.addOnItemTouchListener( new RecyclerItemClickListener(this,recyclerView,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        //ottengo il tipo di mezzo di trasporto
+                        s.pt_type = (s.PTList.get(position).getPt_type());//tipo di lista da visualizzare
+                        initNewActivity();
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {}
+                })
+        );
 
         //pulsante preferiti
         FloatingActionButton favourites_fab = (FloatingActionButton) findViewById(R.id.favourites_fab);
@@ -71,7 +81,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (!s.favList.isEmpty()) {
                     s.goToHomeActivity = true;//activity alla quale devo ritornare
 
-                    Intent i = new Intent(HomeActivity.this, FavouritesActivity.class);
+                    Intent i = new Intent(HomeActivity.this, FavoritesActivity.class);
                     Bundle b = new Bundle();
 
                     b.putParcelable("SharedData", s);
@@ -92,7 +102,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //costruisco il menù
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.home_menu, menu);
         return true;
     }
 
@@ -119,15 +129,26 @@ public class HomeActivity extends AppCompatActivity {
 
         s.offset = 0;
 
-        LoadingThread lt = new LoadingThread(s);
+        /*LoadingThread lt = new LoadingThread(s);
         lt.start();
         try {
             lt.join();
-            Log.i("THREAD EXCEPTION", "JOIN ESEGUITA");
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Log.i("THREAD EXCEPTION", "TREAD TERMINATO PER TIMEOUT");
-        }
+        }*/
+
+        s.trainList.add(new PublicTransport(1, "treno", "R21753", "Trenord", "Milano-Asso", true, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(2, "treno", "R20899", "Trenord", "Treviso-Venezia", true, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(3, "treno", "ETR500", "Trenitalia", "Napoli-Venezia", false, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(4, "treno", "444444", "Trenord", "Milano-Asso", true, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(5, "treno", "555555", "Trenord", "Treviso-Venezia", true, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(6, "treno", "666666", "Trenitalia", "Napoli-Venezia", false, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(7, "treno", "777777", "Trenord", "Milano-Asso", true, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(8, "treno", "888888", "Trenord", "Treviso-Venezia", true, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(9, "treno", "999999", "Trenitalia", "Napoli-Venezia", false, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(10, "treno", "101010", "Trenord", "Milano-Asso", true, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(11, "treno", "111111", "Trenord", "Treviso-Venezia", true, 12.11, 14.02));
+        s.trainList.add(new PublicTransport(12,"treno", "121212", "Trenitalia", "Napoli-Venezia", false, 12.11, 14.02));
 
         s.goToHomeActivity = true;//torno alla HomeActivity
 

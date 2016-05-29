@@ -15,6 +15,9 @@
     <string name="pref_reset_title">Predefinite</string>
     <string name="pref_reset_summary">Ripristina le impostazioni predefinite ed elimina tutti i preferiti.</string>
     <string name="pref_info_title">Informazioni applicazione</string>
-    <string name="title_activity_maps">Map</string>
+
+    <!-- search strings -->
+    <string name="search_title">Cerca mezzo</string>
+    <string name="search_hint">Cerca per nome o tratta</string>
 
 </resources>

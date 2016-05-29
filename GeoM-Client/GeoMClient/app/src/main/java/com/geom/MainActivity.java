@@ -12,8 +12,6 @@ import classes.PublicTransport;
 import classes.SharedData;
 
 public class MainActivity extends AppCompatActivity {
-
-    MyFile f;
     Intent i;
     SharedData s;
 
@@ -23,13 +21,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         s = new SharedData();
-        f = new MyFile();
         i = new Intent(MainActivity.this, HomeActivity.class);
         Bundle b = new Bundle();
 
         List<PublicTransport> temp;
         //controllo e carico i preferiti
-        if ((temp = f.getFavouritesList()) != null) {
+        if ((temp = s.getFavsListFromFile()) != null) {
             s.favList = temp;
         }
 

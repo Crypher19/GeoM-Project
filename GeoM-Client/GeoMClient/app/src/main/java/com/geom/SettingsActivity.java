@@ -66,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     String snackbarContent;
 
-                                    if(deleteAll()){//elimino i preferiti
+                                    if(s.removeAllFavs()){//elimino i preferiti
                                         //wifiOnly
                                         CheckBoxPreference wifiOnly = (CheckBoxPreference) findPreference("wifiOnly");
                                         if(wifiOnly.isChecked()){
@@ -104,16 +104,6 @@ public class SettingsActivity extends AppCompatActivity {
                     return _return;
                 }
             });
-        }
-
-        public boolean deleteAll(){
-            MyFile f = new MyFile();
-
-            if (f.removeAllFavourites() > -1) {
-                s.favList = new ArrayList<>();//lista vuota
-                return true;
-            }
-            return false;
         }
     }
 
