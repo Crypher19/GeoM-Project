@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,12 +20,14 @@ import android.widget.TextView;
 import com.geom.MapActivity;
 import com.geom.R;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import classes.PublicTransport;
 import classes.SharedData;
 
-public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public final int VIEW_TYPE_ITEM = 0;
     public final int VIEW_TYPE_LOADING = 1;
 
@@ -35,12 +39,15 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
 
-    private List<PublicTransport> pt_list;
+    protected final List<PublicTransport> pt_list;
+
+    protected final List<PublicTransport> filteredPTList;
 
     public PublicTransportListAdapter(SharedData s, RecyclerView recyclerView) {
 
         this.s = s;
         pt_list = s.getCurrentPTList();
+        this.filteredPTList = new ArrayList<>();
 
         final LinearLayoutManager linearLayoutManager
                 = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -62,9 +69,31 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
         });
     }
 
-    public PublicTransportListAdapter(List<PublicTransport> pt_list, RecyclerView recyclerView) {
 
+    public PublicTransportListAdapter(List<PublicTransport> pt_list, SharedData s, RecyclerView recyclerView) {
+
+        this.s = s;
         this.pt_list = pt_list;
+        this.filteredPTList = new ArrayList<>();
+
+        final LinearLayoutManager linearLayoutManager
+                = (LinearLayoutManager) recyclerView.getLayoutManager();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+
+                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    if (mOnLoadMoreListener != null) {
+                        mOnLoadMoreListener.onLoadMore();
+                    }
+                    isLoading = true;
+                }
+            }
+        });
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
@@ -160,6 +189,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
                         }
                     }
                 });
+
 
                 //stella gialla gli elementi della lista che sono anche preferiti
                 for (int i = 0; i < s.favList.size(); i++) {

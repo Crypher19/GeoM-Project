@@ -4,7 +4,6 @@ package com.geom;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
@@ -41,9 +40,7 @@ public class ChoosePTActivity extends AppCompatActivity {
     PublicTransportListAdapter publicTransportListAdapter;
     RecyclerView recyclerView;
     List<PublicTransport> pt_list;
-    Handler handler = new Handler();
     String message;
-    //List<PublicTransport> search_pt_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +78,7 @@ public class ChoosePTActivity extends AppCompatActivity {
         recyclerView.setAdapter(publicTransportListAdapter);
 
         //ProgressBar (scorro in basso per caricare più elementi)
-        publicTransportListAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+        /*publicTransportListAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
                 //add ProgressBar to RecyclerView
@@ -115,7 +112,7 @@ public class ChoosePTActivity extends AppCompatActivity {
             public void onRefresh() {
                 handler.post(refreshing);
             }
-        });
+        });*/
 
         if(message != null){//risultato dell'aggiornamento
             Snackbar.make((findViewById(R.id.activity_choose_pt)), message,
@@ -152,6 +149,7 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_pt_menu, menu);
 
@@ -163,12 +161,14 @@ public class ChoosePTActivity extends AppCompatActivity {
                 = (SearchManager) getSystemService(SEARCH_SERVICE);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //imposto l'hint
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
         AutoCompleteTextView searchTextView
                 = (AutoCompleteTextView) searchView.findViewById(
-                    android.support.v7.appcompat.R.id.search_src_text);
+                android.support.v7.appcompat.R.id.search_src_text);
 
-        //imposto il colore del cursore
+        //imposto il cursore custom
         try {
             Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
             mCursorDrawableRes.setAccessible(true);
@@ -189,23 +189,30 @@ public class ChoosePTActivity extends AppCompatActivity {
             }
 
             @Override //metodo richiamato ogni volta che il testo cambia
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(String query) {
 
-                /*for(int i = 0; i < pt_list.size(); i++){
-                    //null = ProgressBar
-                    if(pt_list.get(i) != null){
-                        //cerco per nome e tratta
-                        if(pt_list.get(i).getPt_name().contains(newText)
-                                || pt_list.get(i).getPt_route().contains(newText)){
+                //ricerca dinamica
+                query = query.toLowerCase();
 
-                            search_pt_list.add(pt_list.get(i));
-                            publicTransportListAdapter
-                                    = new PublicTransportListAdapter(search_pt_list, recyclerView);
-                            recyclerView.setAdapter(publicTransportListAdapter);
+                final List<PublicTransport> filteredList = new ArrayList<>();
+
+                for (int i = 0; i < pt_list.size(); i++) {
+
+                    if(pt_list.get(i) != null){//evito di includere ProgressBar nella ricerca
+                        final String pt_name = pt_list.get(i).getPt_name().toLowerCase();
+                        final String pt_route = pt_list.get(i).getPt_route().toLowerCase();
+                        if (pt_name.contains(query) || pt_route.contains(query)) {
+                            filteredList.add(pt_list.get(i));
                         }
                     }
-                }*/
-                return false;
+                }
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(ChoosePTActivity.this));
+                publicTransportListAdapter = new PublicTransportListAdapter(filteredList, s, recyclerView);
+                recyclerView.setAdapter(publicTransportListAdapter);
+                publicTransportListAdapter.notifyDataSetChanged();  // data set changed
+
+                return true;
             }
         };
         //aggiungo il listener a SearchView
@@ -216,14 +223,6 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        /*if(item.getItemId() == R.id.search){
-            search_pt_list = new ArrayList<>();
-
-            publicTransportListAdapter
-                    = new PublicTransportListAdapter(search_pt_list, recyclerView);
-            recyclerView.setAdapter(publicTransportListAdapter);
-        }*/
         return super.onOptionsItemSelected(item);
     }
 
