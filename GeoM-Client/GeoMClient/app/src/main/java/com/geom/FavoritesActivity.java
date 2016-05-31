@@ -28,7 +28,6 @@ import classes.layout_classes.RecyclerItemClickListener;
 public class FavoritesActivity extends AppCompatActivity {
     private SharedData s;
 
-    private RecyclerView recyclerView;
     FavoritesListAdapter favouritesListAdapter;
 
     @Override
@@ -52,7 +51,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
 
         //lista di mezzi di trasporto
-        recyclerView = (RecyclerView) findViewById(R.id.fav_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.fav_recycler_view);
         //divider
         recyclerView.addItemDecoration(new ListViewDivider(this, ListViewDivider.VERTICAL_LIST));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -62,7 +61,7 @@ public class FavoritesActivity extends AppCompatActivity {
         favouritesListAdapter = new FavoritesListAdapter(s);
         recyclerView.setAdapter(favouritesListAdapter);
 
-        recyclerView.addOnItemTouchListener( new RecyclerItemClickListener(this,recyclerView,
+        recyclerView.addOnItemTouchListener( new RecyclerItemClickListener(this, recyclerView,
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {

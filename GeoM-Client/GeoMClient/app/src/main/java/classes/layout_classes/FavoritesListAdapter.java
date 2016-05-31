@@ -1,7 +1,6 @@
 package classes.layout_classes;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,6 @@ import java.util.List;
 import classes.PublicTransport;
 import classes.SharedData;
 
-/**
- * Created by Mattia on 29/05/2016.
- */
 public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdapter.ViewHolder>{
 
     private SharedData s;

@@ -23,8 +23,6 @@ import classes.layout_classes.RecyclerItemClickListener;
 public class HomeActivity extends AppCompatActivity {
 
     private SharedData s;
-    private RecyclerView recyclerView;
-    private PublicTransportGenericListAdapter publicTransportGenericListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +47,17 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         //lista di mezzi di trasporto
-        recyclerView = (RecyclerView) findViewById(R.id.generic_pt_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.generic_pt_recycler_view);
         //divider
         recyclerView.addItemDecoration(new ListViewDivider(this, ListViewDivider.VERTICAL_LIST));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        publicTransportGenericListAdapter = new PublicTransportGenericListAdapter(s.PTList);
+        PublicTransportGenericListAdapter publicTransportGenericListAdapter = new PublicTransportGenericListAdapter(s.PTList);
         recyclerView.setAdapter(publicTransportGenericListAdapter);
 
-        recyclerView.addOnItemTouchListener( new RecyclerItemClickListener(this,recyclerView,
+        recyclerView.addOnItemTouchListener( new RecyclerItemClickListener(this, recyclerView,
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -129,6 +127,23 @@ public class HomeActivity extends AppCompatActivity {
 
         s.offset = 0;
 
+        load();
+
+        s.goToHomeActivity = true;//torno alla HomeActivity
+
+        b.putParcelable("SharedData", s);
+        i.putExtra("bundle", b);
+        startActivityForResult(i, 1);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent i) {
+        super.onActivityResult(requestCode, resultCode, i);
+        if(resultCode == RESULT_OK){
+            s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
+        }
+    }
+
+    public void load(){
         /*LoadingThread lt = new LoadingThread(s);
         lt.start();
         try {
@@ -149,18 +164,5 @@ public class HomeActivity extends AppCompatActivity {
         s.trainList.add(new PublicTransport(10, "treno", "101010", "Trenord", "Milano-Asso", true, 12.11, 14.02));
         s.trainList.add(new PublicTransport(11, "treno", "111111", "Trenord", "Treviso-Venezia", true, 12.11, 14.02));
         s.trainList.add(new PublicTransport(12,"treno", "121212", "Trenitalia", "Napoli-Venezia", false, 12.11, 14.02));
-
-        s.goToHomeActivity = true;//torno alla HomeActivity
-
-        b.putParcelable("SharedData", s);
-        i.putExtra("bundle", b);
-        startActivityForResult(i, 1);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent i) {
-        super.onActivityResult(requestCode, resultCode, i);
-        if(resultCode == RESULT_OK){
-            s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
-        }
     }
 }

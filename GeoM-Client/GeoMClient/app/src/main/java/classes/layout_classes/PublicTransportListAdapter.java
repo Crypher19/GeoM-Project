@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,7 +19,6 @@ import com.geom.MapActivity;
 import com.geom.R;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import classes.PublicTransport;
@@ -36,12 +33,18 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     private OnLoadMoreListener mOnLoadMoreListener;
 
     private boolean isLoading;
-    private int visibleThreshold = 5;
+    private int visibleThreshold = 2;
     private int lastVisibleItem, totalItemCount;
 
     protected final List<PublicTransport> pt_list;
 
     protected final List<PublicTransport> filteredPTList;
+
+    /*
+    * vaariabile che pilota la ProgressBar
+    * (true: può essere mostrata, false non deve essere mostrata)
+    */
+    public boolean showProgressBar = true;
 
     public PublicTransportListAdapter(SharedData s, RecyclerView recyclerView) {
 
@@ -49,24 +52,8 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
         pt_list = s.getCurrentPTList();
         this.filteredPTList = new ArrayList<>();
 
-        final LinearLayoutManager linearLayoutManager
-                = (LinearLayoutManager) recyclerView.getLayoutManager();
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                totalItemCount = linearLayoutManager.getItemCount();
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-
-                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                    if (mOnLoadMoreListener != null) {
-                        mOnLoadMoreListener.onLoadMore();
-                    }
-                    isLoading = true;
-                }
-            }
-        });
+        //inizializzo LinearLayoutManager e OnScrollListener
+        initAdapter(recyclerView);
     }
 
 
@@ -76,24 +63,8 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
         this.pt_list = pt_list;
         this.filteredPTList = new ArrayList<>();
 
-        final LinearLayoutManager linearLayoutManager
-                = (LinearLayoutManager) recyclerView.getLayoutManager();
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                totalItemCount = linearLayoutManager.getItemCount();
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-
-                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                    if (mOnLoadMoreListener != null) {
-                        mOnLoadMoreListener.onLoadMore();
-                    }
-                    isLoading = true;
-                }
-            }
-        });
+        //inizializzo LinearLayoutManager e OnScrollListener
+        initAdapter(recyclerView);
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
@@ -108,7 +79,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup viewGroup, int viewType) {
 
-        if(pt_list.size() > 0 && pt_list != null){
+        if(pt_list.size() > 0){
             if (viewType == VIEW_TYPE_ITEM) {
 
                 View itemView = LayoutInflater.
@@ -127,7 +98,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
-        if(pt_list.size() > 0 && pt_list != null) {
+        if(pt_list.size() > 0) {
 
             if (viewHolder instanceof ListViewHolder) {//eseguo solo se in OnCreateViewHolder ho scelto la CardView
 
@@ -228,8 +199,8 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-        Log.i("REMOVE_FAVOURITE", "Elemento in pt_list: " + posInPtList);
-        Log.i("REMOVE_FAVOURITE", "Elemento in fav_list: " + posInFavList);
+        //Log.i("GUI_LOG", "Elemento in pt_list: " + posInPtList);
+        //Log.i("GUI_LOG", "Elemento in fav_list: " + posInFavList);
 
         //rimuovo l'elemento alla posizione reale in fav_list
         if (s.removeFav(posInFavList)) {
@@ -248,6 +219,35 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
         } else _return = "ERRORE, preferito non aggiunto";
 
         return _return;
+    }
+
+    //inizializzo LinearLayoutManager e OnScrollListener
+    public void initAdapter(RecyclerView recyclerView){
+        final LinearLayoutManager linearLayoutManager
+                = (LinearLayoutManager) recyclerView.getLayoutManager();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+
+                //Log.i("GUI_LOG", "totalItemCount: " + totalItemCount);
+                //Log.i("GUI_LOG", "lastVisibleItem: " + lastVisibleItem);
+
+                if(showProgressBar) {
+                    if (totalItemCount >= 0 && lastVisibleItem >= 0) {
+                        if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                            if (mOnLoadMoreListener != null) {
+                                mOnLoadMoreListener.onLoadMore();
+                            }
+                            isLoading = true;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override

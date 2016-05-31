@@ -12,9 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import java.util.ArrayList;
-
-import classes.MyFile;
 import classes.SharedData;
 
 public class SettingsActivity extends AppCompatActivity {

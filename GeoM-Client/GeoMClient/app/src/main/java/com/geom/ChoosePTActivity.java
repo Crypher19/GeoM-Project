@@ -4,6 +4,7 @@ package com.geom;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
@@ -15,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,46 +75,18 @@ public class ChoosePTActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        publicTransportListAdapter
-                = new PublicTransportListAdapter(s, recyclerView);
-        recyclerView.setAdapter(publicTransportListAdapter);
-
-        //ProgressBar (scorro in basso per caricare più elementi)
-        /*publicTransportListAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                //add ProgressBar to RecyclerView
-                pt_list.add(null);
-                publicTransportListAdapter.notifyItemInserted(pt_list.size() - 1);
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        //rimuovo la ProgressBar da RecyclerView
-                        pt_list.remove(pt_list.size() - 1);
-                        publicTransportListAdapter.notifyItemRemoved(pt_list.size());
-
-                        //carico piu elementi
-                        loadMore();
-
-                        publicTransportListAdapter.notifyDataSetChanged();
-                        publicTransportListAdapter.setLoaded();
-                    }
-                }, 2000);
-            }
-        });
+        //inizializzo l'Adapter e la ProgressBar
+        initAdapter();
 
         //SwypeRefreshLayout (trascino verso il basso per aggiornare)
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
             @Override
             public void onRefresh() {
-                handler.post(refreshing);
+                new Handler().postDelayed(refreshing, 2000);
             }
-        });*/
+        });
 
         if(message != null){//risultato dell'aggiornamento
             Snackbar.make((findViewById(R.id.activity_choose_pt)), message,
@@ -152,6 +126,27 @@ public class ChoosePTActivity extends AppCompatActivity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.choose_pt_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                //Log.i("GUI_LOG", "ho premuto CERCA");
+                //mentre cerco la ProgressBar non deve apparire
+                publicTransportListAdapter.showProgressBar=false;
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                //Log.i("GUI_LOG", "ho premuto BACK");
+                //ricostruisco la lista
+                initAdapter();
+                //imposto la ProgressBar in modo che sia visibile
+                publicTransportListAdapter.showProgressBar=true;
+                return true;
+            }
+        });
 
         // Retrieve the SearchView and plug it into SearchManager
         final SearchView searchView
@@ -194,23 +189,7 @@ public class ChoosePTActivity extends AppCompatActivity {
                 //ricerca dinamica
                 query = query.toLowerCase();
 
-                final List<PublicTransport> filteredList = new ArrayList<>();
-
-                for (int i = 0; i < pt_list.size(); i++) {
-
-                    if(pt_list.get(i) != null){//evito di includere ProgressBar nella ricerca
-                        final String pt_name = pt_list.get(i).getPt_name().toLowerCase();
-                        final String pt_route = pt_list.get(i).getPt_route().toLowerCase();
-                        if (pt_name.contains(query) || pt_route.contains(query)) {
-                            filteredList.add(pt_list.get(i));
-                        }
-                    }
-                }
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(ChoosePTActivity.this));
-                publicTransportListAdapter = new PublicTransportListAdapter(filteredList, s, recyclerView);
-                recyclerView.setAdapter(publicTransportListAdapter);
-                publicTransportListAdapter.notifyDataSetChanged();  // data set changed
+                filterList(query);
 
                 return true;
             }
@@ -221,12 +200,7 @@ public class ChoosePTActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    //Aggiorno quando trascino verso il basso (DA INSERIRE IN ASYNCTASK)
+    //Aggiorno quando trascino verso il basso
     private final Runnable refreshing = new Runnable() {
         public void run() {
             try {
@@ -234,12 +208,11 @@ public class ChoosePTActivity extends AppCompatActivity {
                 pt_list.clear(); // svuoto completamente la lista
 
                 // parte il thread per ottenere la nuova lista dal server
-                LoadingThread lt = new LoadingThread(s);
-                lt.start();
-                lt.join();
+                //refresh();
+                //Log.i("GUI_LOG", "refresh eseguito");
 
                 /* aggiornamento lista */
-                recyclerView.setAdapter(new PublicTransportListAdapter(s, recyclerView));
+                //publicTransportListAdapter.notifyDataSetChanged();
                 recyclerView.invalidate();
 
                 //termino l'animazione
@@ -250,6 +223,22 @@ public class ChoosePTActivity extends AppCompatActivity {
                 e.printStackTrace();
                 message = "ERRORE, lista non aggiornata";
             }
+        }
+    };
+
+    //Carico più elementi quando arrivo in fondo alla lista
+    private final Runnable loading = new Runnable() {
+        public void run() {
+            //rimuovo la ProgressBar da RecyclerView
+            pt_list.remove(pt_list.size() - 1);
+            publicTransportListAdapter.notifyItemRemoved(pt_list.size());
+
+            //carico piu elementi
+            //loadMore();
+            //Log.i("GUI_LOG", "loadmore eseguito");
+
+            //publicTransportListAdapter.notifyDataSetChanged();
+            publicTransportListAdapter.setLoaded();
         }
     };
 
@@ -264,6 +253,58 @@ public class ChoosePTActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    //Aggiorno la lista quando trascino ferso il basso
+    public void refresh(){
+        LoadingThread lt = new LoadingThread(s);
+        lt.start();
+        try {
+            lt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //inizializzo PublicTransportListAdapter e OnLoadMoreListener
+    public void initAdapter(){
+        publicTransportListAdapter
+                = new PublicTransportListAdapter(s, recyclerView);
+        recyclerView.setAdapter(publicTransportListAdapter);
+
+        //ProgressBar (scorro in basso per caricare più elementi)
+        publicTransportListAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                //add ProgressBar to RecyclerView
+                pt_list.add(null);
+                publicTransportListAdapter.notifyItemInserted(pt_list.size() - 1);
+
+                //carico più elementi
+                new Handler().postDelayed(loading, 2000);
+            }
+        });
+    }
+
+    //filtro la lista in base alla query ricevuta
+    public void filterList(String query){
+        final List<PublicTransport> filteredList = new ArrayList<>();
+
+        for (int i = 0; i < pt_list.size(); i++) {
+
+            if(pt_list.get(i) != null){//evito di includere ProgressBar nella ricerca
+                final String pt_name = pt_list.get(i).getPt_name().toLowerCase();
+                final String pt_route = pt_list.get(i).getPt_route().toLowerCase();
+                if (pt_name.contains(query) || pt_route.contains(query)) {
+                    filteredList.add(pt_list.get(i));
+                }
+            }
+        }
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(ChoosePTActivity.this));
+        publicTransportListAdapter = new PublicTransportListAdapter(filteredList, s, recyclerView);
+        recyclerView.setAdapter(publicTransportListAdapter);
+        publicTransportListAdapter.notifyDataSetChanged();  // data set changed
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
