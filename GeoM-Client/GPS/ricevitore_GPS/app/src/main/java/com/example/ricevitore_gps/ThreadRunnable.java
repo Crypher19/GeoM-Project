@@ -29,7 +29,7 @@ public class ThreadRunnable implements Runnable {
     public void run() {
         String temp = Integer.toString(count);
         LatLng pos = new LatLng(lat, lng);
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 18.0f));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 16.0f));
         gMap.clear();
         gMap.addMarker(new MarkerOptions().position(pos).title("Marker"+temp));
         gMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
