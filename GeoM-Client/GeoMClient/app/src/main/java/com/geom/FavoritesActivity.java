@@ -87,6 +87,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
                             public void onClick(DialogInterface dialog, int id) {
                                 String snackbarContent;
+                                PublicTransport pt = s.favList.get(position);
 
                                 if(removeListItem(position)){
                                     snackbarContent = "Preferito eliminato";
@@ -130,11 +131,14 @@ public class FavoritesActivity extends AppCompatActivity {
     }
 
     public boolean removeListItem(int position){
+        PublicTransport pt = s.favList.get(position);
 
-        if (s.removeFav(position)) {
-            //se va tutto bene aggiorno la lista da visualizzare
-            favouritesListAdapter.removeItem(position);
-            return true;
+        if(pt != null) {
+            if (s.removeFav(pt)) {
+                //se va tutto bene aggiorno la lista da visualizzare
+                favouritesListAdapter.removeItem(position);
+                return true;
+            }
         }
         return false;
     }

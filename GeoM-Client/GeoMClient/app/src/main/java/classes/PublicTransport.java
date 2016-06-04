@@ -32,8 +32,7 @@ public class PublicTransport implements Serializable, Parcelable{
     private double pt_coordX;
     private double pt_coordY;
 
-    //costruttore specifico
-    public PublicTransport(int pt_id, String pt_type, String pt_name, String pt_company,
+    /*public PublicTransport(int pt_id, String pt_type, String pt_name, String pt_company,
                            String pt_route, boolean pt_enabled, double pt_coordX, double pt_coordY){
         this.pt_id = pt_id;
         this.pt_type = pt_type;
@@ -51,8 +50,9 @@ public class PublicTransport implements Serializable, Parcelable{
         } else this.pt_image_id = R.mipmap.ic_material_no_image_grey;//sconosciuto
 
         this.pt_info = null;//evito errori in fase di cancellazione preferito
-    }
+    }*/
 
+    //costruttore specifico
     public PublicTransport(int pt_id, String pt_type, String pt_name, String pt_company,
                            String pt_route, boolean pt_enabled){
         this.pt_id = pt_id;
@@ -61,8 +61,8 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_company = pt_company;
         this.pt_route = pt_route;
         this.pt_enabled = pt_enabled;
-        this.pt_coordX = 0.d;
-        this.pt_coordY = 0.d;
+        //this.pt_coordX = 0.d;
+        //this.pt_coordY = 0.d;
 
         if(pt_type.equals(pt_type_bus)){
             this.pt_image_id = R.mipmap.ic_material_bus_grey;//bus
@@ -80,7 +80,7 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_image_id = pt_image_id;
     }
 
-    public Document getDOMPT() throws ParserConfigurationException {
+    /*public Document getDOMPT() throws ParserConfigurationException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.newDocument();
@@ -120,7 +120,7 @@ public class PublicTransport implements Serializable, Parcelable{
         }
         rootElement.appendChild(elMezzo); // aggiungo l'oggetto "mezzo" all'oggetto radice
         return doc;
-    }
+    }*/
 
     public String getPt_type() {
         return pt_type;
@@ -186,7 +186,7 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_enabled = pt_enabled;
     }
 
-    public double getPt_coordX() {
+    /*public double getPt_coordX() {
         return pt_coordX;
     }
 
@@ -200,17 +200,25 @@ public class PublicTransport implements Serializable, Parcelable{
 
     public void setPt_coordY(double pt_coordY) {
         this.pt_coordY = pt_coordY;
-    }
+    }*/
 
     //override equals
     public boolean equals(PublicTransport pt){
-        if(pt_info == null){//train, bus, favourites
-            return this.pt_id == pt.getPt_id();
-        } else {//generic pt
-            return this.pt_image_id == pt.getPt_image_id()
-                    && this.pt_type.equals(pt.getPt_type())
-                    && this.pt_info.equals(pt.getPt_info());
+        if(pt != null) {
+            if (pt_info == null) {//train, bus, favorite
+                return this.pt_id == pt.getPt_id()
+                        && this.pt_type.equals(pt.getPt_type())
+                        && this.pt_name.equals(pt.getPt_name())
+                        && this.pt_company.equals(pt.getPt_company())
+                        && this.pt_route.equals(pt.getPt_route())
+                        && this.pt_enabled == pt.isPt_enabled();
+            } else {//generic pt
+                return this.pt_image_id == pt.getPt_image_id()
+                        && this.pt_type.equals(pt.getPt_type())
+                        && this.pt_info.equals(pt.getPt_info());
+            }
         }
+        return false;
     }
 
     @Override
@@ -232,8 +240,8 @@ public class PublicTransport implements Serializable, Parcelable{
         dest.writeString(this.pt_info);
         dest.writeByte(pt_enabled ? (byte) 1 : (byte) 0);
         dest.writeInt(this.pt_image_id);
-        dest.writeDouble(this.pt_coordX);
-        dest.writeDouble(this.pt_coordY);
+        //dest.writeDouble(this.pt_coordX);
+        //dest.writeDouble(this.pt_coordY);
     }
 
     protected PublicTransport(Parcel in) {
@@ -249,8 +257,8 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_info = in.readString();
         this.pt_enabled = in.readByte() != 0;
         this.pt_image_id = in.readInt();
-        this.pt_coordX = in.readDouble();
-        this.pt_coordY = in.readDouble();
+        //this.pt_coordX = in.readDouble();
+        //this.pt_coordY = in.readDouble();
     }
 
     public static final Creator<PublicTransport> CREATOR = new Creator<PublicTransport>() {

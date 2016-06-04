@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText inputName, inputEmail, inputPassword;
-    private TextInputLayout inputLayoutName, inputLayoutEmail, inputLayoutPassword;
+    private EditText inputName, inputPassword;
+    private TextInputLayout inputLayoutName, inputLayoutPassword;
     private Button btnSignUp;
 
     @Override
@@ -27,15 +27,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         inputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
-        inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
         inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
         inputName = (EditText) findViewById(R.id.input_name);
-        inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
         btnSignUp = (Button) findViewById(R.id.btn_signup);
 
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
-        inputEmail.addTextChangedListener(new MyTextWatcher(inputEmail));
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -54,21 +51,17 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (!validateEmail()) {
-            return;
-        }
-
         if (!validatePassword()) {
             return;
         }
 
-        Toast.makeText(getApplicationContext(), "Thank You!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Login Effettuato", Toast.LENGTH_SHORT).show();
     }
 
     private boolean validateName() {
         if (inputName.getText().toString().trim().isEmpty()) {
             inputLayoutName.setError(getString(R.string.err_msg_name));
-            requestFocus(inputName);
+            //requestFocus(inputName);
             return false;
         } else {
             inputLayoutName.setErrorEnabled(false);
@@ -77,34 +70,16 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean validateEmail() {
-        String email = inputEmail.getText().toString().trim();
-
-        if (email.isEmpty() || !isValidEmail(email)) {
-            inputLayoutEmail.setError(getString(R.string.err_msg_email));
-            requestFocus(inputEmail);
-            return false;
-        } else {
-            inputLayoutEmail.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
     private boolean validatePassword() {
         if (inputPassword.getText().toString().trim().isEmpty()) {
             inputLayoutPassword.setError(getString(R.string.err_msg_password));
-            requestFocus(inputPassword);
+            //requestFocus(inputPassword);
             return false;
         } else {
             inputLayoutPassword.setErrorEnabled(false);
         }
 
         return true;
-    }
-
-    private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private void requestFocus(View view) {
@@ -131,9 +106,6 @@ public class MainActivity extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.input_name:
                     validateName();
-                    break;
-                case R.id.input_email:
-                    validateEmail();
                     break;
                 case R.id.input_password:
                     validatePassword();

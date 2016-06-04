@@ -205,7 +205,7 @@ public class ChoosePTActivity extends AppCompatActivity {
         public void run() {
             try {
                 swipeRefreshLayout.setRefreshing(true);
-                pt_list.clear(); // svuoto completamente la lista
+                //pt_list.clear(); // svuoto completamente la lista
 
                 // parte il thread per ottenere la nuova lista dal server
                 //refresh();
@@ -213,7 +213,7 @@ public class ChoosePTActivity extends AppCompatActivity {
 
                 /* aggiornamento lista */
                 //publicTransportListAdapter.notifyDataSetChanged();
-                recyclerView.invalidate();
+                //recyclerView.invalidate();
 
                 //termino l'animazione
                 swipeRefreshLayout.setRefreshing(false);
@@ -232,6 +232,11 @@ public class ChoosePTActivity extends AppCompatActivity {
             //rimuovo la ProgressBar da RecyclerView
             pt_list.remove(pt_list.size() - 1);
             publicTransportListAdapter.notifyItemRemoved(pt_list.size());
+
+            /*og.i("GUI_LOG", "dopo il caricamento");
+            for(int i = 0; i < pt_list.size(); i++){
+                Log.i("GUI_LOG", "elemento in posizione " + i + ": " + pt_list.get(i).getPt_id());
+            }*/
 
             //carico piu elementi
             //loadMore();
@@ -279,6 +284,14 @@ public class ChoosePTActivity extends AppCompatActivity {
                 //add ProgressBar to RecyclerView
                 pt_list.add(null);
                 publicTransportListAdapter.notifyItemInserted(pt_list.size() - 1);
+
+                /*Log.i("GUI_LOG", "prima del caricamento");
+                for(int i = 0; i < pt_list.size(); i++){
+                    if(pt_list.get(i) != null)
+                        Log.i("GUI_LOG", "elemento in posizione " + i + ": " + pt_list.get(i).getPt_id());
+                    else
+                        Log.i("GUI_LOG", "elemento in posizione " + i + ": progressbar");
+                }*/
 
                 //carico più elementi
                 new Handler().postDelayed(loading, 2000);

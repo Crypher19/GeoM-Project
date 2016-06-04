@@ -84,14 +84,14 @@ public class MyFile {
         favourite.appendChild(pt_enabled);
 
         //pt_coordX
-        Element pt_coordX = doc.createElement("pt_coordX");
+        /*Element pt_coordX = doc.createElement("pt_coordX");
         pt_coordX.appendChild(doc.createTextNode(Double.toString(pt.getPt_coordX())));
         favourite.appendChild(pt_coordX);
 
         //pt_coordY
         Element pt_coordY = doc.createElement("pt_coordY");
         pt_coordY.appendChild(doc.createTextNode(Double.toString(pt.getPt_coordY())));
-        favourite.appendChild(pt_coordY);
+        favourite.appendChild(pt_coordY);*/
 
         //pt_image_id
         Element pt_image_id = doc.createElement("pt_image_id");

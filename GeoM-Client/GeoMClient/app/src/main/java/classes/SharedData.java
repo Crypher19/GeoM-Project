@@ -8,6 +8,8 @@ import java.util.List;
 
 public class SharedData implements Parcelable {
 
+    public boolean check;
+
     public List<PublicTransport> PTList;
     public List<PublicTransport> busList;
     public List<PublicTransport> trainList;
@@ -22,6 +24,8 @@ public class SharedData implements Parcelable {
     public boolean goToFavouritesActivity;
 
     public SharedData() {
+        check=true;
+
         PTList = new ArrayList<>();
         busList = new ArrayList<>();
         trainList = new ArrayList<>();
@@ -46,13 +50,12 @@ public class SharedData implements Parcelable {
     }
 
     //rimuovo il preferito dalla lista e dal file xml
-    public boolean removeFav(int position){
-        MyFile f = new MyFile();
-        if(position >= 0){
+    public boolean removeFav(PublicTransport fav){
+        if(fav != null) {
+            MyFile f = new MyFile();
 
-            PublicTransport temp_pt = favList.remove(position);
-
-            if(temp_pt != null && f.removeFavourite(temp_pt) == 0){
+            if (f.removeFavourite(fav) == 0) {
+                favList.remove(fav);//aggiorno la lista dei preferiti
                 return true;
             }
         }
@@ -72,11 +75,13 @@ public class SharedData implements Parcelable {
 
     //aggiungo un preferito
     public boolean addFav(PublicTransport fav){
-        MyFile f = new MyFile();
+        if(fav != null) {
+            MyFile f = new MyFile();
 
-        if(f.addFavourite(fav) == 0){
-            favList.add(fav);//aggiorno la lista dei preferiti
-            return true;
+            if (f.addFavourite(fav) == 0) {
+                favList.add(fav);//aggiorno la lista dei preferiti
+                return true;
+            }
         }
         return false;
     }
@@ -100,6 +105,7 @@ public class SharedData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte(this.check ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.PTList);
         dest.writeTypedList(this.busList);
         dest.writeTypedList(this.trainList);
@@ -112,6 +118,7 @@ public class SharedData implements Parcelable {
     }
 
     protected SharedData(Parcel in) {
+        this.check = in.readByte() != 0;
         this.PTList = in.createTypedArrayList(PublicTransport.CREATOR);
         this.busList = in.createTypedArrayList(PublicTransport.CREATOR);
         this.trainList = in.createTypedArrayList(PublicTransport.CREATOR);

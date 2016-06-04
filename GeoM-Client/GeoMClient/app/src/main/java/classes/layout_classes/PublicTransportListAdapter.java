@@ -37,6 +37,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     private int lastVisibleItem, totalItemCount;
 
     protected final List<PublicTransport> pt_list;
+    protected  final List<PublicTransport> fav_list;
 
     protected final List<PublicTransport> filteredPTList;
 
@@ -47,9 +48,9 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     public boolean showProgressBar = true;
 
     public PublicTransportListAdapter(SharedData s, RecyclerView recyclerView) {
-
         this.s = s;
-        pt_list = s.getCurrentPTList();
+        this.pt_list = s.getCurrentPTList();
+        this.fav_list = s.favList;
         this.filteredPTList = new ArrayList<>();
 
         //inizializzo LinearLayoutManager e OnScrollListener
@@ -58,9 +59,9 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
     public PublicTransportListAdapter(List<PublicTransport> pt_list, SharedData s, RecyclerView recyclerView) {
-
         this.s = s;
         this.pt_list = pt_list;
+        this.fav_list = s.favList;
         this.filteredPTList = new ArrayList<>();
 
         //inizializzo LinearLayoutManager e OnScrollListener
@@ -78,7 +79,6 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup viewGroup, int viewType) {
-
         if(pt_list.size() > 0){
             if (viewType == VIEW_TYPE_ITEM) {
 
@@ -97,128 +97,103 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
-        if(pt_list.size() > 0) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-            if (viewHolder instanceof ListViewHolder) {//eseguo solo se in OnCreateViewHolder ho scelto la CardView
+        if (viewHolder instanceof ListViewHolder) {//eseguo solo se in OnCreateViewHolder ho scelto la CardView
 
-                final ListViewHolder holder = (ListViewHolder) viewHolder;
+            final ListViewHolder holder = (ListViewHolder) viewHolder;
+            //ottengo l'elemento attuale
+            final PublicTransport pt = pt_list.get(holder.getAdapterPosition());
 
-                PublicTransport pt = pt_list.get(position);
-                holder.pt_name.setText(pt.getPt_name());
-                holder.pt_route.setText(pt.getPt_route());
+            holder.pt_name.setText(pt.getPt_name());
+            holder.pt_route.setText(pt.getPt_route());
 
-                //apro mapActivity cliccando sull'elemento
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int pos = holder.getAdapterPosition();//ottengo la posizione dell'elemento
-                        PublicTransport pt = pt_list.get(pos);//ottengo l'elemento in posizion "pos"
+            for(int i = 0; i < fav_list.size(); i++){
+                if(fav_list.get(i).equals(pt)){
+                    holder.fav_img.setImageResource(R.drawable.ic_favorites_star_full);
+                } else{
+                    holder.fav_img.setImageResource(R.drawable.ic_favorites_star_empty);
+                }
+            }
 
-                        //lancio MapActivity
-                        Intent i = new Intent(v.getContext(), MapActivity.class);
-                        Bundle b = new Bundle();
+            //apro mapActivity cliccando sull'elemento
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //lancio MapActivity
+                    Intent i = new Intent(v.getContext(), MapActivity.class);
+                    Bundle b = new Bundle();
 
-                        s.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity
-                        b.putParcelable("PublicTransport", pt);
-                        b.putParcelable("SharedData", s);
-                        i.putExtra("bundle", b);
-                        ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
-                        ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
-                    }
-                });
+                    s.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity
+                    b.putParcelable("PublicTransport", pt);
+                    b.putParcelable("SharedData", s);
+                    i.putExtra("bundle", b);
+                    ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
+                    ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
+                }
+            });
 
-                //salvo - elimino i preferiti cliccando sulla stella
-                holder.fav_img.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //ottengo la posizione dell'elemento selezionato
-                        int pos = holder.getAdapterPosition();
+            //salvo - elimino i preferiti cliccando sulla stella
+            holder.fav_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //ottengo la posizione dell'elemento selezionato
+                    if (holder.fav_img.getDrawable().getConstantState().equals(//non è un preferito
+                            ContextCompat.getDrawable(v.getContext(),
+                                    R.drawable.ic_favorites_star_empty).getConstantState())) {
 
-                        //ottengo l'elemento in posizion "pos"
-                        PublicTransport pt = pt_list.get(pos);
+                        String message;
 
-                        if (holder.fav_img.getDrawable().getConstantState().equals(//non è un preferito
-                                ContextCompat.getDrawable(v.getContext(),
-                                        R.drawable.ic_favorites_star_empty).getConstantState())) {
-
-                            String message = addFav(pt);
+                        if (addFav(pt)) {
                             //cambio immagine
                             holder.fav_img.setImageResource(R.drawable.ic_favorites_star_full);
-                            //notifico il salvataggio all'utente
-                            Snackbar.make(v.getRootView().findViewById(R.id.activity_choose_pt),
-                                    message, Snackbar.LENGTH_LONG).show();
+                            message = "Preferito aggiunto";
+                        } else {
+                            holder.fav_img.setImageResource(R.drawable.ic_favorites_star_empty);
+                            message = "ERRORE, preferito non aggiunto";
+                        }
 
-                        } else {//è un preferito
+                        //notifico il salvataggio all'utente
+                        Snackbar.make(v.getRootView().findViewById(R.id.activity_choose_pt),
+                                message, Snackbar.LENGTH_LONG).show();
 
-                            String message = removeFav(pos);
+                    } else {//è un preferito
+                        String message;
+
+                        if (removeFav(pt)) {
                             //cambio immagine
                             holder.fav_img.setImageResource(R.drawable.ic_favorites_star_empty);
-                            //notifico l'eliminazione all'utente
-                            Snackbar.make(v.getRootView().findViewById(R.id.activity_choose_pt),
-                                    message, Snackbar.LENGTH_LONG).show();
+                            message = "Preferito rimosso";
+                        } else {
+                            holder.fav_img.setImageResource(R.drawable.ic_favorites_star_full);
+                            message = "ERRORE, prefedrito non rimosso";
                         }
-                    }
-                });
 
-
-                //stella gialla gli elementi della lista che sono anche preferiti
-                for (int i = 0; i < s.favList.size(); i++) {
-                    if (pt_list.get(position).equals(s.favList.get(i))) {
-                        holder.fav_img.setImageResource(R.drawable.ic_favorites_star_full);
+                        //notifico l'eliminazione all'utente
+                        Snackbar.make(v.getRootView().findViewById(R.id.activity_choose_pt),
+                                message, Snackbar.LENGTH_LONG).show();
                     }
                 }
+            });
 
-                //mezzo disponibile - non disponibile (pallino verde - rosso)
-                if (pt_list.get(position).isPt_enabled()) {
-                    holder.pt_enabled.setImageResource(R.drawable.ic_enabled_green);//mezzo disponibile
-                } else
-                    holder.pt_enabled.setImageResource(R.drawable.ic_disabled_red);//mezzo non disponibile*/
+            //mezzo disponibile - non disponibile (pallino verde - rosso)
+            if (pt_list.get(position).isPt_enabled())
+                holder.pt_enabled.setImageResource(R.drawable.ic_enabled_green);//mezzo disponibile
+            else
+                holder.pt_enabled.setImageResource(R.drawable.ic_disabled_red);//mezzo non disponibile*/
 
-            } else if (viewHolder instanceof LoadingViewHolder) {//eseguo solo se in OnCreateViewHolder ho scelto la ProgressBar
-                LoadingViewHolder loadingViewHolder = (LoadingViewHolder) viewHolder;
-                loadingViewHolder.progressBar.setIndeterminate(true);
-            }
+        } else if (viewHolder instanceof LoadingViewHolder) {//eseguo solo se in OnCreateViewHolder ho scelto la ProgressBar
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) viewHolder;
+            loadingViewHolder.progressBar.setIndeterminate(true);
         }
     }
 
-    public String removeFav(int posInPtList) {
-        String _return;
-
-        //il preferito non è nella stessa posizione in pt_list e fav_list
-        int posInFavList = -1;
-
-        //ottengo l'oggetto in pt_list
-        PublicTransport temp = pt_list.get(posInPtList);
-
-        //trovo la sua posizione in fav_list
-        for (int i = 0; i < s.favList.size(); i++) {
-            if (temp.equals(s.favList.get(i))) {
-                posInFavList = i;
-                break;
-            }
-        }
-
-        //Log.i("GUI_LOG", "Elemento in pt_list: " + posInPtList);
-        //Log.i("GUI_LOG", "Elemento in fav_list: " + posInFavList);
-
-        //rimuovo l'elemento alla posizione reale in fav_list
-        if (s.removeFav(posInFavList)) {
-            _return = "Preferito eliminato";
-        } else
-            _return = "ERRORE, preferito non eliminato";
-
-        return _return;
+    public boolean removeFav(PublicTransport fav) {
+        return (s.removeFav(fav));
     }
 
-    public String addFav(PublicTransport fav){
-        String _return;
-
-        if(s.addFav(fav)){
-            _return = "Preferito aggiunto";
-        } else _return = "ERRORE, preferito non aggiunto";
-
-        return _return;
+    public boolean addFav(PublicTransport fav){
+        return (s.addFav(fav));
     }
 
     //inizializzo LinearLayoutManager e OnScrollListener
@@ -261,6 +236,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
 }
 
 class LoadingViewHolder extends RecyclerView.ViewHolder {
+
     public ProgressBar progressBar;
 
     public LoadingViewHolder(View itemView) {
