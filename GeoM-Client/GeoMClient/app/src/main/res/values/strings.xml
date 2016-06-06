@@ -19,5 +19,6 @@
     <!-- search strings -->
     <string name="search_title">Cerca mezzo</string>
     <string name="search_hint">Cerca per nome o tratta</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

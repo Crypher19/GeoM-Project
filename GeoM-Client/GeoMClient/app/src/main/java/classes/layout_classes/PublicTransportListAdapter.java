@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.geom.MapActivity;
+import com.geom.MapsActivity;
 import com.geom.R;
 
 import java.util.ArrayList;
@@ -121,7 +120,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
                 @Override
                 public void onClick(View v) {
                     //lancio MapActivity
-                    Intent i = new Intent(v.getContext(), MapActivity.class);
+                    Intent i = new Intent(v.getContext(), MapsActivity.class);
                     Bundle b = new Bundle();
 
                     s.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity

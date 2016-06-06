@@ -153,19 +153,19 @@ public class HomeActivity extends AppCompatActivity {
         }*/
 
         if(s.check) {
-            s.trainList.add(new PublicTransport(0, "treno", "121212", "Trenitalia", "Napoli-Venezia", false));
-            s.trainList.add(new PublicTransport(1, "treno", "R09547", "Trenord", "Milano-Asso", true));
-            s.trainList.add(new PublicTransport(2, "treno", "R20177", "Trenord", "Treviso-Venezia", true));
-            s.trainList.add(new PublicTransport(3, "treno", "R20199", "Trenord", "Novara-Treviglio", true));
-            s.trainList.add(new PublicTransport(4, "treno", "R21753", "Trenord", "Saronno-Lodi", true));
-            s.trainList.add(new PublicTransport(5, "treno", "R22178", "Trenord", "Pavia-Codogno", true));
-            s.trainList.add(new PublicTransport(6, "treno", "ETR500", "Trenitalia", "Napoli-Venezia", true));
-            s.trainList.add(new PublicTransport(7, "treno", "FRM644", "Trenitalia", "Milano-Riccione", false));
-            s.trainList.add(new PublicTransport(8, "treno", "R24312", "Trenitalia", "Torino–Milano", false));
+            s.trainList.add(new PublicTransport(0, "treno", "121212", "Trenitalia", "Napoli-Venezia", false, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(1, "treno", "R09547", "Trenord", "Milano-Asso", true, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(2, "treno", "R20177", "Trenord", "Treviso-Venezia", true, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(3, "treno", "R20199", "Trenord", "Novara-Treviglio", true, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(4, "treno", "R21753", "Trenord", "Saronno-Lodi", true, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(5, "treno", "R22178", "Trenord", "Pavia-Codogno", true, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(6, "treno", "ETR500", "Trenitalia", "Napoli-Venezia", true, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(7, "treno", "FRM644", "Trenitalia", "Milano-Riccione", false, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(8, "treno", "R24312", "Trenitalia", "Torino–Milano", false, 12.0, 12.0));
 
-            s.trainList.add(new PublicTransport(9, "treno", "999999", "Trenitalia", "Napoli-Venezia", false));
-            s.trainList.add(new PublicTransport(10, "treno", "101010", "Trenord", "Milano-Asso", true));
-            s.trainList.add(new PublicTransport(11, "treno", "111111", "Trenord", "Treviso-Venezia", true));
+            s.trainList.add(new PublicTransport(9, "treno", "999999", "Trenitalia", "Napoli-Venezia", false, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(10, "treno", "101010", "Trenord", "Milano-Asso", true, 12.0, 12.0));
+            s.trainList.add(new PublicTransport(11, "treno", "111111", "Trenord", "Treviso-Venezia", true, 12.0, 12.0));
 
             s.check=false;
         }

@@ -65,7 +65,7 @@ public class FavoritesActivity extends AppCompatActivity {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent i = new Intent(FavoritesActivity.this, MapActivity.class);
+                        Intent i = new Intent(FavoritesActivity.this, MapsActivity.class);
                         Bundle b = new Bundle();
                         //invio la posizione del preferito selezionato
                         PublicTransport fav = s.favList.get(position);

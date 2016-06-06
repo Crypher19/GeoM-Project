@@ -5,14 +5,7 @@ import android.os.Parcelable;
 
 import com.geom.R;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import java.io.Serializable;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 public class PublicTransport implements Serializable, Parcelable{
     //tipi di default (non final per problemi con Parcelable)
@@ -32,7 +25,7 @@ public class PublicTransport implements Serializable, Parcelable{
     private double pt_coordX;
     private double pt_coordY;
 
-    /*public PublicTransport(int pt_id, String pt_type, String pt_name, String pt_company,
+    public PublicTransport(int pt_id, String pt_type, String pt_name, String pt_company,
                            String pt_route, boolean pt_enabled, double pt_coordX, double pt_coordY){
         this.pt_id = pt_id;
         this.pt_type = pt_type;
@@ -50,7 +43,7 @@ public class PublicTransport implements Serializable, Parcelable{
         } else this.pt_image_id = R.mipmap.ic_material_no_image_grey;//sconosciuto
 
         this.pt_info = null;//evito errori in fase di cancellazione preferito
-    }*/
+    }
 
     //costruttore specifico
     public PublicTransport(int pt_id, String pt_type, String pt_name, String pt_company,
@@ -61,8 +54,8 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_company = pt_company;
         this.pt_route = pt_route;
         this.pt_enabled = pt_enabled;
-        //this.pt_coordX = 0.d;
-        //this.pt_coordY = 0.d;
+        this.pt_coordX = 0.d;
+        this.pt_coordY = 0.d;
 
         if(pt_type.equals(pt_type_bus)){
             this.pt_image_id = R.mipmap.ic_material_bus_grey;//bus
@@ -186,7 +179,7 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_enabled = pt_enabled;
     }
 
-    /*public double getPt_coordX() {
+    public double getPt_coordX() {
         return pt_coordX;
     }
 
@@ -200,7 +193,7 @@ public class PublicTransport implements Serializable, Parcelable{
 
     public void setPt_coordY(double pt_coordY) {
         this.pt_coordY = pt_coordY;
-    }*/
+    }
 
     //override equals
     public boolean equals(PublicTransport pt){
@@ -240,8 +233,8 @@ public class PublicTransport implements Serializable, Parcelable{
         dest.writeString(this.pt_info);
         dest.writeByte(pt_enabled ? (byte) 1 : (byte) 0);
         dest.writeInt(this.pt_image_id);
-        //dest.writeDouble(this.pt_coordX);
-        //dest.writeDouble(this.pt_coordY);
+        dest.writeDouble(this.pt_coordX);
+        dest.writeDouble(this.pt_coordY);
     }
 
     protected PublicTransport(Parcel in) {
@@ -257,8 +250,8 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_info = in.readString();
         this.pt_enabled = in.readByte() != 0;
         this.pt_image_id = in.readInt();
-        //this.pt_coordX = in.readDouble();
-        //this.pt_coordY = in.readDouble();
+        this.pt_coordX = in.readDouble();
+        this.pt_coordY = in.readDouble();
     }
 
     public static final Creator<PublicTransport> CREATOR = new Creator<PublicTransport>() {
