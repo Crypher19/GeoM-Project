@@ -7,4 +7,5 @@
     <string name="btn_sign_up">Accedi</string>
     <string name="err_msg_name">Inserisci il nome utente</string>
     <string name="err_msg_password">Inserisci la password</string>
+    <string name="title_activity_second">SecondActivity</string>
 </resources>

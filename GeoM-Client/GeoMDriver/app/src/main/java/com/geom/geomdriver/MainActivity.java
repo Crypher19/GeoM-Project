@@ -1,5 +1,7 @@
 package com.geom.geomdriver;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,21 +53,16 @@ public class MainActivity extends AppCompatActivity {
      * Validating form
      */
     private void submitForm() {
-        if (!validateName()) {
-            return;
+        if(validateName() && validatePassword()){
+            Intent i = new Intent(MainActivity.this, SecondActivity.class);
+            startActivity(i);
         }
-
-        if (!validatePassword()) {
-            return;
-        }
-
-        Toast.makeText(getApplicationContext(), "Login Effettuato", Toast.LENGTH_SHORT).show();
     }
 
     private boolean validateName() {
         if (inputName.getText().toString().trim().isEmpty()) {
             inputLayoutName.setError(getString(R.string.err_msg_name));
-            //requestFocus(inputName);
+            requestFocus(inputName);
             return false;
         } else {
             inputLayoutName.setErrorEnabled(false);
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean validatePassword() {
         if (inputPassword.getText().toString().trim().isEmpty()) {
             inputLayoutPassword.setError(getString(R.string.err_msg_password));
-            //requestFocus(inputPassword);
+            requestFocus(inputPassword);
             return false;
         } else {
             inputLayoutPassword.setErrorEnabled(false);
