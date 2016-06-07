@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,7 +35,6 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     private int lastVisibleItem, totalItemCount;
 
     protected final List<PublicTransport> pt_list;
-    protected  final List<PublicTransport> fav_list;
 
     protected final List<PublicTransport> filteredPTList;
 
@@ -49,7 +47,6 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     public PublicTransportListAdapter(SharedData s, RecyclerView recyclerView) {
         this.s = s;
         this.pt_list = s.getCurrentPTList();
-        this.fav_list = s.favList;
         this.filteredPTList = new ArrayList<>();
 
         //inizializzo LinearLayoutManager e OnScrollListener
@@ -60,7 +57,6 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
     public PublicTransportListAdapter(List<PublicTransport> pt_list, SharedData s, RecyclerView recyclerView) {
         this.s = s;
         this.pt_list = pt_list;
-        this.fav_list = s.favList;
         this.filteredPTList = new ArrayList<>();
 
         //inizializzo LinearLayoutManager e OnScrollListener
@@ -102,17 +98,23 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
 
             final ListViewHolder holder = (ListViewHolder) viewHolder;
             //ottengo l'elemento attuale
-            final PublicTransport pt = pt_list.get(holder.getAdapterPosition());
+            PublicTransport pt = pt_list.get(holder.getAdapterPosition());
+            boolean found = false;
 
             holder.pt_name.setText(pt.getPt_name());
             holder.pt_route.setText(pt.getPt_route());
 
-            for(int i = 0; i < fav_list.size(); i++){
-                if(fav_list.get(i).equals(pt)){
-                    holder.fav_img.setImageResource(R.drawable.ic_favorites_star_full);
-                } else{
-                    holder.fav_img.setImageResource(R.drawable.ic_favorites_star_empty);
+            for(int i = 0; i < s.favList.size(); i++){
+                if(s.favList.get(i).equals(pt)) {
+                    found = true;
+                    break;
                 }
+            }
+
+            if(found){
+                holder.fav_img.setImageResource(R.drawable.ic_favorites_star_full);
+            } else{
+                holder.fav_img.setImageResource(R.drawable.ic_favorites_star_empty);
             }
 
             //apro mapActivity cliccando sull'elemento
@@ -120,6 +122,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
                 @Override
                 public void onClick(View v) {
                     //lancio MapActivity
+                    PublicTransport pt = pt_list.get(holder.getAdapterPosition());
                     Intent i = new Intent(v.getContext(), MapsActivity.class);
                     Bundle b = new Bundle();
 
@@ -136,27 +139,18 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
             holder.fav_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //ottengo la posizione dell'elemento selezionato
-                    if (holder.fav_img.getDrawable().getConstantState().equals(//non è un preferito
-                            ContextCompat.getDrawable(v.getContext(),
-                                    R.drawable.ic_favorites_star_empty).getConstantState())) {
+                    //ottengo l'elemento selezionato
+                    PublicTransport pt = pt_list.get(holder.getAdapterPosition());
+                    boolean found = false;
 
-                        String message;
-
-                        if (addFav(pt)) {
-                            //cambio immagine
-                            holder.fav_img.setImageResource(R.drawable.ic_favorites_star_full);
-                            message = "Preferito aggiunto";
-                        } else {
-                            holder.fav_img.setImageResource(R.drawable.ic_favorites_star_empty);
-                            message = "ERRORE, preferito non aggiunto";
+                    for(int i = 0; i < s.favList.size(); i++){
+                        if(s.favList.get(i).equals(pt)){
+                            found = true;
+                            break;
                         }
+                    }
 
-                        //notifico il salvataggio all'utente
-                        Snackbar.make(v.getRootView().findViewById(R.id.activity_choose_pt),
-                                message, Snackbar.LENGTH_LONG).show();
-
-                    } else {//è un preferito
+                    if (found) {//è un preferito
                         String message;
 
                         if (removeFav(pt)) {
@@ -169,6 +163,22 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
                         }
 
                         //notifico l'eliminazione all'utente
+                        Snackbar.make(v.getRootView().findViewById(R.id.activity_choose_pt),
+                                message, Snackbar.LENGTH_LONG).show();
+
+                    } else {//non è un preferito
+                        String message;
+
+                        if (addFav(pt)) {
+                            //cambio immagine
+                            holder.fav_img.setImageResource(R.drawable.ic_favorites_star_full);
+                            message = "Preferito aggiunto";
+                        } else {
+                            holder.fav_img.setImageResource(R.drawable.ic_favorites_star_empty);
+                            message = "ERRORE, preferito non aggiunto";
+                        }
+
+                        //notifico il salvataggio all'utente
                         Snackbar.make(v.getRootView().findViewById(R.id.activity_choose_pt),
                                 message, Snackbar.LENGTH_LONG).show();
                     }

@@ -240,10 +240,10 @@ public class ChoosePTActivity extends AppCompatActivity {
             }*/
 
             //carico piu elementi
-            loadMore();
+            //loadMore();
             //Log.i("GUI_LOG", "loadmore eseguito");
 
-            publicTransportListAdapter.notifyDataSetChanged();
+            //publicTransportListAdapter.notifyDataSetChanged();
             publicTransportListAdapter.setLoaded();
         }
     };

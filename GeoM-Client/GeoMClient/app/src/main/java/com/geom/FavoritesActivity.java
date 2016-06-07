@@ -49,7 +49,6 @@ public class FavoritesActivity extends AppCompatActivity {
             }
         });
 
-
         //lista di mezzi di trasporto
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.fav_recycler_view);
         //divider
