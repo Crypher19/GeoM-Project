@@ -14,11 +14,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+<<<<<<< HEAD
+    private Geocoder gc;
+    private TextView myLocationText;
+    private double lat, lon;
+=======
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
+>>>>>>> 882fe124493ca8cc47a142cb6e764b59a78725ee
     private GoogleApiClient client;
+    final double latitudine = 0,longitudine = =;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +60,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void run() {
                 int i = 0;
                 while (i++ < 100) {
+<<<<<<< HEAD
+                    ThreadRunnable t = new ThreadRunnable(getApplicationContext(),mMap,latitudine,longitudine,i);
+=======
                     double latitudine = (i / 10) + 44;
                     double longitudine = (i / 10) + 8;
                     ThreadRunnable t = new ThreadRunnable(getApplicationContext(), mMap, latitudine, longitudine, i);
+>>>>>>> 882fe124493ca8cc47a142cb6e764b59a78725ee
                     try {
                         runOnUiThread(t);
                         Thread.sleep(1000);
