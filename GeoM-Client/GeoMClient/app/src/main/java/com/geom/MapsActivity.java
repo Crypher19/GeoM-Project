@@ -50,14 +50,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        ct = new CoordThread(pt);
+        ct = new CoordThread(s, pt);
         ct.start();
-
-        try {
-            ct.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -83,6 +77,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void goBack(){
         Intent i;
         Bundle b = new Bundle();
+
+        s.ricezioneCoord = false; // interrompo la ricezione delle coordinate
 
         if(s.goToChoosePTActivity && !s.goToFavouritesActivity){//devo tornare a ChoosePTActivity
             i = new Intent(MapsActivity.this, ChoosePTActivity.class);

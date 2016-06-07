@@ -29,6 +29,7 @@ class UserThread (threading.Thread):
 
                 # ricevo mezzo dell'utente
                 msg = self.conn.recv(1024).decode('utf-8').strip()
+                print(msg)
                 doc = pxml.toDOMObject(msg)
                 tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
                 posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta) # ottengo posizione del mezzo nella lista
@@ -44,8 +45,8 @@ class UserThread (threading.Thread):
                     loop = True
 
                 # imposto timeout per invio coordinate
-                self.conn.settimeout( 1 )
-            
+                self.conn.settimeout(1)
+                
                 while loop :
                     try:
                         time.sleep(self.time)

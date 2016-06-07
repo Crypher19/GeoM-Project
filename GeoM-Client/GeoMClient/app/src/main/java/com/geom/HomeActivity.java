@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;;
 
+import classes.LoadingThread;
 import classes.PublicTransport;
 import classes.SharedData;
 import classes.layout_classes.ListViewDivider;
@@ -144,14 +145,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void load(){
-        /*LoadingThread lt = new LoadingThread(s);
+        LoadingThread lt = new LoadingThread(s);
         lt.start();
         try {
             lt.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
-
+        }
+        /*
         if(s.check) {
             s.trainList.add(new PublicTransport(0, "treno", "121212", "Trenitalia", "Napoli-Venezia", false, 12.0, 12.0));
             s.trainList.add(new PublicTransport(1, "treno", "R09547", "Trenord", "Milano-Asso", true, 12.0, 12.0));
@@ -168,6 +169,6 @@ public class HomeActivity extends AppCompatActivity {
             s.trainList.add(new PublicTransport(11, "treno", "111111", "Trenord", "Treviso-Venezia", true, 12.0, 12.0));
 
             s.check=false;
-        }
+        }*/
     }
 }

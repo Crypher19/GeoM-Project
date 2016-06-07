@@ -12,6 +12,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -104,13 +106,6 @@ public class Connection {
         return doc;
     }
 
-    public String readDOMResponse(Document doc, String element) {
-        String contenuto = doc.getElementsByTagName("ciao").item(0).getFirstChild().getNodeValue();
-        return contenuto;
-    }
-
-
-
     public Document getDOMRichiesta(String tipo, String limit, String offset) throws ParserConfigurationException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -192,6 +187,19 @@ public class Connection {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String readDOMResponse(Document doc, String element) {
+        String contenuto = doc.getElementsByTagName(element).item(0).getFirstChild().getNodeValue();
+        return contenuto;
+    }
+
+    public List<Double> readDOMofCoord(Document doc) {
+        List<Double> coord = new ArrayList<>();
+        String posizione = doc.getElementsByTagName("posizione").item(0).getFirstChild().getNodeValue();
+        coord.add(Double.parseDouble(doc.getElementsByTagName("coordX").item(0).getFirstChild().getNodeValue()));
+        coord.add(Double.parseDouble(doc.getElementsByTagName("coordY").item(0).getFirstChild().getNodeValue()));
+        return coord;
     }
 
 	// metodi statici per la conversione da Document a String e viceversa

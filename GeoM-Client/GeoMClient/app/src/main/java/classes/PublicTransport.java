@@ -85,7 +85,7 @@ public class PublicTransport implements Serializable, Parcelable{
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.newDocument();
 
-        Element rootElement = doc.createElement("mezzi"); // creo la radice "posizione"
+        Element rootElement = doc.createElement("mezzi"); // creo la radice "mezzi"
         Element elMezzo = doc.createElement("mezzo"); // creo l'elemento "mezzo"
         elMezzo.setAttribute("id", Integer.toString(pt_id)); // imposto l'attributo "id"
 
@@ -110,14 +110,14 @@ public class PublicTransport implements Serializable, Parcelable{
         elMezzo.appendChild(elAttivo); // aggiungo l'elemento al mezzo
 
         // se sono stati modificati, aggiungo l'XML delle coordinate
-        if (pt_coordX != 0.d && pt_coordY != 0.d) {
+       /* if (pt_coordX != 0.d && pt_coordY != 0.d) {
             Element elCoordX = doc.createElement("coordX"); // creo l'elemento "coordX"
             elCoordX.appendChild(doc.createTextNode(Double.toString(pt_coordX))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
             elMezzo.appendChild(elCoordX); // aggiungo l'elemento al mezzo
             Element elCoordY = doc.createElement("coordY"); // creo l'elemento "coordY"
             elCoordY.appendChild(doc.createTextNode(Double.toString(pt_coordY))); // aggiungo all'elemento un nodo di tipo testo contenente il valore della query
             elMezzo.appendChild(elCoordY); // aggiungo l'elemento al mezzo
-        }
+        }*/
         rootElement.appendChild(elMezzo); // aggiungo l'oggetto "mezzo" all'oggetto radice
         return doc;
     }

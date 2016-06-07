@@ -205,15 +205,15 @@ public class ChoosePTActivity extends AppCompatActivity {
         public void run() {
             try {
                 swipeRefreshLayout.setRefreshing(true);
-                //pt_list.clear(); // svuoto completamente la lista
+                pt_list.clear(); // svuoto completamente la lista
 
                 // parte il thread per ottenere la nuova lista dal server
-                //refresh();
+                refresh();
                 //Log.i("GUI_LOG", "refresh eseguito");
 
                 /* aggiornamento lista */
-                //publicTransportListAdapter.notifyDataSetChanged();
-                //recyclerView.invalidate();
+                publicTransportListAdapter.notifyDataSetChanged();
+                recyclerView.invalidate();
 
                 //termino l'animazione
                 swipeRefreshLayout.setRefreshing(false);
@@ -230,26 +230,27 @@ public class ChoosePTActivity extends AppCompatActivity {
     private final Runnable loading = new Runnable() {
         public void run() {
             //rimuovo la ProgressBar da RecyclerView
+
             pt_list.remove(pt_list.size() - 1);
             publicTransportListAdapter.notifyItemRemoved(pt_list.size());
 
-            /*og.i("GUI_LOG", "dopo il caricamento");
+            /*Log.i("GUI_LOG", "dopo il caricamento");
             for(int i = 0; i < pt_list.size(); i++){
                 Log.i("GUI_LOG", "elemento in posizione " + i + ": " + pt_list.get(i).getPt_id());
             }*/
 
             //carico piu elementi
-            //loadMore();
+            loadMore();
             //Log.i("GUI_LOG", "loadmore eseguito");
 
-            //publicTransportListAdapter.notifyDataSetChanged();
+            publicTransportListAdapter.notifyDataSetChanged();
             publicTransportListAdapter.setLoaded();
         }
     };
 
     //Carico più elementi quando arrivo alla fine della lista
     public void loadMore(){
-        s.offset = pt_list.size()+1;
+        s.offset = pt_list.size();
 
         LoadingThread lt = new LoadingThread(s);
         lt.start();

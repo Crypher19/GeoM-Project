@@ -9,6 +9,7 @@ import java.util.List;
 public class SharedData implements Parcelable {
 
     public boolean check;
+    public boolean ricezioneCoord;
 
     public List<PublicTransport> PTList;
     public List<PublicTransport> busList;
@@ -24,7 +25,8 @@ public class SharedData implements Parcelable {
     public boolean goToFavouritesActivity;
 
     public SharedData() {
-        check=true;
+        check = true;
+        ricezioneCoord = true;
 
         PTList = new ArrayList<>();
         busList = new ArrayList<>();
@@ -106,6 +108,7 @@ public class SharedData implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte(this.check ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.ricezioneCoord ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.PTList);
         dest.writeTypedList(this.busList);
         dest.writeTypedList(this.trainList);
@@ -119,6 +122,7 @@ public class SharedData implements Parcelable {
 
     protected SharedData(Parcel in) {
         this.check = in.readByte() != 0;
+        this.ricezioneCoord = in.readByte() != 0;
         this.PTList = in.createTypedArrayList(PublicTransport.CREATOR);
         this.busList = in.createTypedArrayList(PublicTransport.CREATOR);
         this.trainList = in.createTypedArrayList(PublicTransport.CREATOR);
