@@ -14,13 +14,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import classes.CoordThread;
 import classes.PublicTransport;
 import classes.SharedData;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    SharedData s;
+    private SharedData s;
+    private CoordThread ct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 goBack();
             }
         });
+
+        ct = new CoordThread(pt);
+        ct.start();
+
+        try {
+            ct.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 

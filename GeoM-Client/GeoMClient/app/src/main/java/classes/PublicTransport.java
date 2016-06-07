@@ -5,7 +5,14 @@ import android.os.Parcelable;
 
 import com.geom.R;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.io.Serializable;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class PublicTransport implements Serializable, Parcelable{
     //tipi di default (non final per problemi con Parcelable)
@@ -73,7 +80,7 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_image_id = pt_image_id;
     }
 
-    /*public Document getDOMPT() throws ParserConfigurationException {
+    public Document getDOMPT() throws ParserConfigurationException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.newDocument();
@@ -113,7 +120,7 @@ public class PublicTransport implements Serializable, Parcelable{
         }
         rootElement.appendChild(elMezzo); // aggiungo l'oggetto "mezzo" all'oggetto radice
         return doc;
-    }*/
+    }
 
     public String getPt_type() {
         return pt_type;

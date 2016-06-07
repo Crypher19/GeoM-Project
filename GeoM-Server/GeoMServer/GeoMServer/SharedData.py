@@ -12,7 +12,7 @@ class SharedData:
         self.transportList = [] # lista di thread transport attivi
         self.fileMezziXML = "mezzi.xml"     
 
-    def addTransport(self, transport):        
+    def addTransport(self, transport):      
         self.transportList.append(transport) # aggiungo un elemento ThreadTrasport nella lista
         self.transportList[-1].start() # parte il threadTransport | -1 -> ultimo elemento
         

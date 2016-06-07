@@ -104,6 +104,13 @@ public class Connection {
         return doc;
     }
 
+    public String readDOMResponse(Document doc, String element) {
+        String contenuto = doc.getElementsByTagName("ciao").item(0).getFirstChild().getNodeValue();
+        return contenuto;
+    }
+
+
+
     public Document getDOMRichiesta(String tipo, String limit, String offset) throws ParserConfigurationException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

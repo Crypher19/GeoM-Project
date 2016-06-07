@@ -19,17 +19,21 @@ class UserThread (threading.Thread):
             print("Connected by", self.addr)
             self.send("Connected")
 
-            while True: # TODO: esco quando il client si disconnette
+            while True: # esco quando il client si disconnette
                 # rimuovo timeout per ricezione mezzo
                 self.conn.settimeout(None) 
+
+                print("Connected by", self.addr)
+                pxml = ParserXML()
+                self.send(pxml.getDOMResponse("Connected")) # invio risposta al client
 
                 # ricevo mezzo dell'utente
                 msg = self.conn.recv(1024).decode('utf-8').strip()
                 doc = pxml.toDOMObject(msg)
                 tobj = pxml.getTransportObj(doc) # ottengo il mezzo del client
-                posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta)
+                posI = self.sd.getTransportI(tobj.nomeMezzo, tobj.compagnia, tobj.tratta) # ottengo posizione del mezzo nella lista
             
-                #invio risposta se il mezzo è attivo
+                # invio risposta se il mezzo è attivo
                 loop = False
                 if posI == -1:
                     self.send(pxml.getDOMResponse(msg="Mezzo di trasporto non attivo"))
@@ -39,7 +43,7 @@ class UserThread (threading.Thread):
                     print("mezzo di trasporto trovato")
                     loop = True
 
-                #imposto timeout per invio coordinate
+                # imposto timeout per invio coordinate
                 self.conn.settimeout( 1 )
             
                 while loop :

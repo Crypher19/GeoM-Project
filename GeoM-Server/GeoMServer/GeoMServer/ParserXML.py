@@ -46,7 +46,7 @@ class ParserXML:
         #print(xmldoc.toprettyxml())  
         return xmldoc
 
-    def readDOMResponse(self, doc , element):
+    def readDOMResponse(self, doc, element):
         try:
             contenuto = doc.getElementsByTagName(element)[0].firstChild.nodeValue
             return contenuto
