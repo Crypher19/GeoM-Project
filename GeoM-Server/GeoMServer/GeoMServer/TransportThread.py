@@ -59,7 +59,7 @@ class TransportThread (threading.Thread):
 
                 # ricevi dati posizione (for/while)
             else:
-                self.send(getDOMResponse(msg="username o password errati"))
+                self.send(getDOMResponse(msg="Username o password errata"))
 
             # fine del programma
         except ConnectionResetError:

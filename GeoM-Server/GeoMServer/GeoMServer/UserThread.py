@@ -18,14 +18,11 @@ class UserThread (threading.Thread):
         try:
             print("Connected by", self.addr)
             self.send("Connected")
+            pxml = ParserXML()
 
             while True: # esco quando il client si disconnette
                 # rimuovo timeout per ricezione mezzo
                 self.conn.settimeout(None) 
-
-                print("Connected by", self.addr)
-                pxml = ParserXML()
-                self.send(pxml.getDOMResponse("Connected")) # invio risposta al client
 
                 # ricevo mezzo dell'utente
                 msg = self.conn.recv(1024).decode('utf-8').strip()
