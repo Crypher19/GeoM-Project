@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,6 +50,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 goBack();
             }
         });
+
+        Log.i("sMESSAGE ooooooooooo", pt.getPt_name());
 
         ct = new CoordThread(s, pt);
         ct.start();

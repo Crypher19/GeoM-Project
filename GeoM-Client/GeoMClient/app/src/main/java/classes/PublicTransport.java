@@ -119,6 +119,7 @@ public class PublicTransport implements Serializable, Parcelable{
             elMezzo.appendChild(elCoordY); // aggiungo l'elemento al mezzo
         }*/
         rootElement.appendChild(elMezzo); // aggiungo l'oggetto "mezzo" all'oggetto radice
+        doc.appendChild(rootElement); // aggiungo la radice al documento
         return doc;
     }
 
