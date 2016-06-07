@@ -4,14 +4,13 @@ from Transport import Transport
 
 class Database:
 
-    def __init__(self):
-        # Connect to MySQL database
+    def __init__(self):       
         global cursor
         global conn
       
         try:
             print('Connecting to MySQL database...')
-            conn = MySQLConnection(user='root', database='geom')
+            conn = MySQLConnection(user='root', database='geom') # Connect to MySQL database
             cursor = conn.cursor()
             
             if conn.is_connected():
@@ -26,24 +25,11 @@ class Database:
         try:
             refresh = RefreshOption.LOG | RefreshOption.THREADS
             conn.cmd_refresh(refresh) # This method flushes tables or caches, or resets replication server information. 
-            #print(query)
             ris = cursor.execute(query)
             return True
         except Error as error:
-            #print("errore")
             print(error)
             return False
-
-    def createUser(self, username, password): # da provare
-            if(self.execQuery("INSERT INTO transport_users_table (Username,Password) VALUES ('" + username + "','" + password + "');")):
-                return True
-            return False
-
-    def addTransport(self, TransportType, Name, Company, Route, Enabled): # da provare
-        if(self.execQuery("INSERT INTO transports_table (TipoMezzo,NomeMezzo,Tratta,Attivo, Compagnia) VALUES ('" + TransportType + "','" + Name + "','" + Route + "','" + Enabled + "','" + Company+ "')")!=False):
-            conn.commit()
-            return True
-        return False
         
     def getTransports(self, tipoMezzo=None, limit=None, offset=None):
         sql = """SELECT transports_table.ID,transports_table.TipoMezzo,transports_table.NomeMezzo,
@@ -82,4 +68,15 @@ class Database:
         if self.execQuery(sql):
             res = cursor.fetchall()
             return res[0] # restituisco il numero dei trasporti presenti nel DB
+        return False
+
+    def createUser(self, username, password):
+            if(self.execQuery("INSERT INTO transport_users_table (Username,Password) VALUES ('" + username + "','" + password + "');")):
+                return True
+            return False
+
+    def addTransport(self, TransportType, Name, Company, Route, Enabled):
+        if(self.execQuery("INSERT INTO transports_table (TipoMezzo,NomeMezzo,Tratta,Attivo, Compagnia) VALUES ('" + TransportType + "','" + Name + "','" + Route + "','" + Enabled + "','" + Company+ "')")!=False):
+            conn.commit()
+            return True
         return False
