@@ -45,7 +45,7 @@ public class FavoritesActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBack();
+                goBack(null);
             }
         });
 
@@ -171,19 +171,12 @@ public class FavoritesActivity extends AppCompatActivity {
 
                 public void onClick(DialogInterface dialog, int id) {
                     String snackbarContent;
-                    Intent i;
-                    Bundle b = new Bundle();
 
                     if(deleteAll()){
                         snackbarContent = "Preferiti eliminati";
                     } else snackbarContent = "ERRORE, preferiti non eliminati";
 
-                    i = new Intent(FavoritesActivity.this, HomeActivity.class);
-
-                    b.putString("snackbarContent", snackbarContent);
-                    b.putParcelable("SharedData", s);
-                    i.putExtra("bundle", b);
-                    startActivityForResult(i, 3);
+                    goBack(snackbarContent);
                 }
             });
 
@@ -223,7 +216,7 @@ public class FavoritesActivity extends AppCompatActivity {
         }
     }
 
-    public void goBack(){
+    public void goBack(String returnMessage){
         Intent i;
         Bundle b = new Bundle();
 
@@ -236,6 +229,10 @@ public class FavoritesActivity extends AppCompatActivity {
         }
 
         b.putParcelable("SharedData", s);
+
+        if(returnMessage != null && !returnMessage.isEmpty())
+            b.putString("snackbarContent", returnMessage);
+
         i.putExtra("bundle", b);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         setResult(RESULT_OK);
@@ -244,6 +241,6 @@ public class FavoritesActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        goBack();
+        goBack(null);
     }
 }

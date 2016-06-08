@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
         //carico i mezzi di trasporto
         List<PublicTransport> PTList = new ArrayList<>();
         PTList.add(new PublicTransport("bus", "Include ASF, Urbani e Internurbani",
-                R.mipmap.ic_material_bus_grey));
+                R.drawable.ic_material_bus_grey));
         PTList.add(new PublicTransport("treno", "Include Trennord, Trenitalia e Italo",
-                R.mipmap.ic_material_train_grey));
+                R.drawable.ic_material_train_grey));
         s.PTList = PTList;
 
         b.putParcelable("SharedData", s); //puntatore ai dati condivisi

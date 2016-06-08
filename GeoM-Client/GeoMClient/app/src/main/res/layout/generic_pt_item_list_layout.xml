@@ -13,12 +13,13 @@
 
     <ImageView
         android:id="@+id/pt_image"
+        android:src="@drawable/ic_material_no_image_grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/pt_info"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-    />
+        android:layout_alignTop="@+id/pt_type" />
 
     <TextView
         android:id="@+id/pt_type"
@@ -28,6 +29,7 @@
         android:layout_toEndOf="@+id/pt_image"
         android:layout_alignParentTop="true"
         android:textSize="30sp"
+        android:text="ciaoooo"
     />
 
     <TextView
@@ -37,6 +39,7 @@
         android:layout_toRightOf="@+id/pt_image"
         android:layout_toEndOf="@+id/pt_image"
         android:layout_below="@+id/pt_type"
+        android:text="ciaoooo"
     />
 
 </RelativeLayout>

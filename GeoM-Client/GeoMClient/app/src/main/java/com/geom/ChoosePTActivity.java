@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import classes.Connectivity;
 import classes.LoadingThread;
 import classes.PublicTransport;
 import classes.SharedData;
@@ -42,7 +44,6 @@ public class ChoosePTActivity extends AppCompatActivity {
     PublicTransportListAdapter publicTransportListAdapter;
     RecyclerView recyclerView;
     List<PublicTransport> pt_list;
-    String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,14 @@ public class ChoosePTActivity extends AppCompatActivity {
 
         //ottengo la lista di mezzi da visualizzare
         pt_list = s.getCurrentPTList();
+
+        //quando passo da FavoritesActivity a ChoosePTActivity avendo eliminato tutti i preferiti
+        if(getIntent().getBundleExtra("bundle").containsKey("snackbarContent")){
+            Snackbar.make(findViewById(R.id.activity_choose_pt),
+                    getIntent().getBundleExtra("bundle").getString("snackbarContent"),
+                    Snackbar.LENGTH_LONG)
+                    .show();
+        }
 
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -88,11 +97,6 @@ public class ChoosePTActivity extends AppCompatActivity {
             }
         });
 
-        if(message != null){//risultato dell'aggiornamento
-            Snackbar.make((findViewById(R.id.activity_choose_pt)), message,
-                            Snackbar.LENGTH_LONG).show();
-        }
-
         //FloatingActionButton per i preferiti
         FloatingActionButton favourites_fab
                 = (FloatingActionButton) findViewById(R.id.favourites_fab);
@@ -110,12 +114,7 @@ public class ChoosePTActivity extends AppCompatActivity {
                     startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
-                    AlertDialog.Builder builder
-                            = new AlertDialog.Builder(ChoosePTActivity.this,
-                                                        R.style.AppCompatAlertDialogStyleLight);
-                    builder.setTitle("Nessun preferito trovato");
-                    builder.setPositiveButton("OK", null);
-                    builder.show();
+                    showAlertDialog("Nessun preferito trovato", null);
                 }
 }
         });
@@ -204,46 +203,62 @@ public class ChoosePTActivity extends AppCompatActivity {
     private final Runnable refreshing = new Runnable() {
         public void run() {
             try {
+                String message;
                 swipeRefreshLayout.setRefreshing(true);
-                pt_list.clear(); // svuoto completamente la lista
 
-                // parte il thread per ottenere la nuova lista dal server
-                refresh();
-                //Log.i("GUI_LOG", "refresh eseguito");
+                if(Connectivity.isConnected(ChoosePTActivity.this)) {
+                    pt_list.clear(); // svuoto completamente la lista
+                    refresh();
+                    //Log.i("GUI_LOG", "refresh eseguito");
 
-                /* aggiornamento lista */
-                publicTransportListAdapter.notifyDataSetChanged();
-                recyclerView.invalidate();
+                    publicTransportListAdapter.notifyDataSetChanged();
+                    recyclerView.invalidate();
+                    message = "Lista aggiornata";
+                } else{
+                    message = getString(R.string.internet_error_title);
+                }
 
                 //termino l'animazione
                 swipeRefreshLayout.setRefreshing(false);
 
-                message = "Lista aggiornata";
+                //notifico all'utente l'esito dell'operazione
+                Snackbar.make(findViewById(R.id.activity_choose_pt),
+                        message, Snackbar.LENGTH_LONG).show();
+
             } catch (Exception e) {
                 e.printStackTrace();
-                message = "ERRORE, lista non aggiornata";
+                //operazione NON andata a buon fine
+                Snackbar.make(findViewById(R.id.activity_choose_pt),
+                        "ERRORE, lista non aggiornata",
+                        Snackbar.LENGTH_LONG)
+                        .show();
             }
         }
     };
 
     //Carico più elementi quando arrivo in fondo alla lista
     private final Runnable loading = new Runnable() {
+        boolean shown = false;
         public void run() {
             //rimuovo la ProgressBar da RecyclerView
-
             pt_list.remove(pt_list.size() - 1);
             publicTransportListAdapter.notifyItemRemoved(pt_list.size());
 
-            /*Log.i("GUI_LOG", "dopo il caricamento");
-            for(int i = 0; i < pt_list.size(); i++){
-                Log.i("GUI_LOG", "elemento in posizione " + i + ": " + pt_list.get(i).getPt_id());
-            }*/
-
-            //carico piu elementi
-            //loadMore();
-            //Log.i("GUI_LOG", "loadmore eseguito");
-
-            //publicTransportListAdapter.notifyDataSetChanged();
+            //controllo se il dispositivo è connesso ad internet
+            if(Connectivity.isConnected(ChoosePTActivity.this)) {
+                //carico piu elementi
+                loadMore();
+                //Log.i("GUI_LOG", "loadmore eseguito");
+                publicTransportListAdapter.notifyDataSetChanged();
+            } else{//se non è connesso ad internet
+                if(!shown) {
+                    Snackbar.make(findViewById(R.id.activity_choose_pt),
+                            getString(R.string.internet_error_title),
+                            Snackbar.LENGTH_LONG)
+                            .show();
+                    shown = true;
+                }
+            }
             publicTransportListAdapter.setLoaded();
         }
     };
@@ -319,6 +334,18 @@ public class ChoosePTActivity extends AppCompatActivity {
         publicTransportListAdapter = new PublicTransportListAdapter(filteredList, s, recyclerView);
         recyclerView.setAdapter(publicTransportListAdapter);
         publicTransportListAdapter.notifyDataSetChanged();  // data set changed
+    }
+
+    public void showAlertDialog(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChoosePTActivity.this,
+                R.style.AppCompatAlertDialogStyleLight);
+        if(title != null && !title.isEmpty())
+            builder.setTitle(Html.fromHtml("<b>"+ title +"</b>"));
+        if(message != null && !message.isEmpty())
+            builder.setMessage(message);
+
+        builder.setPositiveButton(Html.fromHtml("<b>"+ "OK" +"</b>"), null);
+        builder.show();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent i) {

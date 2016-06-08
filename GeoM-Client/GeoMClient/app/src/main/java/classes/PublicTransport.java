@@ -44,10 +44,10 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_coordY = pt_coordY;
 
         if(pt_type.equals(pt_type_bus)){
-            this.pt_image_id = R.mipmap.ic_material_bus_grey;//bus
+            this.pt_image_id = R.drawable.ic_material_bus_grey;//bus
         } else if(pt_type.equals(pt_type_train)){
-            this.pt_image_id = R.mipmap.ic_material_train_grey;//treno
-        } else this.pt_image_id = R.mipmap.ic_material_no_image_grey;//sconosciuto
+            this.pt_image_id = R.drawable.ic_material_train_grey;//treno
+        } else this.pt_image_id = R.drawable.ic_material_no_image_grey;//sconosciuto
 
         this.pt_info = null;//evito errori in fase di cancellazione preferito
     }
@@ -65,10 +65,10 @@ public class PublicTransport implements Serializable, Parcelable{
         this.pt_coordY = 0.d;
 
         if(pt_type.equals(pt_type_bus)){
-            this.pt_image_id = R.mipmap.ic_material_bus_grey;//bus
+            this.pt_image_id = R.drawable.ic_material_bus_grey;//bus
         } else if(pt_type.equals(pt_type_train)){
-            this.pt_image_id = R.mipmap.ic_material_train_grey;//treno
-        } else this.pt_image_id = R.mipmap.ic_material_no_image_grey;//sconosciuto
+            this.pt_image_id = R.drawable.ic_material_train_grey;//treno
+        } else this.pt_image_id = R.drawable.ic_material_no_image_grey;//sconosciuto
 
         this.pt_info = null;//evito errori in fase di cancellazione preferito
     }

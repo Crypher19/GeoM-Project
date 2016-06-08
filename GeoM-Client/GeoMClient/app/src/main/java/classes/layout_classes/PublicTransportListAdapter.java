@@ -1,11 +1,14 @@
 package classes.layout_classes;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import com.geom.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import classes.Connectivity;
 import classes.PublicTransport;
 import classes.SharedData;
 
@@ -121,17 +125,24 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //lancio MapActivity
-                    PublicTransport pt = pt_list.get(holder.getAdapterPosition());
-                    Intent i = new Intent(v.getContext(), MapsActivity.class);
-                    Bundle b = new Bundle();
+                    //controllo la connessione ad internet
+                    if(Connectivity.isConnected((v.getRootView().getContext()))){
+                        //lancio MapActivity
+                        PublicTransport pt = pt_list.get(holder.getAdapterPosition());
+                        Intent i = new Intent(v.getContext(), MapsActivity.class);
+                        Bundle b = new Bundle();
 
-                    s.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity
-                    b.putParcelable("PublicTransport", pt);
-                    b.putParcelable("SharedData", s);
-                    i.putExtra("bundle", b);
-                    ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
-                    ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
+                        s.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity
+                        b.putParcelable("PublicTransport", pt);
+                        b.putParcelable("SharedData", s);
+                        i.putExtra("bundle", b);
+                        ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
+                        ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
+                    } else{//se non è connesso ad internet
+                        showAlertDialog(v.getContext(),
+                                v.getContext().getString(R.string.internet_error_title),
+                                v.getContext().getString(R.string.internet_error_message));
+                    }
                 }
             });
 
@@ -232,6 +243,18 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             }
         });
+    }
+
+    public void showAlertDialog(Context context, String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,
+                R.style.AppCompatAlertDialogStyleLight);
+        if(title != null && !title.isEmpty())
+            builder.setTitle(Html.fromHtml("<b>"+ title +"</b>"));
+        if(message != null && !message.isEmpty())
+            builder.setMessage(message);
+
+        builder.setPositiveButton(Html.fromHtml("<b>"+ "OK" +"</b>"), null);
+        builder.show();
     }
 
     @Override

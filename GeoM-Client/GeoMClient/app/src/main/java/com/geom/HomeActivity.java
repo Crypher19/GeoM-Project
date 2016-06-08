@@ -10,10 +10,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;;
 
+import classes.Connectivity;
 import classes.LoadingThread;
 import classes.PublicTransport;
 import classes.SharedData;
@@ -62,9 +64,15 @@ public class HomeActivity extends AppCompatActivity {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        //ottengo il tipo di mezzo di trasporto
-                        s.pt_type = (s.PTList.get(position).getPt_type());//tipo di lista da visualizzare
-                        initNewActivity();
+                        //controllo se il dispositivo è connesso alla rete (wifi o mobile)
+                        if(Connectivity.isConnected(HomeActivity.this)){
+                            //ottengo il tipo di mezzo di trasporto
+                            s.pt_type = (s.PTList.get(position).getPt_type());//tipo di lista da visualizzare
+                            initNewActivity();
+                        } else{//se il dispositivo non è connesso
+                            showAlertDialog(getString(R.string.internet_error_title),
+                                    getString(R.string.internet_error_message));
+                        }
                     }
 
                     @Override
@@ -74,9 +82,11 @@ public class HomeActivity extends AppCompatActivity {
 
         //pulsante preferiti
         FloatingActionButton favourites_fab = (FloatingActionButton) findViewById(R.id.favourites_fab);
+        assert favourites_fab != null;
         favourites_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (!s.favList.isEmpty()) {
                     s.goToHomeActivity = true;//activity alla quale devo ritornare
 
@@ -88,12 +98,9 @@ public class HomeActivity extends AppCompatActivity {
                     startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this,
-                            R.style.AppCompatAlertDialogStyleLight);
-                    builder.setTitle("Nessun preferito trovato");
-                    builder.setPositiveButton("OK", null);
-                    builder.show();
+                    showAlertDialog("Nessun preferito trovato", null);
                 }
+
             }
         });
     }
@@ -170,5 +177,17 @@ public class HomeActivity extends AppCompatActivity {
 
             s.check=false;
         }
+    }
+
+    public void showAlertDialog(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this,
+                R.style.AppCompatAlertDialogStyleLight);
+        if(title != null && !title.isEmpty())
+            builder.setTitle(Html.fromHtml("<b>" + title + "<b>"));
+        if(message != null && !message.isEmpty())
+            builder.setMessage(message);
+
+        builder.setPositiveButton(Html.fromHtml("<b>" + getString(R.string.ok_string) + "<b>"), null);
+        builder.show();
     }
 }

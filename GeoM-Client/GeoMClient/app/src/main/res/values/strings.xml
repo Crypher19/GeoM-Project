@@ -21,4 +21,9 @@
     <string name="search_hint">Cerca per nome o tratta</string>
     <string name="title_activity_maps">Map</string>
 
+    <!-- AlertDialog strings -->
+    <string name="ok_string"><b><i>OK</i></b></string>
+    <string name="internet_error_title">Nessuna connessione a Internet</string>
+    <string name="internet_error_message">Devi essere connesso ad Internet per usare GeoM.</string>
+
 </resources>

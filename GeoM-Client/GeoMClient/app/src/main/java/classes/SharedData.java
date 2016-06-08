@@ -2,6 +2,7 @@ package classes;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +56,22 @@ public class SharedData implements Parcelable {
     public boolean removeFav(PublicTransport fav){
         if(fav != null) {
             MyFile f = new MyFile();
+            int pos = -1;
 
+            //rimuovo in base alla posizione
             if (f.removeFavourite(fav) == 0) {
-                favList.remove(fav);//aggiorno la lista dei preferiti
-                return true;
+                for(int i = 0; i < favList.size(); i++){
+                    if(favList.get(i).equals(fav)){
+                        pos = i;
+                        break;
+                    }
+                }
+
+                if(pos > -1){
+                    //aggiorno la lista
+                    favList.remove(pos);
+                    return true;
+                }
             }
         }
         return false;
