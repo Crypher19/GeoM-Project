@@ -1,8 +1,10 @@
 package com.geom;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,5 +52,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
         //mainActivity non deve essere raggiungibile dall'utente
         finish();
+    }
+
+    /*multidex: for further reference see:
+    * https://developer.android.com/studio/build/multidex.html
+    * */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
     }
 }

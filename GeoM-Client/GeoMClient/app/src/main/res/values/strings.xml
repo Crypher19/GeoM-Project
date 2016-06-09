@@ -4,7 +4,6 @@
     <string name="action_refresh">Aggiorna</string>
     <string name="action_delete_all">Elimina tutto</string>
     <string name="title_activity_main">@string/app_name</string>
-    <string name="title_activity_map">Replace with map title</string>
     <string name="title_activity_favourite">Preferiti</string>
     <string name="title_activity_choose_pt">Nuovo </string>
     <string name="title_activity_settings">Impostazioni</string>
@@ -19,7 +18,6 @@
     <!-- search strings -->
     <string name="search_title">Cerca mezzo</string>
     <string name="search_hint">Cerca per nome o tratta</string>
-    <string name="title_activity_maps">Map</string>
 
     <!-- AlertDialog strings -->
     <string name="ok_string"><b><i>OK</i></b></string>
@@ -33,5 +31,6 @@
     <string name="copyright">© 2016 GeoM\nAll right reserved.</string>
     <string name="app_version">Versione 1.6</string>
     <string name="creators">Created by:\nMattia Calabresi, Dario Busnelli,\nSamuele Negrini, Aldo Plenzich</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

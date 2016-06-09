@@ -1,7 +1,7 @@
 package classes;
 
 import android.content.Context;
-
+/*
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -10,9 +10,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * Created by Mattia on 06/06/2016.
  */
-public class UiGpsThread implements  Runnable {
+public class UiGpsThread /*implements  Runnable */{
 
-
+/*
     private Context c;
     private GoogleMap gMap;
     private double lat, lng;
@@ -34,5 +34,5 @@ public class UiGpsThread implements  Runnable {
         gMap.clear();
         gMap.addMarker(new MarkerOptions().position(pos).title("Marker"+temp));
         gMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
-    }
+    }*/
 }
