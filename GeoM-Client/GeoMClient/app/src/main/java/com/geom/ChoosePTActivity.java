@@ -1,8 +1,11 @@
 package com.geom;
 
 
+import android.app.Dialog;
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
@@ -114,7 +118,7 @@ public class ChoosePTActivity extends AppCompatActivity {
                     startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
-                    showAlertDialog("Nessun preferito trovato", null);
+                    showAlertDialog("Nessun preferito trovato", null, null);
                 }
 }
         });
@@ -173,7 +177,6 @@ public class ChoosePTActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         //listener per la query di ricerca
         SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
 
@@ -203,27 +206,38 @@ public class ChoosePTActivity extends AppCompatActivity {
     private final Runnable refreshing = new Runnable() {
         public void run() {
             try {
-                String message;
                 swipeRefreshLayout.setRefreshing(true);
 
+                //è connesso ad internet
                 if(Connectivity.isConnected(ChoosePTActivity.this)) {
-                    pt_list.clear(); // svuoto completamente la lista
-                    refresh();
-                    //Log.i("GUI_LOG", "refresh eseguito");
+                    //è coneesso alla rete mobile e ha l'opzione wifiOnly impostata
+                    //Log.i("GUI_LOG", "wifiOnly: " + Boolean.toString(s.wifiOnly));
+                    if(Connectivity.isConnectedMobile(ChoosePTActivity.this) && s.wifiOnly){
+                        Log.i("GUI_LOG", "wifiOnly " + String.valueOf(s.wifiOnly));
+                        showAlertDialog(getString(R.string.wifiOnly_erro_title),
+                                getString(R.string.wifiOnly_error_message),
+                                getString(R.string.cambia_string));
+                    } else {//è connesso via wifi oppure wifiOnly è disabilitato
+                        pt_list.clear(); // svuoto completamente la lista
+                        refresh();
+                        //Log.i("GUI_LOG", "refresh eseguito");
 
-                    publicTransportListAdapter.notifyDataSetChanged();
-                    recyclerView.invalidate();
-                    message = "Lista aggiornata";
-                } else{
-                    message = getString(R.string.internet_error_title);
+                        publicTransportListAdapter.notifyDataSetChanged();
+                        recyclerView.invalidate();
+
+                        //notifico all'utente l'esito dell'operazione
+                        Snackbar.make(findViewById(R.id.activity_choose_pt),
+                                "Lista aggiornata",
+                                Snackbar.LENGTH_LONG).show();
+                    }
+                } else{//non è connesso ad internet
+                    Snackbar.make(findViewById(R.id.activity_choose_pt),
+                            getString(R.string.internet_error_title),
+                            Snackbar.LENGTH_LONG).show();
                 }
 
                 //termino l'animazione
                 swipeRefreshLayout.setRefreshing(false);
-
-                //notifico all'utente l'esito dell'operazione
-                Snackbar.make(findViewById(R.id.activity_choose_pt),
-                        message, Snackbar.LENGTH_LONG).show();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -246,10 +260,18 @@ public class ChoosePTActivity extends AppCompatActivity {
 
             //controllo se il dispositivo è connesso ad internet
             if(Connectivity.isConnected(ChoosePTActivity.this)) {
-                //carico piu elementi
-                loadMore();
-                //Log.i("GUI_LOG", "loadmore eseguito");
-                publicTransportListAdapter.notifyDataSetChanged();
+                //è coneesso alla rete mobile e ha l'opzione wifiOnly impostata
+                //Log.i("GUI_LOG", "wifiOnly: " + Boolean.toString(s.wifiOnly));
+                if(Connectivity.isConnectedMobile(ChoosePTActivity.this) && s.wifiOnly){
+                    showAlertDialog(getString(R.string.wifiOnly_erro_title),
+                            getString(R.string.wifiOnly_error_message),
+                            getString(R.string.cambia_string));
+                } else {
+                    //carico piu elementi
+                    loadMore();
+                    //Log.i("GUI_LOG", "loadmore eseguito");
+                    publicTransportListAdapter.notifyDataSetChanged();
+                }
             } else{//se non è connesso ad internet
                 if(!shown) {
                     Snackbar.make(findViewById(R.id.activity_choose_pt),
@@ -300,15 +322,6 @@ public class ChoosePTActivity extends AppCompatActivity {
                 //add ProgressBar to RecyclerView
                 pt_list.add(null);
                 publicTransportListAdapter.notifyItemInserted(pt_list.size() - 1);
-
-                /*Log.i("GUI_LOG", "prima del caricamento");
-                for(int i = 0; i < pt_list.size(); i++){
-                    if(pt_list.get(i) != null)
-                        Log.i("GUI_LOG", "elemento in posizione " + i + ": " + pt_list.get(i).getPt_id());
-                    else
-                        Log.i("GUI_LOG", "elemento in posizione " + i + ": progressbar");
-                }*/
-
                 //carico più elementi
                 new Handler().postDelayed(loading, 2000);
             }
@@ -336,15 +349,31 @@ public class ChoosePTActivity extends AppCompatActivity {
         publicTransportListAdapter.notifyDataSetChanged();  // data set changed
     }
 
-    public void showAlertDialog(String title, String message){
+    public void showAlertDialog(String title, String message, String neutralButtonText){
         AlertDialog.Builder builder = new AlertDialog.Builder(ChoosePTActivity.this,
                 R.style.AppCompatAlertDialogStyleLight);
         if(title != null && !title.isEmpty())
             builder.setTitle(Html.fromHtml("<b>"+ title +"</b>"));
         if(message != null && !message.isEmpty())
             builder.setMessage(message);
+        if(neutralButtonText != null && !neutralButtonText.isEmpty()) {
+            builder.setNeutralButton(neutralButtonText, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    s.goToChoosePTActivity = true;
 
-        builder.setPositiveButton(Html.fromHtml("<b>"+ "OK" +"</b>"), null);
+                    Intent i = new Intent(ChoosePTActivity.this, SettingsActivity.class);
+                    Bundle b = new Bundle();
+                    b.putParcelable("SharedData", s);
+                    i.putExtra("bundle", b);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    setResult(RESULT_OK);
+                    startActivityForResult(i, 7);
+                }
+            });
+        }
+
+        builder.setPositiveButton(getString(R.string.ok_string), null);
         builder.show();
     }
 

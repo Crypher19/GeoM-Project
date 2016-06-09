@@ -23,7 +23,15 @@
 
     <!-- AlertDialog strings -->
     <string name="ok_string"><b><i>OK</i></b></string>
+    <string name="cambia_string"><b><i>CAMBIA</i></b></string>
     <string name="internet_error_title">Nessuna connessione a Internet</string>
     <string name="internet_error_message">Devi essere connesso ad Internet per usare GeoM.</string>
+    <string name="wifiOnly_erro_title">Modalità solo WiFi attiva</string>
+    <string name="wifiOnly_error_message">Puoi modificare le impostazioni cliccando su "CAMBIA"</string>
+
+    <!-- Info strings -->
+    <string name="copyright">© 2016 GeoM\nAll right reserved.</string>
+    <string name="app_version">Versione 1.6</string>
+    <string name="creators">Created by:\nMattia Calabresi, Dario Busnelli,\nSamuele Negrini, Aldo Plenzich</string>
 
 </resources>

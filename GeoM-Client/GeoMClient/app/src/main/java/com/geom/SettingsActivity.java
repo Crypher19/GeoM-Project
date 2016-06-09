@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import classes.SharedData;
@@ -68,10 +69,10 @@ public class SettingsActivity extends AppCompatActivity {
                                         CheckBoxPreference wifiOnly = (CheckBoxPreference) findPreference("wifiOnly");
                                         if(wifiOnly.isChecked()){
                                             wifiOnly.setChecked(false);
-
-                                            //cambio valori
-                                            //...
                                         }
+
+                                        //aggiorno il valore di wifiOnly
+                                        s.wifiOnly = wifiOnly.isChecked();
 
                                         //notifico esito dell'operazione
                                         snackbarContent = "Impostazioni ripristinate";
@@ -101,18 +102,41 @@ public class SettingsActivity extends AppCompatActivity {
                     return _return;
                 }
             });
+
+            //solo wifi (si-no)
+            final CheckBoxPreference prefWifiOnly = (CheckBoxPreference) findPreference("wifiOnly");
+            prefWifiOnly.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    //cambio valore
+                    prefWifiOnly.setChecked((Boolean) newValue);
+                    //Log.i("GUI_LOG", "newvalue: " + newValue.toString());
+                    //aggiorno in SharedData
+                    s.wifiOnly = (Boolean) newValue;
+                    return false;
+                }
+            });
         }
     }
 
     public void goBack(){
-        Intent i = new Intent(SettingsActivity.this, HomeActivity.class);
+
+        Intent i;
         Bundle b = new Bundle();
 
-        s.goToHomeActivity = false;
+        if(s.goToChoosePTActivity){//sono arrivato in SettingsActivity tramite popup
+            i = new Intent(SettingsActivity.this, ChoosePTActivity.class);
+            s.goToChoosePTActivity = false;
+        } else{//sono arrivato in SettingsActivity da HomeActivity
+            i = new Intent(SettingsActivity.this, MainActivity.class);
+            s.goToHomeActivity = false;
+        }
 
         b.putParcelable("SharedData", s);
         i.putExtra("bundle", b);
-        setResult(RESULT_OK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
     }

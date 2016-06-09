@@ -2,7 +2,6 @@ package classes;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,9 @@ public class SharedData implements Parcelable {
     public boolean goToChoosePTActivity;
     public boolean goToFavouritesActivity;
 
+    //variabile impostazioni (solo wifi)
+    public boolean wifiOnly;
+
     public SharedData() {
         check = true;
         ricezioneCoord = true;
@@ -41,6 +43,8 @@ public class SharedData implements Parcelable {
         goToHomeActivity = false;
         goToChoosePTActivity = false;
         goToFavouritesActivity = false;
+
+        wifiOnly = false;
     }
 
     public List<PublicTransport> getListType(String pt_type) {
@@ -131,6 +135,7 @@ public class SharedData implements Parcelable {
         dest.writeByte(this.goToHomeActivity ? (byte) 1 : (byte) 0);
         dest.writeByte(this.goToChoosePTActivity ? (byte) 1 : (byte) 0);
         dest.writeByte(this.goToFavouritesActivity ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.wifiOnly ? (byte) 1 : (byte) 0);
     }
 
     protected SharedData(Parcel in) {
@@ -145,6 +150,7 @@ public class SharedData implements Parcelable {
         this.goToHomeActivity = in.readByte() != 0;
         this.goToChoosePTActivity = in.readByte() != 0;
         this.goToFavouritesActivity = in.readByte() != 0;
+        this.wifiOnly = in.readByte() != 0;
     }
 
     public static final Creator<SharedData> CREATOR = new Creator<SharedData>() {

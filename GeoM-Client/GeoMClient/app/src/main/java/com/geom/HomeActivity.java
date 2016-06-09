@@ -95,7 +95,11 @@ public class HomeActivity extends AppCompatActivity {
 
                     b.putParcelable("SharedData", s);
                     i.putExtra("bundle", b);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivityForResult(i, 2);
+                    finish();
                 }//se non ci sono preferiti
                 else {
                     showAlertDialog("Nessun preferito trovato", null);
@@ -152,30 +156,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void load(){
-        /*LoadingThread lt = new LoadingThread(s);
+        LoadingThread lt = new LoadingThread(s);
         lt.start();
         try {
             lt.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
-
-        if(s.check) {
-            s.trainList.add(new PublicTransport(0, "treno", "121212", "Trenitalia", "Napoli-Venezia", false, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(1, "treno", "R09547", "Trenord", "Milano-Asso", true, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(2, "treno", "R20177", "Trenord", "Treviso-Venezia", true, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(3, "treno", "R20199", "Trenord", "Novara-Treviglio", true, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(4, "treno", "R21753", "Trenord", "Saronno-Lodi", true, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(5, "treno", "R22178", "Trenord", "Pavia-Codogno", true, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(6, "treno", "ETR500", "Trenitalia", "Napoli-Venezia", true, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(7, "treno", "FRM644", "Trenitalia", "Milano-Riccione", false, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(8, "treno", "R24312", "Trenitalia", "Torino–Milano", false, 12.0, 12.0));
-
-            s.trainList.add(new PublicTransport(9, "treno", "999999", "Trenitalia", "Napoli-Venezia", false, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(10, "treno", "101010", "Trenord", "Milano-Asso", true, 12.0, 12.0));
-            s.trainList.add(new PublicTransport(11, "treno", "111111", "Trenord", "Treviso-Venezia", true, 12.0, 12.0));
-
-            s.check=false;
         }
     }
 
