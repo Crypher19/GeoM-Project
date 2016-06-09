@@ -1,7 +1,11 @@
 package com.geom;
 
-import android.support.v4.app.FragmentActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,9 +14,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import classes.CoordThread;
+import classes.PublicTransport;
+import classes.SharedData;
+
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private SharedData s;
+    private CoordThread ct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +32,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
 
+        s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
+        //extra ricevuto da ChoosePTActivity o FavoritesActivity
+        PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("PublicTransport");
+
+        //toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Mappa di " + pt.getPt_name());
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBack();
+            }
+        });
+
+        ct = new CoordThread(s, pt);
+        ct.start();
+    }
 
     /**
      * Manipulates the map once available.
@@ -42,5 +71,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    public void goBack(){
+        Intent i;
+        Bundle b = new Bundle();
+
+        s.ricezioneCoord = false; // interrompo la ricezione delle coordinate
+
+        if(s.goToChoosePTActivity && !s.goToFavouritesActivity){//devo tornare a ChoosePTActivity
+            i = new Intent(MapsActivity.this, ChoosePTActivity.class);
+            b.putParcelable("SharedData", s);
+            i.putExtra("bundle", b);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            setResult(Activity.RESULT_OK, i);
+            startActivity(i);
+
+            s.goToChoosePTActivity = false;
+        } else{//devo tornare a FavoritesActivity
+            i = new Intent(MapsActivity.this, FavoritesActivity.class);
+            s.goToFavouritesActivity = false;
+
+            b.putParcelable("SharedData", s);
+            i.putExtra("bundle", b);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            setResult(RESULT_OK);
+            startActivity(i);
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        goBack();
     }
 }

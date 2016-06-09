@@ -17,7 +17,6 @@ import android.view.View;;
 
 import classes.Connectivity;
 import classes.LoadingThread;
-import classes.PublicTransport;
 import classes.SharedData;
 import classes.layout_classes.ListViewDivider;
 import classes.layout_classes.PublicTransportGenericListAdapter;
@@ -156,15 +155,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void load(){
-        /*LoadingThread lt = new LoadingThread(s);
+        LoadingThread lt = new LoadingThread(s);
         lt.start();
         try {
             lt.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        s.trainList.add(new PublicTransport(1, "aa", "aa", "aa", "aa", true, 12.0, 12.0));
+        /*s.trainList.add(new PublicTransport(1, "aa", "aa", "aa", "aa", true, 12.0, 12.0));
         s.trainList.add(new PublicTransport(2, "bb", "bb", "bb", "bb", true, 12.0, 12.0));
         s.trainList.add(new PublicTransport(3, "cc", "cc", "cc", "cc", true, 12.0, 12.0));
         s.trainList.add(new PublicTransport(4, "dd", "dd", "dd", "dd", true, 12.0, 12.0));
@@ -174,7 +173,7 @@ public class HomeActivity extends AppCompatActivity {
         s.trainList.add(new PublicTransport(8, "hh", "hh", "hh", "hh", true, 12.0, 12.0));
         s.trainList.add(new PublicTransport(8, "ii", "ii", "ii", "ii", true, 12.0, 12.0));
         s.trainList.add(new PublicTransport(9, "ll", "ll", "ll", "ll", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(10, "mm", "mm", "mm", "mm", true, 12.0, 12.0));
+        s.trainList.add(new PublicTransport(10, "mm", "mm", "mm", "mm", true, 12.0, 12.0));*/
     }
 
     public void showAlertDialog(String title, String message){
