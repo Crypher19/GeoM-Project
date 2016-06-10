@@ -24,7 +24,7 @@ class ListRequestThread(threading.Thread):
             richiesta = pxml.getLimitOffsetAndPTtype(doc) # ottengo una tupla (tipo, limit, offset)
             #totMezzi = self.sd.getNumTransports(richiesta[0]) # passo il tipoMezzo
             print("TYPE:" + richiesta[0] + " LIMIT:" + richiesta[1] + " OFFSET:" + richiesta[2])
-            msg = self.sd.getDOMTransportsList(richiesta[0], richiesta[1], richiesta[2]) # ottengo i primi "richiesta[1]" mezzi di tipo "richiesta[0]" a partire da "richiesta[2]"
+            msg = self.sd.getDOMTransportsList(tipoMezzo=richiesta[0], limit=richiesta[1], offset=richiesta[2]) # ottengo i primi "richiesta[1]" mezzi di tipo "richiesta[0]" a partire da "richiesta[2]"
             self.send(msg)       
             self.conn.close()
             print("Connessione chiusa correttamente")

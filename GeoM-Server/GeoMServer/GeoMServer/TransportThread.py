@@ -31,12 +31,13 @@ class TransportThread (threading.Thread):
 
             auth = pxml.getUsernameAndPassword(userdoc) # ottengo una tupla contenente username e password
             # controllo username e password
-            if self.sd.checkLogin(auth[0], auth[1]):
+            ris = self.sd.checkLogin(auth[0], auth[1])
+            if  ris != False:
                 #invio ack password corretta
                 self.send(ack)
 
                 # invio lista dei mezzi
-                msg = self.sd.getDOMTransportsList()
+                msg = self.sd.getDOMTransportsList(IDCompagnia=ris)
                 self.send(msg)
 
                 # ricevo il mezzo dell'autista

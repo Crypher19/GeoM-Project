@@ -30,6 +30,7 @@ class Database:
         except Error as error:
             print(error)
             return False
+
         
     def getTransports(self, tipoMezzo=None, limit=None, offset=None):
         sql = """SELECT transports_table.ID,transports_table.TipoMezzo,transports_table.NomeMezzo,
@@ -54,9 +55,9 @@ class Database:
         return False
 
     def getUser(self, username):
-        if self.execQuery("SELECT Username,Password FROM transport_users_table WHERE Username='"+username+"';"):
+        if self.execQuery("SELECT Username,Password,Compagnia FROM transport_users_table WHERE Username='"+username+"';"):
             res = cursor.fetchall()
-            return (res[0], res[1])                      
+            return (res[0], res[1], res[2])                      
         return False
 
     def getNumTransports(self, tipoMezzo=None):

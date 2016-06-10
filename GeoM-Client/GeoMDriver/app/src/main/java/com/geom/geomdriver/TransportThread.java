@@ -45,6 +45,7 @@ public class TransportThread extends Thread {
 
             } else {
 
+
                 // TODO: Ottenere la lista dei mezzi di trasporto della sola compagnia di cui faccio parte
                 // TODO: Da modificare anche la query server (magari aggiungendo qualche parametro)
 

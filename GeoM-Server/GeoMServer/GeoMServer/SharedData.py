@@ -22,8 +22,8 @@ class SharedData:
     def getNumTransports(self, tipoMezzo=None):
         return self.db.getNumTransports(tipoMezzo)
 
-    def getDOMTransportsList(self, tipoMezzo=None, limit=None, offset=None):
-        self.listaMezzi = self.db.getTransports(tipoMezzo, limit, offset)
+    def getDOMTransportsList(self, IDCompagnia=None, tipoMezzo=None, limit=None, offset=None):
+        self.listaMezzi = self.db.getTransports(IDCompagnia, tipoMezzo, limit, offset)
         pxml = ParserXML()
         doc = pxml.getDOMOfTransportsList(self.listaMezzi)
         return doc
@@ -35,13 +35,13 @@ class SharedData:
         return -1
         
     def checkLogin(self, username, password):
-        auth = self.db.getUser(username) # ricevo una tupla (username, password)
+        auth = self.db.getUser(username) # ricevo una tupla (username, password, IDCompagnia)
 
         if auth:
             # controllo se la password è corretta
             if bcrypt.hashpw(password.encode('utf-8'), auth[1].encode('utf-8')) == auth[1].encode('utf-8'):
                 print("Password corretta.")
-                return True
+                return auth[2] # ritorno l'id della compagnia
             else:
                 print("Password errata.")
                 return False
