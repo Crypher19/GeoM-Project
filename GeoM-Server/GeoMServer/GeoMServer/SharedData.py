@@ -44,9 +44,9 @@ class SharedData:
                 return auth[2] # ritorno l'id della compagnia
             else:
                 print("Password errata.")
-                return False
+                return -1 # Password errata
         else:
             print("Username errato.")
-            return False
+            return -2 # Username errato
 
     
