@@ -32,7 +32,9 @@ class TransportThread (threading.Thread):
             auth = pxml.getUsernameAndPassword(userdoc) # ottengo una tupla contenente username e password
             # controllo username e password
             ris = self.sd.checkLogin(auth[0], auth[1])
-            if  ris != False:
+
+            # se username e password non sono errati
+            if  ris != -2 and ris != -1:
                 #invio ack password corretta
                 self.send(ack)
 
@@ -59,8 +61,14 @@ class TransportThread (threading.Thread):
                        
 
                 # ricevi dati posizione (for/while)
-            else:
-                self.send(getDOMResponse(msg="Username o password errata"))
+
+            # username errato
+            elif ris == -2:
+                self.send(pxml.getDOMResponse(msg="-2"))
+            # password errata
+            elif ris == -1:
+                self.send(pxml.getDOMResponse(msg="-1"))
+
 
             # fine del programma
         except ConnectionResetError:
