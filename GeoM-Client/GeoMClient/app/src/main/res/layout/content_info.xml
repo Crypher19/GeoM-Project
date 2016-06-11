@@ -48,7 +48,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/copyright"
         android:id="@+id/textView3"
-        android:textAlignment="center"
+        android:gravity="center_horizontal"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp" />
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:text="@string/creators"
         android:id="@+id/textView4"
-        android:textAlignment="center"
+        android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"/>

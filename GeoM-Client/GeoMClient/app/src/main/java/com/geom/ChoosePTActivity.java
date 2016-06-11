@@ -81,7 +81,7 @@ public class ChoosePTActivity extends AppCompatActivity {
             }
         });
 
-        //CardView
+        //RecyclerView
         recyclerView = (RecyclerView) findViewById(R.id.pt_recycler_view);
         //divider
         recyclerView.addItemDecoration(new ListViewDivider(this, ListViewDivider.VERTICAL_LIST));

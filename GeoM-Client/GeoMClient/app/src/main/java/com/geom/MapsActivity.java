@@ -2,11 +2,17 @@ package com.geom;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,12 +23,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import classes.CoordThread;
 import classes.PublicTransport;
 import classes.SharedData;
+import classes.UiGpsThread;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private SharedData s;
+    private Geocoder gc;
+    private TextView myLocationText;
+    private double lat, lon;
     private CoordThread ct;
+    private SharedData s;
+
+    private GoogleApiClient client;
+    final double latitudine = 0,longitudine = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +63,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        ct = new CoordThread(s, pt);
-        ct.start();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        /*ct = new CoordThread(s, pt);
+        ct.start();*/
     }
 
     /**
@@ -67,10 +84,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        new Thread() {
+            public void run() {
+                int i = 0;
+                while (i++ < 100) {
+                    double latitudine = (i / 10) + 44;
+                    double longitudine = (i / 10) + 8;
+
+                    UiGpsThread t = new UiGpsThread(getApplicationContext(), mMap, latitudine, longitudine, i);
+                    try {
+                        runOnUiThread(t);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, "Maps Page", Uri.parse("http://host/path"),
+                Uri.parse("android-app://com.geom/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, "Maps Page", Uri.parse("http://host/path"),
+                Uri.parse("android-app://com.geom/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     public void goBack(){

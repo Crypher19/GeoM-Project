@@ -5,7 +5,13 @@
     <string name="hint_username">Nome utente</string>
     <string name="hint_password">Password</string>
     <string name="btn_sign_up">Accedi</string>
-    <string name="err_msg_name">Inserisci il nome utente</string>
-    <string name="err_msg_password">Inserisci la password</string>
     <string name="title_activity_second">SecondActivity</string>
+
+    <!-- Login error strings -->
+    <string name="err_msg_name_empty">Inserisci il nome utente</string>
+    <string name="err_msg_password">Inserisci la password</string>
+    <string name="err_msg_name">Errore nome utente errato</string>
+    <string name="err_msg_password_empty">Errore password errata</string>
+    <string name="title_activity_choose_pt">ChoosePTActivity</string>
+
 </resources>

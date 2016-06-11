@@ -30,18 +30,15 @@ public class SecondActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Area riservata");
 
+        PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("pt");
+        //Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //il titolo varia in base alla lista visualizzata
+        toolbar.setTitle("Info " + pt.getPt_name());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
         String svcName = Context.LOCATION_SERVICE;
         locationManager = (LocationManager) getSystemService(svcName);
@@ -107,5 +104,4 @@ public class SecondActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
-
 }

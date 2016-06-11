@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:paddingTop="60dp">
+    android:paddingTop="20dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Benvenuto autista, accedi a GeoM"
-        android:textSize="18dp"
-        android:textAlignment="center"
+        android:textSize="18sp"
+        android:gravity="center_horizontal"
+        android:singleLine="true"
         android:textColor="@color/colorPrimary"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="50dp"/>
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_name"
@@ -28,6 +36,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:nextFocusUp="@id/input_name"
+            android:nextFocusLeft="@id/input_name"
+            android:layout_below="@+id/textView1"
+            android:layout_marginTop="30dp"
+            android:ems="10"
             android:hint="@string/hint_username" />
     </android.support.design.widget.TextInputLayout>
 
@@ -41,14 +54,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
+            android:layout_below="@+id/input_layout_name"
+            android:layout_marginTop="20dp"
+            android:ems="10"
             android:hint="@string/hint_password" />
     </android.support.design.widget.TextInputLayout>
 
     <Button android:id="@+id/btn_signup"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_sign_up"
-        android:background="@color/colorPrimary"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/login_button"
         android:textColor="@android:color/white"/>
 </LinearLayout>
