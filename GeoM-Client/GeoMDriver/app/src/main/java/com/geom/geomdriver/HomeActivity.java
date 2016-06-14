@@ -6,10 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -20,7 +16,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private EditText inputName, inputPassword;
     private TextInputLayout inputLayoutName, inputLayoutPassword;
-    private Button btnSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +28,15 @@ public class HomeActivity extends AppCompatActivity {
         inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
         inputName = (EditText) findViewById(R.id.input_name);
         inputPassword = (EditText) findViewById(R.id.input_password);
-        btnSignUp = (Button) findViewById(R.id.btn_signup);
-
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                submitForm();
-            }
-        });
+        Button btnSignUp = (Button) findViewById(R.id.btn_signup);
+        if(btnSignUp != null) {
+            btnSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    submitForm();
+                }
+            });
+        }
 
         s = new SharedData();
     }

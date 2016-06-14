@@ -22,9 +22,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class CoordActivity extends AppCompatActivity {
 
     private GoogleApiClient client;
-    int count = 0;
 
-    private LocationManager locationManager;
     TextView myLocationText, locationRefresh;
 
     @Override
@@ -54,7 +52,7 @@ public class CoordActivity extends AppCompatActivity {
         }
 
         String svcName = Context.LOCATION_SERVICE;
-        locationManager = (LocationManager) getSystemService(svcName);
+        LocationManager locationManager = (LocationManager) getSystemService(svcName);
 
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -68,7 +66,7 @@ public class CoordActivity extends AppCompatActivity {
         myLocationText = (TextView) findViewById(R.id.textView);
         locationRefresh = (TextView) findViewById(R.id.textView2);
 
-        ThreadLocation t = new ThreadLocation(this,locationManager,myLocationText,locationRefresh,provider);
+        ThreadLocation t = new ThreadLocation(this, locationManager,myLocationText,locationRefresh,provider);
         t.start();
 
         //locationManager.requestLocationUpdates(provider, 2000, 10, locationListener); //metodo per aggiornare la posizione periodicamente

@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChoosePTActivity extends AppCompatActivity {
