@@ -1,5 +1,6 @@
 package com.geom.geomdriver;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -31,17 +32,18 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<PublicTrans
         holder.pt_name.setText(pt_list.get(position).getPt_name());
         holder.pt_route.setText(pt_list.get(position).getPt_route());
 
-        //apro SecondActivity cliccando sull'elemento
+        //apro CoordActivity cliccando sull'elemento
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PublicTransport pt = pt_list.get(holder.getAdapterPosition());
-                Intent i = new Intent(v.getContext(), SecondActivity.class);
+                Intent i = new Intent(v.getContext(), CoordActivity.class);
                 Bundle b = new Bundle();
 
                 b.putParcelable("pt", pt);
                 i.putExtra("bundle", b);
                 v.getRootView().getContext().startActivity(i);
+                ((Activity) v.getRootView().getContext()).finish();
             }
         });
     }

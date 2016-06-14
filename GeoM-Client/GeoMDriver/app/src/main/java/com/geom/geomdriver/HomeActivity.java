@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private EditText inputName, inputPassword;
     private TextInputLayout inputLayoutName, inputLayoutPassword;
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -87,8 +87,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
 
                         case "ok"://credenziali corrette
-                            Intent i = new Intent(MainActivity.this, ChoosePTActivity.class);
+                            Intent i = new Intent(HomeActivity.this, ChoosePTActivity.class);
                             startActivity(i);
+                            finish();
                             break;
 
                         default://errore generico
