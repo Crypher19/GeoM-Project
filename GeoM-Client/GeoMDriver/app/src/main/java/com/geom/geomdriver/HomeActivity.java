@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class HomeActivity extends AppCompatActivity {
+    private SharedData s;
 
     private EditText inputName, inputPassword;
     private TextInputLayout inputLayoutName, inputLayoutPassword;
@@ -40,6 +41,8 @@ public class HomeActivity extends AppCompatActivity {
                 submitForm();
             }
         });
+
+        s = new SharedData();
     }
 
     private void submitForm() {
@@ -71,19 +74,13 @@ public class HomeActivity extends AppCompatActivity {
         //username e password non vuote
         if(checkUser && checkPsw) {
             //get username and password from input text
-            String username = inputName.getText().toString();
-            String passsword = inputPassword.getText().toString();
+            s.username = inputName.getText().toString();
+            s.password = inputPassword.getText().toString();
 
-            /*
-            * Thread t = new Thread(username, password);
-            * t.start();
-            *
-            * try{
-            *   t.stop();
-            * } catch(IOException e){
-            *   e.printStackTrace();
-            * }
-            * */
+            View v = findViewById(R.id.activity_home);
+
+            TransportThread tt = new TransportThread(s, v);
+            tt.start();
 
             String response = "ok";
             /*Stirng response = t.getResponse();*/

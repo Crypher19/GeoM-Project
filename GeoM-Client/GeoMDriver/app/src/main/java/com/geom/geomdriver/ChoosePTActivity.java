@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChoosePTActivity extends AppCompatActivity {
-
+    public SharedData s;
     public List<PublicTransport> pt_list;
 
     @Override
@@ -41,8 +41,6 @@ public class ChoosePTActivity extends AppCompatActivity {
             });
         }
 
-        pt_list = new ArrayList<>();
-
         /* Parte il thread per riempire la lista
         *
         * Thread t = new Thread(pt_list);
@@ -56,11 +54,13 @@ public class ChoosePTActivity extends AppCompatActivity {
         *
         * */
 
-        pt_list.add(new PublicTransport(1, "treno", "etr501", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
-        pt_list.add(new PublicTransport(2, "treno", "etr502", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
-        pt_list.add(new PublicTransport(3, "treno", "etr503", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
-        pt_list.add(new PublicTransport(4, "treno", "etr504", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
-        pt_list.add(new PublicTransport(5, "treno", "etr505", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
+        s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
+
+        s.pt_list.add(new PublicTransport(1, "treno", "etr501", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
+        s.pt_list.add(new PublicTransport(2, "treno", "etr502", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
+        s.pt_list.add(new PublicTransport(3, "treno", "etr503", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
+        s.pt_list.add(new PublicTransport(4, "treno", "etr504", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
+        s.pt_list.add(new PublicTransport(5, "treno", "etr505", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
 
         //RecyclerView
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.pt_recycler_view);
