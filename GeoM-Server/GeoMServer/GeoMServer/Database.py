@@ -32,11 +32,14 @@ class Database:
             return False
 
         
-    def getTransports(self, tipoMezzo=None, limit=None, offset=None):
+    def getTransports(self, IDcompagnia=None, tipoMezzo=None, limit=None, offset=None):
         sql = """SELECT transports_table.ID,transports_table.TipoMezzo,transports_table.NomeMezzo,
                         transports_table.Tratta,transports_table.Attivo,company_table.Nome
                      FROM transports_table, company_table
                      WHERE company_table.ID = transports_table.Compagnia"""
+
+        if IDcompagnia != None:
+            sql += " AND transports_table.Compagnia='"+IDcompagnia+"'"
         if tipoMezzo != None:
             sql += " AND transports_table.TipoMezzo='"+tipoMezzo+"'"
         if offset != None and limit != None:
