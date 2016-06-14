@@ -6,14 +6,24 @@
 
     <string name="hint_username">Nome utente</string>
     <string name="hint_password">Password</string>
+
+    <!-- Buttons strings -->
     <string name="btn_sign_up">Accedi</string>
     <string name="logout">LOGOUT</string>
+    <string name="ok_string">OK</string>
+    <string name="undo_string">ANNULLA</string>
+
+    <string name="welcome_str">Benvenuto autista, accedi a GeoM</string>
 
     <!-- Login error strings -->
     <string name="err_msg_name_empty">Inserisci il nome utente</string>
-    <string name="err_msg_password">Inserisci la password</string>
-    <string name="err_msg_name">Errore nome utente errato</string>
-    <string name="err_msg_password_empty">Errore password errata</string>
+    <string name="err_msg_password_empty">Inserisci la password</string>
+    <string name="err_msg_wrong_name">Errore nome utente errato</string>
+    <string name="err_msg_wrong_password">Errore password errata</string>
+    <string name="err_msg_undefined">Errore, impossibile connettersi a GeoM</string>
 
+    <!-- Logout warning strings -->
+    <string name="warning_title">Uscire?</string>
+    <string name="warning_message">Uscendo ti disconnetterai da GeoM</string>
 
 </resources>

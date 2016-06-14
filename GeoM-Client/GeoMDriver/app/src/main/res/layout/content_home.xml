@@ -65,6 +65,6 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_sign_up"
         android:layout_marginTop="20dp"
-        android:background="@drawable/login_button"
+        android:background="@drawable/button_behaviour"
         android:textColor="@android:color/white"/>
 </LinearLayout>

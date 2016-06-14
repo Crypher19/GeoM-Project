@@ -1,13 +1,16 @@
 package com.geom.geomdriver;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -99,4 +102,22 @@ public class CoordActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+
+    @Override
+    public void onBackPressed(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CoordActivity.this,
+                R.style.AppCompatAlertDialogStyleLight);
+        builder.setTitle(Html.fromHtml("<b>"+ getString(R.string.warning_title) +"</b>"));
+        builder.setMessage(getString(R.string.warning_message));
+        builder.setPositiveButton(getString(R.string.ok_string), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //continuo con onBackPressed normalmente
+                CoordActivity.super.onBackPressed();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.undo_string), null);
+        builder.show();
+    }
+
 }
