@@ -3,6 +3,8 @@ package com.geom.geomdriver;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -75,13 +77,29 @@ public class HomeActivity extends AppCompatActivity {
 
             View v = findViewById(R.id.activity_home);
 
-            TransportThread tt = new TransportThread(s, v);
+            Handler handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    String msgResp = (String) msg.obj; // object of String
+                    if ("-1".equals(msgResp)) {
+                        //refresh textview
+                        inputLayoutName.setError(getString(R.string.err_msg_wrong_name));
+                        requestFocus(inputName);
+                    }
+                    else if ("-2".equals(msgResp)) {
+                        inputLayoutPassword.setError(getString(R.string.err_msg_wrong_password));
+                        requestFocus(inputPassword);
+                    }
+                }
+            };
+
+            TransportThread tt = new TransportThread(s, v, handler);
             tt.start();
 
             String response = "ok";
             /*Stirng response = t.getResponse();*/
 
-            if(!response.toLowerCase().isEmpty()) {
+            /*if(!response.toLowerCase().isEmpty()) {
 
                 switch (response.toLowerCase()) {
                     case "-1"://username errato
@@ -104,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
                         inputLayoutPassword.setError(getString(R.string.err_msg_undefined));
                         break;
                 }
-            }
+            }*/
         }
     }
 

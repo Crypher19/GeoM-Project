@@ -14,6 +14,13 @@ public class SharedData {
     public String response;
 
     public SharedData() {
+        response = "";
+    }
 
+    synchronized public String response() {
+        return response;
+    }
+    synchronized public void response(String response) {
+        this.response = response;
     }
 }
