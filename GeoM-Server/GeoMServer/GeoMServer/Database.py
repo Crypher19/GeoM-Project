@@ -60,7 +60,9 @@ class Database:
     def getUser(self, username):
         if self.execQuery("SELECT Username,Password,Compagnia FROM transport_users_table WHERE Username='"+username+"';"):
             res = cursor.fetchall()
-            return (res[0], res[1], res[2])                      
+            print("len(res) = " + str(len(res)))
+            if len(res) > 0:
+                return (res[0][0], res[0][1], res[0][2])                      
         return False
 
     def getNumTransports(self, tipoMezzo=None):

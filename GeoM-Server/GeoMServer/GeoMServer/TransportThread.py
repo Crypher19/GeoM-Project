@@ -34,7 +34,7 @@ class TransportThread (threading.Thread):
             ris = self.sd.checkLogin(auth[0], auth[1])
 
             # se username e password non sono errati
-            if  ris != -2 and ris != -1:
+            if  ris != -1 and ris != -2:
                 #invio ack password corretta
                 self.send(ack)
 
