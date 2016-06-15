@@ -1,4 +1,4 @@
-package com.geom.geomdriver;
+package com.geom.geomdriver.classes;
 
 public class Coordinate {
     private double lng;

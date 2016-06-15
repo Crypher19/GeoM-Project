@@ -26,4 +26,8 @@
     <string name="warning_title">Uscire?</string>
     <string name="warning_message">Uscendo ti disconnetterai da GeoM</string>
 
+    <!-- Network connection error strings -->
+    <string name="internet_error_title">Nessuna connessione a Internet</string>
+    <string name="internet_error_message">Devi essere connesso ad Internet per usare GeoM.</string>
+
 </resources>

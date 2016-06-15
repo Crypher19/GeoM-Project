@@ -1,4 +1,4 @@
-package com.geom.geomdriver;
+package com.geom.geomdriver.classes;
 
 import android.util.Log;
 

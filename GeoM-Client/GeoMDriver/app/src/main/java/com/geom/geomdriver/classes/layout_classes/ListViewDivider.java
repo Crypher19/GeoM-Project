@@ -1,4 +1,4 @@
-package com.geom.geomdriver;
+package com.geom.geomdriver.classes.layout_classes;
 
 import android.content.Context;
 import android.content.res.TypedArray;

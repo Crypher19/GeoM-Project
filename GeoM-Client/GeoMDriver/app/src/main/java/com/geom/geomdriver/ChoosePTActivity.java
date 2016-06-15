@@ -10,6 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.geom.geomdriver.classes.layout_classes.ListViewDivider;
+import com.geom.geomdriver.classes.PublicTransport;
+import com.geom.geomdriver.classes.layout_classes.PublicTransportListAdapter;
+import com.geom.geomdriver.classes.SharedData;
+
 import java.util.List;
 
 public class ChoosePTActivity extends AppCompatActivity {

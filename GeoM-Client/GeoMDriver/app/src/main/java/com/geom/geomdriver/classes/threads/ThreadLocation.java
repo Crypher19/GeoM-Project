@@ -1,4 +1,4 @@
-package com.geom.geomdriver;
+package com.geom.geomdriver.classes.threads;
 
 import android.Manifest;
 import android.app.Activity;

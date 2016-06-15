@@ -1,4 +1,4 @@
-package com.geom.geomdriver;
+package com.geom.geomdriver.classes.threads;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,8 +14,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.util.concurrent.Semaphore;
+
 import android.os.Handler;
+
+import com.geom.geomdriver.ChoosePTActivity;
+import com.geom.geomdriver.classes.Connection;
+import com.geom.geomdriver.classes.PublicTransport;
+import com.geom.geomdriver.classes.SharedData;
 
 import javax.xml.parsers.ParserConfigurationException;
 
