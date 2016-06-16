@@ -44,20 +44,21 @@ class TransportThread (threading.Thread):
 
                 # ricevo il mezzo dell'autista
                 msg = self.conn.recv(1024).decode('utf-8').strip()
-                #print(msg)
+                print(msg)
                 doc = pxml.toDOMObject(msg)
                 self.mezzo = pxml.getTransportObj(doc)
 
                 # invio conferma di ricezione del mezzo           
                 self.send(ack)
             
-                # ricevo posizione di prova
+                # ricevo posizione (X e Y)
                 while pxml.readDOMResponse(doc, "messaggio") != "END":
                     msg = self.conn.recv(1024).decode('utf-8').strip()
                     doc = pxml.toDOMObject(msg)
                     pos = pxml.getCoordFromDOM(doc)
                     if pos != False:
-                        self.coordX,self.coordY = pos[0],pos[1]     
+                        self.coordX,self.coordY = pos[0],pos[1]
+                        print(self.coordX + " ; " + self.coordY)  
                        
 
                 # ricevi dati posizione (for/while)
