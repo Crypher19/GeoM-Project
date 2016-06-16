@@ -50,7 +50,7 @@ public class CoordThread extends Thread {
                 } else {
                     msgRicevuto = conn.readMessage(); // ricevo le coordinate del mezzo
                     Document docCoord = Connection.convertStringToDocument(msgRicevuto);
-                    List<Double> listCoord = conn.readDOMofCoord(docCoord);
+                    List<Double> listCoord = conn.readDOMPosizione(docCoord);
                     Log.i("sMESSAGE coordX", listCoord.get(0).toString());
                     Log.i("sMESSAGE coordY", listCoord.get(1).toString());
                 }

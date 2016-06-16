@@ -16,13 +16,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.geom.geomdriver.classes.PublicTransport;
+import com.geom.geomdriver.classes.SharedData;
 import com.geom.geomdriver.classes.threads.ThreadLocation;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 public class CoordActivity extends AppCompatActivity {
-
+    private SharedData s;
     private GoogleApiClient client;
 
     TextView myLocationText, locationRefresh;
@@ -32,7 +33,9 @@ public class CoordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coord);
 
-        PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("pt");
+        s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
+        PublicTransport pt = s.pt;
+
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //il titolo varia in base alla lista visualizzata
@@ -68,7 +71,7 @@ public class CoordActivity extends AppCompatActivity {
         myLocationText = (TextView) findViewById(R.id.textView);
         locationRefresh = (TextView) findViewById(R.id.textView2);
 
-        ThreadLocation t = new ThreadLocation(this, locationManager,myLocationText,locationRefresh,provider);
+        ThreadLocation t = new ThreadLocation(s, this, locationManager,myLocationText,locationRefresh,provider);
         t.start();
 
         //locationManager.requestLocationUpdates(provider, 2000, 10, locationListener); //metodo per aggiornare la posizione periodicamente

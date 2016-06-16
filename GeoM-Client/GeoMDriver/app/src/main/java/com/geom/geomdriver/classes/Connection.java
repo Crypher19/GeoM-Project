@@ -194,7 +194,7 @@ public class Connection {
         return contenuto;
     }
 
-    public List<Double> readDOMofCoord(Document doc) {
+    public List<Double> readDOMPosizione(Document doc) {
         List<Double> coord = new ArrayList<>();
         String posizione = doc.getElementsByTagName("posizione").item(0).getFirstChild().getNodeValue();
         coord.add(Double.parseDouble(doc.getElementsByTagName("coordX").item(0).getFirstChild().getNodeValue()));

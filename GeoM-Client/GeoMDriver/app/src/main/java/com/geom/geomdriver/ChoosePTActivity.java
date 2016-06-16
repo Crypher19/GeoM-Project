@@ -60,11 +60,14 @@ public class ChoosePTActivity extends AppCompatActivity {
 
         s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
 
+        /*
         s.pt_list.add(new PublicTransport(1, "treno", "etr501", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
         s.pt_list.add(new PublicTransport(2, "treno", "etr502", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
         s.pt_list.add(new PublicTransport(3, "treno", "etr503", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
         s.pt_list.add(new PublicTransport(4, "treno", "etr504", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
         s.pt_list.add(new PublicTransport(5, "treno", "etr505", "trenitalia", "milano-riccione", true, 12.5, 12.5, "ciao"));
+        */
+
 
         //RecyclerView
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.pt_recycler_view);
@@ -76,7 +79,7 @@ public class ChoosePTActivity extends AppCompatActivity {
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             //adapter
             PublicTransportListAdapter publicTransportListAdapter
-                    = new PublicTransportListAdapter(pt_list);
+                    = new PublicTransportListAdapter(s);
             recyclerView.setAdapter(publicTransportListAdapter);
         }
     }

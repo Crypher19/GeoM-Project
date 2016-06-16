@@ -3,9 +3,11 @@ package com.geom.geomdriver.classes.layout_classes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +17,19 @@ import com.geom.geomdriver.CoordActivity;
 import com.geom.geomdriver.R;
 import com.geom.geomdriver.classes.Connectivity;
 import com.geom.geomdriver.classes.PublicTransport;
+import com.geom.geomdriver.classes.SharedData;
+import com.geom.geomdriver.classes.StaticHandler;
 
 import java.util.List;
+import android.os.Handler;
 
 public class PublicTransportListAdapter extends RecyclerView.Adapter<PublicTransportListAdapter.ViewHolder> {
+    private SharedData s;
     private List<PublicTransport> pt_list;
 
-    public PublicTransportListAdapter(List<PublicTransport> pt_list){
-        this.pt_list = pt_list;
+    public PublicTransportListAdapter(SharedData s) {
+        this.s = s;
+        this.pt_list = s.pt_list;
     }
 
     @Override
@@ -46,10 +53,20 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<PublicTrans
                 //client connesso ad internet
                 if(Connectivity.isConnected(v.getContext())) {
                     PublicTransport pt = pt_list.get(holder.getAdapterPosition());
+
+                    // imposto il PT in SharedData
+                    s.pt = pt;
+                    s.setPTChosen(true);
+
+                    Message msg = new Message();
+                    msg.obj = s;
+                    Log.i("sMESSAGE", "Handler = " + StaticHandler.getHandler().toString());
+                    StaticHandler.getHandler().sendMessage(msg); // invio messaggio che sveglia anche il thread
+
                     Intent i = new Intent(v.getContext(), CoordActivity.class);
                     Bundle b = new Bundle();
 
-                    b.putParcelable("pt", pt);
+                    b.putParcelable("SharedData", s);
                     i.putExtra("bundle", b);
                     v.getRootView().getContext().startActivity(i);
                     ((Activity) v.getRootView().getContext()).finish();

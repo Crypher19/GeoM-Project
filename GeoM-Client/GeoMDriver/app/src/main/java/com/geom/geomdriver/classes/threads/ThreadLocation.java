@@ -10,14 +10,19 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
+
+import com.geom.geomdriver.classes.SharedData;
+import com.geom.geomdriver.classes.StaticHandler;
 
 /**
  * Created by dario on 5/22/2016.
  */
 public class ThreadLocation extends Thread {
 
+    private SharedData sd;
     private Context c;
     private LocationManager loc;
     private TextView t1, t2;
@@ -25,13 +30,14 @@ public class ThreadLocation extends Thread {
     private int count;
     private Activity a;
 
-    public ThreadLocation(Activity activity, LocationManager locationManager, TextView locationText, TextView refreshText, String provider) {
-        a=activity;
-        loc = locationManager;
-        t1 = locationText;
-        t2 = refreshText;
-        prov = provider;
-        count = 0;
+    public ThreadLocation(SharedData sd, Activity activity, LocationManager locationManager, TextView locationText, TextView refreshText, String provider) {
+        this.sd = sd;
+        this.a = activity;
+        this.loc = locationManager;
+        this.t1 = locationText;
+        this.t2 = refreshText;
+        this.prov = provider;
+        this.count = 0;
     }
 
     public void run() {
@@ -69,7 +75,15 @@ public class ThreadLocation extends Thread {
         }
     };
 
-    public void updateWithNewLocation(Location location){
+    public void updateWithNewLocation(Location location) {
+        sd.coordX = location.getLatitude(); // X
+        sd.coordY = location.getLongitude(); // Y
+        sd.refreshOnly = true; // imposto solo il refresh normale di SharedData senza notify()
+
+        Message msg = new Message();
+        msg.obj = sd;
+        StaticHandler.getHandler().sendMessage(msg); // invio messaggio per aggiornare SharedData
+
         ThreadRunnable t = new ThreadRunnable(location,t1,t2,count);
         a.runOnUiThread(t);
         count++;

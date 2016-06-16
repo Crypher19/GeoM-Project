@@ -1,5 +1,7 @@
 package com.geom.geomdriver;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,17 +10,22 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.geom.geomdriver.classes.Connectivity;
+import com.geom.geomdriver.classes.PublicTransport;
 import com.geom.geomdriver.classes.SharedData;
+import com.geom.geomdriver.classes.StaticHandler;
 import com.geom.geomdriver.classes.threads.TransportThread;
 
 public class HomeActivity extends AppCompatActivity {
     private SharedData s;
+    TransportThread tt;
+    Handler handler;
 
     private EditText inputName, inputPassword;
     private TextInputLayout inputLayoutName, inputLayoutPassword;
@@ -82,25 +89,56 @@ public class HomeActivity extends AppCompatActivity {
                 s.username = inputName.getText().toString();
                 s.password = inputPassword.getText().toString();
 
-                View v = findViewById(R.id.activity_home);
-
-                Handler handler = new Handler() {
+                handler = new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
-                        String msgResp = (String) msg.obj; // object of String
-                        if ("-1".equals(msgResp)) {
-                            //refresh textview
-                            inputLayoutName.setError(getString(R.string.err_msg_wrong_name));
-                            requestFocus(inputName);
+                        if (msg.obj instanceof String) {
+                            String option = (String) msg.obj; // object of String
+
+                            switch(option) {
+                                case "-1":
+                                    //refresh textview
+                                    inputLayoutName.setError(getString(R.string.err_msg_wrong_name));
+                                    requestFocus(inputName);
+                                    break;
+                                case "-2":
+                                    //refresh textview
+                                    inputLayoutPassword.setError(getString(R.string.err_msg_wrong_password));
+                                    requestFocus(inputPassword);
+                                    break;
+                                case "OK":
+
+                                    //finish();
+                                    Log.i("sMESSAGE", "FINE SWITCH CASE OK");
+                                    break;
+                                default: //errore generico
+                                    inputLayoutPassword.setError(getString(R.string.err_msg_undefined));
+                                    break;
+                            }
                         }
-                        else if ("-2".equals(msgResp)) {
-                            inputLayoutPassword.setError(getString(R.string.err_msg_wrong_password));
-                            requestFocus(inputPassword);
+                        else if (msg.obj instanceof SharedData) {
+                            SharedData newsd = (SharedData) msg.obj; // object of PublicTransport
+                            tt.setSharedData(newsd);
+
+                            if (newsd.refreshOnly) {
+                                newsd.refreshOnly = false;
+                            } else {
+                                // sveglio il thread, dato che è stato scelto un mezzo
+                                synchronized (StaticHandler.lock) {
+                                    StaticHandler.lock.notify();
+                                }
+                            }
                         }
+
                     }
                 };
 
-                TransportThread tt = new TransportThread(s, v, handler);
+                StaticHandler.setHandler(handler);
+                //s.handler = handler;
+
+                View v = findViewById(R.id.activity_home);
+
+                tt = new TransportThread(s, v, handler);
                 tt.start();
 
                 /*Stirng response = tt.getResponse();*/
