@@ -39,7 +39,7 @@ class Database:
                      WHERE company_table.ID = transports_table.Compagnia"""
 
         if IDcompagnia != None:
-            sql += " AND transports_table.Compagnia='"+IDcompagnia+"'"
+            sql += " AND transports_table.Compagnia='"+str(IDcompagnia)+"'"
         if tipoMezzo != None:
             sql += " AND transports_table.TipoMezzo='"+tipoMezzo+"'"
         if offset != None and limit != None:
