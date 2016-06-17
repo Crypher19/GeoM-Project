@@ -132,20 +132,23 @@ public class TransportThread extends Thread {
                 // se il server conferma
                 if ("OK".equals(msgResp)) {
                     // invio posizione
-                    // TODO: cambiare eventualmente la condizione del while
-                    while(true) {
+                    sd.sendCoord = true;
+
+                    while(sd.sendCoord) {
                         conn.sendMessage(conn.getDOMPosizione(Double.toString(sd.coordX), Double.toString(sd.coordY)));
                         try {
                             Thread.sleep(1500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                        Log.i("sMESSAGE FINE SLEEP", "sd.sendCoord = " + sd.sendCoord);
                     }
+                    Log.i("sMESSAGE FINE WHILE", "sd.sendCoord = " + sd.sendCoord);
+                    conn.sendMessage(conn.getDOMResponse("END"));
                 }
 
-                // TODO: alla chiusura dell'app devo inviare messaggio di "END"
-                // TODO: controllare funzionamento timeout lato server
             }
+            conn.closeConn();
 
         } catch (IOException e) {
             e.printStackTrace();

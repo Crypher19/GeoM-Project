@@ -1,12 +1,16 @@
 package com.geom.geomdriver;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -38,9 +42,22 @@ public class ChoosePTActivity extends AppCompatActivity {
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(ChoosePTActivity.this, HomeActivity.class);
-                    startActivity(i);
-                    finish();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(),
+                            R.style.AppCompatAlertDialogStyleLight);
+                    builder.setTitle(Html.fromHtml("<b>"+ getString(R.string.warning_title) +"</b>"));
+                    builder.setMessage(getString(R.string.warning_message));
+                    builder.setPositiveButton(getString(R.string.ok_string), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            s.sendCoord = false; // termino l'invio di coordinate
+                            Log.i("sMESSAGE CAMBIATO", "s.sendCoord = " + s.sendCoord);
+                            Intent i = new Intent(ChoosePTActivity.this, HomeActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    });
+                    builder.setNegativeButton(getString(R.string.undo_string), null);
+                    builder.show();
                 }
             });
         }

@@ -26,6 +26,8 @@
     <string name="internet_error_message">Devi essere connesso ad Internet per usare GeoM.</string>
     <string name="wifiOnly_erro_title">Modalità solo WiFi attiva</string>
     <string name="wifiOnly_error_message">Puoi modificare le impostazioni cliccando su "CAMBIA"</string>
+    <string name="pt_nondisponibile_title">Mezzo fuori servizio</string>
+    <string name="pt_nondisponibile_message">Il mezzo non è attualmente disponibile. Riprova più tardi.</string>
 
     <!-- Info strings -->
     <string name="copyright">© 2016 GeoM\nAll right reserved.</string>

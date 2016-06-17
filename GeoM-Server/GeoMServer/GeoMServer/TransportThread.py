@@ -54,12 +54,12 @@ class TransportThread (threading.Thread):
                 # ricevo posizione (X e Y)
                 while pxml.readDOMResponse(doc, "messaggio") != "END":
                     msg = self.conn.recv(1024).decode('utf-8').strip()
+                    print(msg)
                     doc = pxml.toDOMObject(msg)
                     pos = pxml.getCoordFromDOM(doc)
                     if pos != False:
                         self.coordX,self.coordY = pos[0],pos[1]
                         print(self.coordX + " ; " + self.coordY)  
-                       
 
                 # ricevi dati posizione (for/while)
 

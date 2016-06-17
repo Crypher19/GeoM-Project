@@ -118,11 +118,12 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         else if (msg.obj instanceof SharedData) {
                             SharedData newsd = (SharedData) msg.obj; // object of PublicTransport
-                            tt.setSharedData(newsd);
 
                             if (newsd.refreshOnly) {
                                 newsd.refreshOnly = false;
+                                tt.setSharedData(newsd); // refresh SharedData TransportThread
                             } else {
+                                tt.setSharedData(newsd); // refresh SharedData TransportThread
                                 // sveglio il thread, dato che è stato scelto un mezzo
                                 synchronized (StaticHandler.lock) {
                                     StaticHandler.lock.notify();
@@ -141,32 +142,6 @@ public class HomeActivity extends AppCompatActivity {
                 tt = new TransportThread(s, v, handler);
                 tt.start();
 
-                /*Stirng response = tt.getResponse();*/
-
-                /*if(!response.toLowerCase().isEmpty()) {
-
-                    switch (response.toLowerCase()) {
-                        case "-1"://username errato
-                            inputLayoutName.setError(getString(R.string.err_msg_wrong_name));
-                            requestFocus(inputName);
-                            break;
-
-                        case "-2"://password errato
-                            inputLayoutPassword.setError(getString(R.string.err_msg_wrong_password));
-                            requestFocus(inputPassword);
-                            break;
-
-                        case "ok"://credenziali corrette
-                            Intent i = new Intent(HomeActivity.this, ChoosePTActivity.class);
-                            startActivity(i);
-                            finish();
-                            break;
-
-                        default://errore generico
-                            inputLayoutPassword.setError(getString(R.string.err_msg_undefined));
-                            break;
-                    }
-                }*/
             }
         } else{//client non connesso
             showAlertDialog(getString(R.string.internet_error_title),

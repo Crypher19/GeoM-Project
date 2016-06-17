@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import classes.Connectivity;
+import classes.CoordThread;
 import classes.PublicTransport;
 import classes.SharedData;
 
@@ -102,7 +103,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
 
             final ListViewHolder holder = (ListViewHolder) viewHolder;
             //ottengo l'elemento attuale
-            PublicTransport pt = pt_list.get(holder.getAdapterPosition());
+            final PublicTransport pt = pt_list.get(holder.getAdapterPosition());
             boolean found = false;
 
             holder.pt_name.setText(pt.getPt_name());
@@ -126,18 +127,9 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
                 @Override
                 public void onClick(View v) {
                     //controllo la connessione ad internet
-                    if(Connectivity.isConnected((v.getRootView().getContext()))){
-                        //lancio MapActivity
-                        PublicTransport pt = pt_list.get(holder.getAdapterPosition());
-                        Intent i = new Intent(v.getContext(), MapsActivity.class);
-                        Bundle b = new Bundle();
-
-                        s.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity
-                        b.putParcelable("PublicTransport", pt);
-                        b.putParcelable("SharedData", s);
-                        i.putExtra("bundle", b);
-                        ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
-                        ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
+                    if(Connectivity.isConnected((v.getRootView().getContext()))) {
+                        CoordThread ct = new CoordThread(s, v, pt);
+                        ct.start();
                     } else{//se non è connesso ad internet
                         showAlertDialog(v.getContext(),
                                 v.getContext().getString(R.string.internet_error_title),

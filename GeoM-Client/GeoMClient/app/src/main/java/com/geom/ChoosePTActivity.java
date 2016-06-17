@@ -300,6 +300,7 @@ public class ChoosePTActivity extends AppCompatActivity {
 
     //Aggiorno la lista quando trascino ferso il basso
     public void refresh(){
+        s.offset = 0;
         LoadingThread lt = new LoadingThread(s);
         lt.start();
         try {

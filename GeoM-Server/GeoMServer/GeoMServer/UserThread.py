@@ -44,7 +44,7 @@ class UserThread (threading.Thread):
                 # imposto timeout per invio coordinate
                 self.conn.settimeout(1)
                 
-                while loop :
+                while loop:
                     try:
                         time.sleep(self.time)
                         # lettura posizioni xy del mezzo interessato

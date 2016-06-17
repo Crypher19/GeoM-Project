@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -49,9 +50,22 @@ public class CoordActivity extends AppCompatActivity {
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(CoordActivity.this, HomeActivity.class);
-                    startActivity(i);
-                    finish();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(),
+                            R.style.AppCompatAlertDialogStyleLight);
+                    builder.setTitle(Html.fromHtml("<b>"+ getString(R.string.warning_title) +"</b>"));
+                    builder.setMessage(getString(R.string.warning_message));
+                    builder.setPositiveButton(getString(R.string.ok_string), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            s.sendCoord = false; // termino l'invio di coordinate
+                            Log.i("sMESSAGE CAMBIATO", "s.sendCoord = " + s.sendCoord);
+                            Intent i = new Intent(CoordActivity.this, HomeActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    });
+                    builder.setNegativeButton(getString(R.string.undo_string), null);
+                    builder.show();
                 }
             });
         }
@@ -115,12 +129,21 @@ public class CoordActivity extends AppCompatActivity {
         builder.setPositiveButton(getString(R.string.ok_string), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                s.sendCoord = false; // termino l'invio di coordinate
+                Log.i("sMESSAGE CAMBIATO", "s.sendCoord = " + s.sendCoord);
                 //continuo con onBackPressed normalmente
                 CoordActivity.super.onBackPressed();
             }
         });
         builder.setNegativeButton(getString(R.string.undo_string), null);
         builder.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        s.sendCoord = false;
+        Log.i("sMESSAGE DESTROY", "s.sendCoord = " + s.sendCoord);
+        super.onDestroy();
     }
 
 }
