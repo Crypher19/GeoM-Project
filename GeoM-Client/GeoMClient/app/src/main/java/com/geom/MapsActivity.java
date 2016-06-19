@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.appindexing.Action;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import classes.PublicTransport;
 import classes.SharedData;
+import classes.StaticVars;
 import classes.UiGpsThread;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -52,6 +54,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -65,9 +69,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         new Thread() {
             public void run() {
                 int i = 0;
-                while (s.ricezioneCoord) {
-                    Double latitudine = s.listCoord.get(0);
-                    Double longitudine = s.listCoord.get(1);
+                while (StaticVars.isRicezioneCoord()) {
+                    Double latitudine = StaticVars.getListCoord().get(0);
+                    Double longitudine = StaticVars.getListCoord().get(1);
+
+                    Log.i("sMESSAGE BEFORE UIGPS", latitudine + " ; " + longitudine);
 
                     UiGpsThread t = new UiGpsThread(getApplicationContext(), mMap, latitudine, longitudine, i);
                     try {
@@ -107,9 +113,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent i;
         Bundle b = new Bundle();
 
-        s.ricezioneCoord = false; // interrompo la ricezione delle coordinate
+        StaticVars.setRicezioneCoord(false); // interrompo la ricezione delle coordinate
 
-        if(s.goToChoosePTActivity && !s.goToFavouritesActivity){//devo tornare a ChoosePTActivity
+        if (s.goToChoosePTActivity && !s.goToFavouritesActivity) { // devo tornare a ChoosePTActivity
             i = new Intent(MapsActivity.this, ChoosePTActivity.class);
             b.putParcelable("SharedData", s);
             i.putExtra("bundle", b);

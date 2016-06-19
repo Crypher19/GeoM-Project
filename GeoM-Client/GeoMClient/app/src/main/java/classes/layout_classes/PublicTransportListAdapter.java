@@ -200,6 +200,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+
     public boolean removeFav(PublicTransport fav) {
         return (s.removeFav(fav));
     }

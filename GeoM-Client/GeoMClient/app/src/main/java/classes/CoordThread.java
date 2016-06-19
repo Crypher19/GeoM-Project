@@ -69,15 +69,15 @@ public class CoordThread extends Thread {
                 ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
                 ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
 
-                while (sd.ricezioneCoord) {
+                while (StaticVars.isRicezioneCoord()) {
                     msgRicevuto = conn.readMessage(); // ricevo le coordinate del mezzo
                     Document docCoord = Connection.convertStringToDocument(msgRicevuto);
-                    sd.listCoord = conn.readDOMPosizione(docCoord);
-                    Log.i("sMESSAGE coordX", sd.listCoord.get(0).toString());
-                    Log.i("sMESSAGE coordY", sd.listCoord.get(1).toString());
+                    StaticVars.setListCoord(conn.readDOMPosizione(docCoord));
+                    Log.i("sMESSAGE coordX", StaticVars.getListCoord().get(0).toString());
+                    Log.i("sMESSAGE coordY", StaticVars.getListCoord().get(1).toString());
                 }
 
-                if (!sd.ricezioneCoord) {
+                if (!StaticVars.isRicezioneCoord()) {
                     conn.sendMessage(conn.getDOMResponse("STOP")); // invio messaggio di STOP
                 }
 
@@ -94,6 +94,10 @@ public class CoordThread extends Thread {
         } catch (SAXException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setSharedData(SharedData sd) {
+        this.sd = sd;
     }
 
     private void showAlertDialog(String title, String message){
