@@ -2,25 +2,19 @@ package com.geom;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import classes.CoordThread;
 import classes.PublicTransport;
 import classes.SharedData;
 import classes.UiGpsThread;
@@ -28,14 +22,9 @@ import classes.UiGpsThread;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Geocoder gc;
-    private TextView myLocationText;
-    private double lat, lon;
-    private CoordThread ct;
     private SharedData s;
 
     private GoogleApiClient client;
-    final double latitudine = 0,longitudine = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,25 +57,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
         new Thread() {
             public void run() {
                 int i = 0;
-                while (i++ < 100) {
-                    double latitudine = (i / 10) + 44;
-                    double longitudine = (i / 10) + 8;
+                while (s.ricezioneCoord) {
+                    Double latitudine = s.listCoord.get(0);
+                    Double longitudine = s.listCoord.get(1);
 
                     UiGpsThread t = new UiGpsThread(getApplicationContext(), mMap, latitudine, longitudine, i);
                     try {
