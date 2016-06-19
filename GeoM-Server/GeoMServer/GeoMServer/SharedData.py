@@ -49,4 +49,9 @@ class SharedData:
             print("Username errato.")
             return -1 # Username errato
 
+    def enableTransport(self, id):
+        self.db.setTransportAttivo(id, "true")
+
+    def disableTransport(self, id):
+        self.db.setTransportAttivo(id, "false")
     

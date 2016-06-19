@@ -48,9 +48,10 @@ class UserThread (threading.Thread):
                     try:
                         time.sleep(self.time)
                         # lettura posizioni xy del mezzo interessato
-                        print(self.sd.transportList[posI].coordX)
-                        print(self.sd.transportList[posI].coordY)
-                        # TODO: invio posizioni X-Y al client
+                        print("INVIO: " + self.sd.transportList[posI].coordX + " ; " + self.sd.transportList[posI].coordY)
+                        print()
+                        
+                        # invio posizioni X-Y al client
                         DOMofCoord = pxml.getDOMofCoord(self.sd.transportList[posI].coordX, self.sd.transportList[posI].coordY)
                         self.send(DOMofCoord)
 
@@ -58,13 +59,13 @@ class UserThread (threading.Thread):
                         loop = False
                         print("can't find transport, maybe disconnected")
 
-                    try: # provo a ricevere un messaggio
+                    try: # provo a ricevere un messaggio di fine
                         msg = self.conn.recv(1024).decode('utf-8').strip()
                         loop = False
                         #print(type())
 
                     except socket.timeout: # ricevo timeout dalla socket
-                        print("Timeout")
+                        print("Timeout, continuo ad inviare")
 
         except ConnectionResetError:
             print("socked closed by client")

@@ -50,3 +50,5 @@ class ThreadSort(threading.Thread):
             #scrivi file di log
             with open("log\log.txt", "a") as myfile:
                 myfile.write(datetime.datetime.now().ctime() + " User connected with IP: " + str(self.addr))
+
+        # TODO: FIXARE LOG

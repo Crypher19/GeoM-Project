@@ -86,3 +86,9 @@ class Database:
             conn.commit()
             return True
         return False
+
+    def setTransportAttivo(self, id, isAttivo):
+        if (self.execQuery("UPDATE transports_table SET Attivo='"+isAttivo+"' WHERE ID="+id+";")):
+            conn.commit()
+            return True
+        return False

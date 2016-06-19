@@ -50,19 +50,22 @@ class TransportThread (threading.Thread):
 
                 # invio conferma di ricezione del mezzo           
                 self.send(ack)
+
+                # abilito il mezzo nel DB
+                self.sd.enableTransport(self.mezzo.ID)
             
                 # ricevo posizione (X e Y)
                 while pxml.readDOMResponse(doc, "messaggio") != "END":
                     msg = self.conn.recv(1024).decode('utf-8').strip()
-                    print(msg)
+                    #print(msg)
                     doc = pxml.toDOMObject(msg)
                     pos = pxml.getCoordFromDOM(doc)
                     if pos != False:
                         self.coordX,self.coordY = pos[0],pos[1]
-                        print(self.coordX + " ; " + self.coordY)  
+                        print("RICEVO: " + self.coordX + " ; " + self.coordY)  
 
                 # ricevi dati posizione (for/while)
-
+                
             # username errato
             elif ris == -2:
                 self.send(pxml.getDOMResponse(msg="-2"))
@@ -74,6 +77,9 @@ class TransportThread (threading.Thread):
             # fine del programma
         except ConnectionResetError:
             print("socked closed by client")
+
+        # cancello il trasporto dalla lista e lo disattivo nel DB
+        self.sd.disableTransport(self.mezzo.ID)
         self.sd.delTransport(self.index)
         #print("transport deleted")
 

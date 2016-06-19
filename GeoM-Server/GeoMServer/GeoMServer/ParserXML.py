@@ -114,9 +114,9 @@ class ParserXML:
         DOMimpl = minidom.getDOMImplementation()
         xmldoc = DOMimpl.createDocument(None, "posizione", None)
 
-        buildXMLcoord(self, xmldoc, coordX, coordY)
+        self.buildXMLcoord(xmldoc, coordX, coordY)
 
-        return xmldocCoord
+        return xmldoc
 
     def getCoordFromDOM(self, doc):
         try:
