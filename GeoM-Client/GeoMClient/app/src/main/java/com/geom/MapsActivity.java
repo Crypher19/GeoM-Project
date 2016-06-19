@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,7 +19,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import classes.PublicTransport;
 import classes.SharedData;
-import classes.StaticVars;
+import classes.StaticHandler;
+import classes.ThreadOnMapReady;
 import classes.UiGpsThread;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -64,27 +66,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
-        new Thread() {
-            public void run() {
-                int i = 0;
-                while (StaticVars.isRicezioneCoord()) {
-                    Double latitudine = StaticVars.getListCoord().get(0);
-                    Double longitudine = StaticVars.getListCoord().get(1);
-
-                    Log.i("sMESSAGE BEFORE UIGPS", latitudine + " ; " + longitudine);
-
-                    UiGpsThread t = new UiGpsThread(getApplicationContext(), mMap, latitudine, longitudine, i);
-                    try {
-                        runOnUiThread(t);
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.start();
+        ThreadOnMapReady tomr = new ThreadOnMapReady(MapsActivity.this, mMap, s);
+        tomr.start();
     }
 
     @Override
@@ -113,7 +96,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent i;
         Bundle b = new Bundle();
 
-        StaticVars.setRicezioneCoord(false); // interrompo la ricezione delle coordinate
+        s.ricezioneCoord = false; // interrompo la ricezione delle coordinate
+        Message msg = new Message();
+        msg.obj = s;
+        StaticHandler.gethCoordThread().sendMessage(msg); // refresh SharedData in CoordThread
+        //StaticHandler.gethMapReady().sendMessage(msg); // refresh SharedData in ThreadOnMapReady
 
         if (s.goToChoosePTActivity && !s.goToFavouritesActivity) { // devo tornare a ChoosePTActivity
             i = new Intent(MapsActivity.this, ChoosePTActivity.class);

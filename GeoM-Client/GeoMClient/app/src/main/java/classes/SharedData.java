@@ -14,6 +14,9 @@ public class SharedData implements Parcelable {
     public List<PublicTransport> busList;
     public List<PublicTransport> trainList;
     public List<PublicTransport> favList;
+    public List<Double> coordList;
+
+    public boolean ricezioneCoord;
 
     public String pt_type;//lista mezzi da visualizzare
     public int offset; // id del prossimo mezzo di trasporto da chiedere
@@ -33,6 +36,9 @@ public class SharedData implements Parcelable {
         busList = new ArrayList<>();
         trainList = new ArrayList<>();
         favList = new ArrayList<>();
+        coordList = new ArrayList<>();
+
+        ricezioneCoord = true;
 
         pt_type = null;
 

@@ -3,6 +3,8 @@ package classes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
@@ -43,6 +45,7 @@ public class CoordThread extends Thread {
     public void run() {
         String msgRicevuto = null;
 
+
         conn.startConn(); // connessione con il server
 
         try {
@@ -69,15 +72,26 @@ public class CoordThread extends Thread {
                 ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
                 ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
 
-                while (StaticVars.isRicezioneCoord()) {
+                while (sd.ricezioneCoord) {
+                    Handler handler = new Handler(){
+                        @Override
+                        public void handleMessage(Message msg) {
+                            sd = (SharedData) msg.obj; // object of PublicTransport
+                        }
+                    };
+                    StaticHandler.sethCoordThread(handler);
+
                     msgRicevuto = conn.readMessage(); // ricevo le coordinate del mezzo
                     Document docCoord = Connection.convertStringToDocument(msgRicevuto);
-                    StaticVars.setListCoord(conn.readDOMPosizione(docCoord));
-                    Log.i("sMESSAGE coordX", StaticVars.getListCoord().get(0).toString());
-                    Log.i("sMESSAGE coordY", StaticVars.getListCoord().get(1).toString());
+                    sd.coordList = conn.readDOMPosizione(docCoord);
+                    Log.i("sMESSAGE coordX", sd.coordList.get(0).toString());
+                    Log.i("sMESSAGE coordY", sd.coordList.get(1).toString());
+                    Message msg = new Message();
+                    msg.obj = sd;
+                    StaticHandler.gethMapReady().sendMessage(msg); // refresh SharedData in ThreadOnMapReady
                 }
 
-                if (!StaticVars.isRicezioneCoord()) {
+                if (!sd.ricezioneCoord) {
                     conn.sendMessage(conn.getDOMResponse("STOP")); // invio messaggio di STOP
                 }
 
@@ -94,10 +108,6 @@ public class CoordThread extends Thread {
         } catch (SAXException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setSharedData(SharedData sd) {
-        this.sd = sd;
     }
 
     private void showAlertDialog(String title, String message){
