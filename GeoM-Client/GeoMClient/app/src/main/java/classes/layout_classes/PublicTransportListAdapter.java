@@ -12,6 +12,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -126,9 +127,11 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    holder.itemView.setEnabled(false); // imposto la label del mezzo NON cliccabile
                     //controllo la connessione ad internet
-                    if(Connectivity.isConnected((v.getRootView().getContext()))) {
+                    if (Connectivity.isConnected((v.getRootView().getContext()))) {
                         CoordThread ct = new CoordThread(s, v, pt);
+                        CoordThread.ricezioneCoord = true;
                         ct.start();
                     } else{//se non è connesso ad internet
                         showAlertDialog(v.getContext(),
@@ -199,7 +202,6 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
             loadingViewHolder.progressBar.setIndeterminate(true);
         }
     }
-
 
     public boolean removeFav(PublicTransport fav) {
         return (s.removeFav(fav));

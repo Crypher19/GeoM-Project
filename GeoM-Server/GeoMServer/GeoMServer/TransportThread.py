@@ -12,6 +12,7 @@ class TransportThread (threading.Thread):
         self.conn = conn
         self.addr = addr
         self.index = index
+        self.mezzo = None
 
     def run(self):
         try:

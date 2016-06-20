@@ -16,7 +16,9 @@ public class SharedData implements Parcelable {
     public List<PublicTransport> favList;
     public List<Double> coordList;
 
-    public boolean ricezioneCoord;
+    public boolean checkMyPT;
+
+    //public boolean ricezioneCoord;
 
     public String pt_type;//lista mezzi da visualizzare
     public int offset; // id del prossimo mezzo di trasporto da chiedere
@@ -38,7 +40,7 @@ public class SharedData implements Parcelable {
         favList = new ArrayList<>();
         coordList = new ArrayList<>();
 
-        ricezioneCoord = true;
+        //ricezioneCoord = true;
 
         pt_type = null;
 
@@ -49,6 +51,7 @@ public class SharedData implements Parcelable {
         goToFavouritesActivity = false;
 
         wifiOnly = false;
+        checkMyPT = true;
     }
 
     public List<PublicTransport> getListType(String pt_type) {
@@ -133,6 +136,8 @@ public class SharedData implements Parcelable {
         dest.writeTypedList(this.busList);
         dest.writeTypedList(this.trainList);
         dest.writeTypedList(this.favList);
+        dest.writeList(this.coordList);
+        dest.writeByte(this.checkMyPT ? (byte) 1 : (byte) 0);
         dest.writeString(this.pt_type);
         dest.writeInt(this.offset);
         dest.writeByte(this.goToHomeActivity ? (byte) 1 : (byte) 0);
@@ -147,6 +152,9 @@ public class SharedData implements Parcelable {
         this.busList = in.createTypedArrayList(PublicTransport.CREATOR);
         this.trainList = in.createTypedArrayList(PublicTransport.CREATOR);
         this.favList = in.createTypedArrayList(PublicTransport.CREATOR);
+        this.coordList = new ArrayList<Double>();
+        in.readList(this.coordList, Double.class.getClassLoader());
+        this.checkMyPT = in.readByte() != 0;
         this.pt_type = in.readString();
         this.offset = in.readInt();
         this.goToHomeActivity = in.readByte() != 0;

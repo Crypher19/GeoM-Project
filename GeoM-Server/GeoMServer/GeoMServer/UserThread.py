@@ -65,7 +65,7 @@ class UserThread (threading.Thread):
                         #print(type())
 
                     except socket.timeout: # ricevo timeout dalla socket
-                        print("Timeout, continuo ad inviare")
+                        print("Timeout")
 
         except ConnectionResetError:
             print("socked closed by client")
