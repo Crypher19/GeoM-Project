@@ -26,6 +26,7 @@
         <activity
             android:name=".CoordActivity"
             android:label="@string/title_activity_coord"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
