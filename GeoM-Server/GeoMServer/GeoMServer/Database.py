@@ -10,7 +10,7 @@ class Database:
       
         try:
             print('Connecting to MySQL database...')
-            conn = MySQLConnection(user='root', database='geom') # Connect to MySQL database
+            conn = MySQLConnection(user='root', password='New9835', database='geom') # Connect to MySQL database
             cursor = conn.cursor()
             
             if conn.is_connected():

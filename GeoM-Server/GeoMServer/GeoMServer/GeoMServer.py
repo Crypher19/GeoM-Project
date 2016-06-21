@@ -9,6 +9,7 @@ def connection():
     HOST = ''
     PORT = 3333
     s = socket.socket()
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind((HOST, PORT))
     s.listen(1) # accetta massimo una coda da <1> prima di rifiutare le altre connessioni
    
