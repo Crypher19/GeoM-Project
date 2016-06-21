@@ -1,7 +1,5 @@
 package com.geom.geomdriver;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.geom.geomdriver.classes.Connectivity;
-import com.geom.geomdriver.classes.PublicTransport;
 import com.geom.geomdriver.classes.SharedData;
 import com.geom.geomdriver.classes.StaticHandler;
 import com.geom.geomdriver.classes.threads.TransportThread;
@@ -98,11 +95,13 @@ public class HomeActivity extends AppCompatActivity {
                             switch(option) {
                                 case "-1":
                                     //refresh textview
+                                    inputLayoutName.setErrorEnabled(true);
                                     inputLayoutName.setError(getString(R.string.err_msg_wrong_name));
                                     requestFocus(inputName);
                                     break;
                                 case "-2":
                                     //refresh textview
+                                    inputLayoutPassword.setErrorEnabled(true);
                                     inputLayoutPassword.setError(getString(R.string.err_msg_wrong_password));
                                     requestFocus(inputPassword);
                                     break;

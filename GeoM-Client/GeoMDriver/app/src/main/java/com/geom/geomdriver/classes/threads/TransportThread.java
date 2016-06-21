@@ -18,8 +18,6 @@ import java.io.IOException;
 import android.os.Handler;
 
 import com.geom.geomdriver.ChoosePTActivity;
-import com.geom.geomdriver.CoordActivity;
-import com.geom.geomdriver.HomeActivity;
 import com.geom.geomdriver.classes.Connection;
 import com.geom.geomdriver.classes.PublicTransport;
 import com.geom.geomdriver.classes.SharedData;
@@ -39,9 +37,7 @@ public class TransportThread extends Thread {
     public TransportThread(SharedData sd, View v, Handler handler) {
         this.sd = sd;
         this.v = v;
-        //this.conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
-        //this.conn = new Connection("172.22.109.93", 3333); // instanzio oggetto
-        this.conn = new Connection("local.tegamino.net", 3333); // instanzio oggetto
+        this.conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
         this.handler = handler;
     }
 
@@ -100,7 +96,6 @@ public class TransportThread extends Thread {
 
                 Log.i("sMESSAGE FUNZIONA", "FINEFOR");
 
-
                 // START ChoosePTActivity
                 Intent intent = new Intent(v.getContext(), ChoosePTActivity.class);
                 Bundle b = new Bundle();
@@ -150,15 +145,9 @@ public class TransportThread extends Thread {
             }
             conn.closeConn();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void setSharedData(SharedData sd) {

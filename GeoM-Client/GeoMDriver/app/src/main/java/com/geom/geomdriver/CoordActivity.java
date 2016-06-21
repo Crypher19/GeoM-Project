@@ -14,6 +14,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.geom.geomdriver.classes.PublicTransport;
@@ -27,7 +28,7 @@ public class CoordActivity extends AppCompatActivity {
     private SharedData s;
     private GoogleApiClient client;
 
-    TextView myLocationText, locationRefresh;
+    TextView myLocationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class CoordActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //il titolo varia in base alla lista visualizzata
         if(toolbar != null && pt != null)
-            toolbar.setTitle("Info " + pt.getPt_name());
+            toolbar.setTitle("Login effettuato");
         setSupportActionBar(toolbar);
 
         //pulsante logout
@@ -70,6 +71,14 @@ public class CoordActivity extends AppCompatActivity {
             });
         }
 
+        //nome utente
+        TextView usernameTextView = (TextView) findViewById(R.id.usernameTextView);
+        usernameTextView.setText("Sei autenticato come " + s.username);
+
+        //mezzo scelto
+        TextView ptTextView = (TextView) findViewById(R.id.ptTextView);
+        ptTextView.setText("Mezzo: " + pt.getPt_name());
+
         String svcName = Context.LOCATION_SERVICE;
         LocationManager locationManager = (LocationManager) getSystemService(svcName);
 
@@ -82,10 +91,9 @@ public class CoordActivity extends AppCompatActivity {
         criteria.setCostAllowed(true);
         final String provider = locationManager.getBestProvider(criteria, true);
 
-        myLocationText = (TextView) findViewById(R.id.textView);
-        locationRefresh = (TextView) findViewById(R.id.textView2);
+        myLocationText = (TextView) findViewById(R.id.textViewCoord);
 
-        ThreadLocation t = new ThreadLocation(s, this, locationManager,myLocationText,locationRefresh,provider);
+        ThreadLocation t = new ThreadLocation(s, this, locationManager, myLocationText, provider);
         t.start();
 
         //locationManager.requestLocationUpdates(provider, 2000, 10, locationListener); //metodo per aggiornare la posizione periodicamente

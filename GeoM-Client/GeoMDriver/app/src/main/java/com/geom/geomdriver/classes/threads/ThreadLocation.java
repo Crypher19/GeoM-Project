@@ -25,19 +25,16 @@ public class ThreadLocation extends Thread {
     private SharedData sd;
     private Context c;
     private LocationManager loc;
-    private TextView t1, t2;
+    private TextView t2;
     private String prov;
-    private int count;
     private Activity a;
 
-    public ThreadLocation(SharedData sd, Activity activity, LocationManager locationManager, TextView locationText, TextView refreshText, String provider) {
+    public ThreadLocation(SharedData sd, Activity activity, LocationManager locationManager, TextView refreshText, String provider) {
         this.sd = sd;
         this.a = activity;
         this.loc = locationManager;
-        this.t1 = locationText;
         this.t2 = refreshText;
         this.prov = provider;
-        this.count = 0;
     }
 
     public void run() {
@@ -84,8 +81,7 @@ public class ThreadLocation extends Thread {
         msg.obj = sd;
         StaticHandler.getHandler().sendMessage(msg); // invio messaggio per aggiornare SharedData
 
-        ThreadRunnable t = new ThreadRunnable(location,t1,t2,count);
+        ThreadRunnable t = new ThreadRunnable(location, t2);
         a.runOnUiThread(t);
-        count++;
     }
 }

@@ -21,7 +21,6 @@ import com.geom.geomdriver.classes.SharedData;
 import com.geom.geomdriver.classes.StaticHandler;
 
 import java.util.List;
-import android.os.Handler;
 
 public class PublicTransportListAdapter extends RecyclerView.Adapter<PublicTransportListAdapter.ViewHolder> {
     private SharedData s;
@@ -52,10 +51,9 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<PublicTrans
             public void onClick(View v) {
                 //client connesso ad internet
                 if(Connectivity.isConnected(v.getContext())) {
-                    PublicTransport pt = pt_list.get(holder.getAdapterPosition());
 
                     // imposto il PT in SharedData
-                    s.pt = pt;
+                    s.pt = pt_list.get(holder.getAdapterPosition());
                     s.setPTChosen(true);
 
                     Message msg = new Message();

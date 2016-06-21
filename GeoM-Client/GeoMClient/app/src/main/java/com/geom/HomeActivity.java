@@ -163,18 +163,6 @@ public class HomeActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        /*s.trainList.add(new PublicTransport(1, "aa", "aa", "aa", "aa", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(2, "bb", "bb", "bb", "bb", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(3, "cc", "cc", "cc", "cc", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(4, "dd", "dd", "dd", "dd", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(5, "ee", "ee", "ee", "ee", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(6, "ff", "ff", "ff", "ff", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(7, "gg", "gg", "gg", "gg", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(8, "hh", "hh", "hh", "hh", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(8, "ii", "ii", "ii", "ii", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(9, "ll", "ll", "ll", "ll", true, 12.0, 12.0));
-        s.trainList.add(new PublicTransport(10, "mm", "mm", "mm", "mm", true, 12.0, 12.0));*/
     }
 
     public void showAlertDialog(String title, String message){

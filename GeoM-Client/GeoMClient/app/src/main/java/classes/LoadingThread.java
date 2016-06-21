@@ -21,9 +21,7 @@ public class LoadingThread extends Thread {
 
     public LoadingThread(SharedData sd) {
         this.sd = sd;
-        //this.conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
-        //this.conn = new Connection("172.22.109.93", 3333); // instanzio oggetto
-        this.conn = new Connection("local.tegamino.net", 3333); // instanzio oggetto
+        this.conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
     }
 
     @Override
