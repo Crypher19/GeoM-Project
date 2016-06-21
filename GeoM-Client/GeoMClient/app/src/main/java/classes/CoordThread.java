@@ -43,7 +43,8 @@ public class CoordThread extends Thread {
         this.sd = sd;
         this.v = v;
         this.pt = pt;
-        conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
+        //conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
+        this.conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
     }
 
     @Override
