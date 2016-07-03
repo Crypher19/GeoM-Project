@@ -71,6 +71,8 @@ public class CoordThread extends Thread {
                 Intent i = new Intent(v.getContext(), MapsActivity.class);
                 Bundle b = new Bundle();
 
+
+                // TODO: controllare da che listadapter viene richiamato il thread. Di conseguenza, modificare la linea sottostante. Grazie e arrivederci!
                 sd.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity
                 b.putParcelable("PublicTransport", pt);
                 b.putParcelable("SharedData", sd);
