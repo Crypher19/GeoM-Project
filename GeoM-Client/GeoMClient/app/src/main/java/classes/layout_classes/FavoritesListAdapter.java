@@ -67,8 +67,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
                     ct.start();
                 } else{//se non è connesso ad internet
                     showAlertDialog(v.getContext(),
-                            v.getContext().getString(R.string.internet_error_title),
-                            v.getContext().getString(R.string.internet_error_message));
+                            null, v.getContext().getString(R.string.internet_error_message));
                 }
             }
         });
@@ -150,7 +149,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
         if(message != null && !message.isEmpty())
             builder.setMessage(message);
 
-        builder.setPositiveButton(Html.fromHtml("<b>"+ "OK" +"</b>"), null);
+        builder.setPositiveButton(context.getString(R.string.ok_string), null);
         builder.show();
     }
 

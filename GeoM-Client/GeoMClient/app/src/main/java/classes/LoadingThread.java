@@ -75,11 +75,7 @@ public class LoadingThread extends Thread {
                     Log.e("LoadingThread", "Tipo non corrispondente! tipo = " + tipo);
                 }
             }
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }

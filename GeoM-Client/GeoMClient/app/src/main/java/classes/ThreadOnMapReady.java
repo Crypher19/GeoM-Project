@@ -1,15 +1,12 @@
 package classes;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by cryph on 19/06/2016.
@@ -20,12 +17,14 @@ public class ThreadOnMapReady extends Thread {
     public GoogleMap mMap;
     public SharedData sd;
     public String checkMyPT;
+    private String ptName;
 
-    public ThreadOnMapReady(Activity activity, GoogleMap mMap, SharedData sd) {
+    public ThreadOnMapReady(Activity activity, GoogleMap mMap, SharedData sd, String ptName) {
         this.activity = activity;
         this.mMap = mMap;
         this.sd = sd;
         this.checkMyPT = "true";
+        this.ptName = ptName;
     }
 
     public void run() {
@@ -43,7 +42,7 @@ public class ThreadOnMapReady extends Thread {
 
                         Log.i("sMESSAGE BEFORE UIGPS", latitudine + " ; " + longitudine);
 
-                        UiGpsThread t = new UiGpsThread(activity.getApplicationContext(), mMap, latitudine, longitudine, 1, checkMyPT);
+                        UiGpsThread t = new UiGpsThread(mMap, latitudine, longitudine, checkMyPT, ptName);
                         try {
                             activity.runOnUiThread(t);
                             Thread.sleep(1000);
@@ -59,7 +58,7 @@ public class ThreadOnMapReady extends Thread {
 
                         Log.i("sMESSAGE UIGPS", latitudine + " ; " + longitudine + " ;;;;;; " + checkMyPT);
 
-                        UiGpsThread t = new UiGpsThread(activity.getApplicationContext(), mMap, latitudine, longitudine, 1, checkMyPT);
+                        UiGpsThread t = new UiGpsThread(mMap, latitudine, longitudine, checkMyPT, ptName);
                         try {
                             activity.runOnUiThread(t);
                             Thread.sleep(1000);

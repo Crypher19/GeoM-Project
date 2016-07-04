@@ -57,8 +57,9 @@ public class SettingsActivity extends AppCompatActivity {
                         public boolean onPreferenceClick(Preference preference) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
                                     R.style.AppCompatAlertDialogStyleLight);
-                            builder.setTitle("Ripristinare le impostazioni predefinite?");
-                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            builder.setMessage(getString(R.string.pref_question));
+                            builder.setPositiveButton(getString(R.string.ok_string),
+                                    new DialogInterface.OnClickListener() {
 
                                 //riporto impostazioni al valore di default
                                 public void onClick(DialogInterface dialog, int id) {
@@ -75,10 +76,10 @@ public class SettingsActivity extends AppCompatActivity {
                                         s.wifiOnly = wifiOnly.isChecked();
 
                                         //notifico esito dell'operazione
-                                        snackbarContent = "Impostazioni ripristinate";
+                                        snackbarContent = getString(R.string.pref_restored);
                                         _return = true;
                                     } else {
-                                        snackbarContent = "ERRORE durante il ripristino delle impostazioni";
+                                        snackbarContent = getString(R.string.pref_not_restored);
                                         _return = false;
                                     }
 
@@ -86,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 }
                             });
 
-                    builder.setNegativeButton("ANNULLA", null);
+                    builder.setNegativeButton(getString(R.string.annulla_string), null);
                     builder.show();
 
                     return _return;

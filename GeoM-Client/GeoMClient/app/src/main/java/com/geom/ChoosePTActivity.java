@@ -1,11 +1,8 @@
 package com.geom;
 
-
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -26,7 +23,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
@@ -104,6 +100,7 @@ public class ChoosePTActivity extends AppCompatActivity {
         //FloatingActionButton per i preferiti
         FloatingActionButton favourites_fab
                 = (FloatingActionButton) findViewById(R.id.favourites_fab);
+        assert favourites_fab != null;
         favourites_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +115,8 @@ public class ChoosePTActivity extends AppCompatActivity {
                     startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
-                    showAlertDialog("Nessun preferito trovato", null, null);
+                    showAlertDialog(null, "Nessun preferito trovato" ,null);
+                    // TODO: aggiungeere stringa statica
                 }
 }
         });
@@ -213,9 +211,10 @@ public class ChoosePTActivity extends AppCompatActivity {
                     //è coneesso alla rete mobile e ha l'opzione wifiOnly impostata
                     //Log.i("GUI_LOG", "wifiOnly: " + Boolean.toString(s.wifiOnly));
                     if(Connectivity.isConnectedMobile(ChoosePTActivity.this) && s.wifiOnly){
-                        Log.i("GUI_LOG", "wifiOnly " + String.valueOf(s.wifiOnly));
-                        showAlertDialog(getString(R.string.wifiOnly_erro_title),
-                                getString(R.string.wifiOnly_error_message),
+                        //Log.i("GUI_LOG", "wifiOnly " + String.valueOf(s.wifiOnly));
+                        showAlertDialog(null,
+                                getString(R.string.wifiOnly_error_title) +
+                                        getString(R.string.wifiOnly_error_message),
                                 getString(R.string.cambia_string));
                     } else {//è connesso via wifi oppure wifiOnly è disabilitato
                         pt_list.clear(); // svuoto completamente la lista
@@ -263,8 +262,9 @@ public class ChoosePTActivity extends AppCompatActivity {
                 //è coneesso alla rete mobile e ha l'opzione wifiOnly impostata
                 //Log.i("GUI_LOG", "wifiOnly: " + Boolean.toString(s.wifiOnly));
                 if(Connectivity.isConnectedMobile(ChoosePTActivity.this) && s.wifiOnly){
-                    showAlertDialog(getString(R.string.wifiOnly_erro_title),
-                            getString(R.string.wifiOnly_error_message),
+                    showAlertDialog(null,
+                            getString(R.string.wifiOnly_error_title) +
+                                    getString(R.string.wifiOnly_error_message),
                             getString(R.string.cambia_string));
                 } else {
                     //carico piu elementi
@@ -374,7 +374,7 @@ public class ChoosePTActivity extends AppCompatActivity {
             });
         }
 
-        builder.setPositiveButton(getString(R.string.ok_string), null);
+        builder.setNegativeButton(getString(R.string.annulla_string), null);
         builder.show();
     }
 

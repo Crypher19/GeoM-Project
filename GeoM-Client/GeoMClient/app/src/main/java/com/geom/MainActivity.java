@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    /*multidex: for further reference see:
+    /*
+    * multidex: for further reference see:
     * https://developer.android.com/studio/build/multidex.html
     * */
     @Override

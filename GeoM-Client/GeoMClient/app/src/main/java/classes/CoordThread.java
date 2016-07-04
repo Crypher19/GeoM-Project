@@ -7,13 +7,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
-import com.geom.HomeActivity;
 import com.geom.MapsActivity;
 import com.geom.R;
 
@@ -21,12 +18,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.security.acl.LastOwnerException;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
-
-import classes.layout_classes.PublicTransportListAdapter;
 
 /**
  * Created by cryph on 19/04/2016.
@@ -48,7 +41,7 @@ public class CoordThread extends Thread {
 
     @Override
     public void run() {
-        String msgRicevuto = null;
+        String msgRicevuto;
 
         conn.startConn(); // connessione con il server
 
@@ -106,7 +99,7 @@ public class CoordThread extends Thread {
                 sd.goToFavouritesActivity = false;
 
                 Log.i("sMESSAGE", "msgResp: " + msgResp);
-                showAlertDialog(v.getContext().getString(R.string.pt_nondisponibile_title), v.getContext().getString(R.string.pt_nondisponibile_message));
+                showAlertDialog(null, v.getContext().getString(R.string.pt_nondisponibile_message));
             }
 
         } catch (ParserConfigurationException | IOException | SAXException e) {
@@ -126,8 +119,7 @@ public class CoordThread extends Thread {
                 if(message != null && !message.isEmpty())
                     builder.setMessage(message);
 
-                builder.setPositiveButton(Html.fromHtml(
-                        "<b>" + v.getContext().getString(R.string.ok_string) + "<b>"), null);
+                builder.setPositiveButton(v.getContext().getString(R.string.ok_string), null);
                 builder.show();
             }
         });

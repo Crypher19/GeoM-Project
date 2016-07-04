@@ -1,9 +1,6 @@
 package classes.layout_classes;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,12 +9,10 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.geom.MapsActivity;
 import com.geom.R;
 
 import java.util.ArrayList;
@@ -136,8 +131,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
                         ct.start();
                     } else{//se non è connesso ad internet
                         showAlertDialog(v.getContext(),
-                                v.getContext().getString(R.string.internet_error_title),
-                                v.getContext().getString(R.string.internet_error_message));
+                                null, v.getContext().getString(R.string.internet_error_message));
                     }
                 }
             });

@@ -17,7 +17,6 @@ import android.view.View;;
 
 import classes.Connectivity;
 import classes.LoadingThread;
-import classes.PublicTransport;
 import classes.SharedData;
 import classes.layout_classes.ListViewDivider;
 import classes.layout_classes.PublicTransportGenericListAdapter;
@@ -70,8 +69,7 @@ public class HomeActivity extends AppCompatActivity {
                             s.pt_type = (s.PTList.get(position).getPt_type());//tipo di lista da visualizzare
                             initNewActivity();
                         } else{//se il dispositivo non è connesso
-                            showAlertDialog(getString(R.string.internet_error_title),
-                                    getString(R.string.internet_error_message));
+                            showAlertDialog(null, getString(R.string.internet_error_message));
                         }
                     }
 
@@ -101,7 +99,7 @@ public class HomeActivity extends AppCompatActivity {
                     startActivityForResult(i, 2);
                 }//se non ci sono preferiti
                 else {
-                    showAlertDialog("Nessun preferito trovato", null);
+                    showAlertDialog(null, getString(R.string.no_fav_found_message));
                 }
 
             }
@@ -168,11 +166,11 @@ public class HomeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this,
                 R.style.AppCompatAlertDialogStyleLight);
         if(title != null && !title.isEmpty())
-            builder.setTitle(Html.fromHtml("<b>" + title + "<b>"));
+            builder.setTitle(title);
         if(message != null && !message.isEmpty())
             builder.setMessage(message);
 
-        builder.setPositiveButton(Html.fromHtml("<b>" + getString(R.string.ok_string) + "<b>"), null);
+        builder.setPositiveButton(getString(R.string.ok_string), null);
         builder.show();
     }
 }

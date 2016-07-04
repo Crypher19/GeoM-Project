@@ -23,7 +23,7 @@
         <!-- title -->
         <item name="android:textColor">@color/colorPrimary</item>
         <!-- message -->
-        <item name="android:textColorPrimary">@color/customGrey</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
         <!-- background -->
         <item name="android:background">#FFFFFF</item>
     </style>

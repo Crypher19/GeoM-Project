@@ -35,6 +35,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private String checkMyPT;
 
+    private PublicTransport pt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         s = getIntent().getBundleExtra("bundle").getParcelable("SharedData");
         //extra ricevuto da ChoosePTActivity o FavoritesActivity
-        PublicTransport pt = getIntent().getBundleExtra("bundle").getParcelable("PublicTransport");
+        pt = getIntent().getBundleExtra("bundle").getParcelable("PublicTransport");
 
         checkMyPT = "true";
 
@@ -57,11 +59,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Message msg = new Message();
                 if ("true".equals(checkMyPT)) {
                     checkMyPT = "false";
-                    btnMyPT.setBackgroundResource(R.drawable.ic_material_bus_grey);
+                    btnMyPT.setImageResource(R.drawable.ic_material_bus_custom_grey);
                 }
                 else if ("false".equals(checkMyPT)) {
                     checkMyPT = "true";
-                    btnMyPT.setBackgroundResource(R.drawable.ic_material_bus_blue);
+                    btnMyPT.setImageResource(R.drawable.ic_material_bus_custom_blue);
                 }
                 msg.obj = checkMyPT;
                 Log.i("sMESSAGE", "PREHANDLER checkMyPT = " + checkMyPT);
@@ -91,19 +93,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mMap.setMyLocationEnabled(true);
 
-        ThreadOnMapReady tomr = new ThreadOnMapReady(MapsActivity.this, mMap, s);
+        ThreadOnMapReady tomr = new ThreadOnMapReady(MapsActivity.this, mMap, s, pt.getPt_name());
         tomr.start();
     }
 

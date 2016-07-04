@@ -68,8 +68,8 @@ public class FavoritesActivity extends AppCompatActivity {
             public void onRefresh() {
                 String message;
                 if(refresh()){
-                    message = "Preferiti aggiornati";
-                } else message = "ERRORE, preferiti non aggiornati";
+                    message = getString(R.string.pref_deleted);
+                } else message = getString(R.string.pref_not_deleted);
 
                 Snackbar.make((findViewById(R.id.activity_favourites)), message,
                         Snackbar.LENGTH_SHORT).show();
@@ -92,8 +92,8 @@ public class FavoritesActivity extends AppCompatActivity {
         if (id == R.id.action_refresh) {//aggiorno i preferiti
             String message;
             if(refresh()){
-                message = "Preferiti aggiornati";
-            } else message = "ERRORE, preferiti non aggiornati";
+                message = getString(R.string.pref_deleted);
+            } else message = getString(R.string.pref_not_deleted);
 
             Snackbar.make((findViewById(R.id.activity_favourites)), message,
                     Snackbar.LENGTH_LONG).show();
@@ -102,21 +102,22 @@ public class FavoritesActivity extends AppCompatActivity {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(FavoritesActivity.this,
                     R.style.AppCompatAlertDialogStyleLight);
-            builder.setTitle("Eliminare tutti i preferiti?");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            builder.setTitle(getString(R.string.pref_string_question));
+            builder.setPositiveButton(getString(R.string.ok_string),
+                    new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int id) {
                     String snackbarContent;
 
                     if(deleteAll()){
-                        snackbarContent = "Preferiti eliminati";
-                    } else snackbarContent = "ERRORE, preferiti non eliminati";
+                        snackbarContent = getString(R.string.pref_deleted);
+                    } else snackbarContent = getString(R.string.pref_not_deleted);
 
                     goBack(snackbarContent);
                 }
             });
 
-            builder.setNegativeButton("ANNULLA", null);
+            builder.setNegativeButton(getString(R.string.annulla_string), null);
             builder.show();
         }
 

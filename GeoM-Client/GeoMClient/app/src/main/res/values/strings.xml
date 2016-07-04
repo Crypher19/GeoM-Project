@@ -20,14 +20,26 @@
     <string name="search_hint">Cerca per nome o tratta</string>
 
     <!-- AlertDialog strings -->
-    <string name="ok_string"><b><i>OK</i></b></string>
-    <string name="cambia_string"><b><i>CAMBIA</i></b></string>
+    <string name="ok_string">OK</string>
+    <string name="cambia_string">CAMBIA</string>
+    <string name="annulla_string">ANNULLA</string>
     <string name="internet_error_title">Nessuna connessione a Internet</string>
     <string name="internet_error_message">Devi essere connesso ad Internet per usare GeoM.</string>
-    <string name="wifiOnly_erro_title">Modalità solo WiFi attiva</string>
+    <string name="wifiOnly_error_title">Modalità solo WiFi attiva</string>
     <string name="wifiOnly_error_message">Puoi modificare le impostazioni cliccando su "CAMBIA"</string>
     <string name="pt_nondisponibile_title">Mezzo fuori servizio</string>
-    <string name="pt_nondisponibile_message">Il mezzo non è attualmente disponibile. Riprova più tardi.</string>
+    <string name="pt_nondisponibile_message">Il mezzo non è attualmente disponibile, riprova più tardi.</string>
+    <string name="no_fav_found_message">Nessun preferito trovato.</string>
+
+    <!-- Favorites strings -->
+    <string name="pref_deleted">Preferiti aggiornati</string>
+    <string name="pref_not_deleted">ERRORE, preferiti non aggiornati</string>
+    <string name="pref_string_question">Eliminare tutti i preferiti?</string>
+
+    <!-- Preferences strings -->
+    <string name="pref_question">Ripristinare le impostazioni predefinite?</string>
+    <string name="pref_restored">Impostazioni ripristinate</string>
+    <string name="pref_not_restored">ERRORE durante il ripristino delle impostazioni</string>
 
     <!-- Info strings -->
     <string name="copyright">© 2016 GeoM\nAll right reserved.</string>
