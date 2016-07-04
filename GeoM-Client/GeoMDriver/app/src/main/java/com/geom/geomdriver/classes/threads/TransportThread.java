@@ -22,6 +22,7 @@ import java.io.IOException;
 import android.os.Handler;
 
 import com.geom.geomdriver.ChoosePTActivity;
+import com.geom.geomdriver.CoordActivity;
 import com.geom.geomdriver.R;
 import com.geom.geomdriver.classes.Connection;
 import com.geom.geomdriver.classes.PublicTransport;
@@ -135,6 +136,15 @@ public class TransportThread extends Thread {
                 }
                 // se il server conferma
                 else if ("OK".equals(msgResp)) {
+                    // START CoordActivity
+                    Intent i =  new Intent(v.getContext(), CoordActivity.class);
+                    Bundle b2 = new Bundle();
+
+                    b2.putParcelable("SharedData", sd);
+                    i.putExtra("bundle", b2);
+                    v.getRootView().getContext().startActivity(i);
+                    ((Activity) v.getRootView().getContext()).finish();
+
                     // invio posizione
                     sd.sendCoord = true;
 
@@ -154,13 +164,22 @@ public class TransportThread extends Thread {
             }
             conn.closeConn();
 
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
+
     }
 
     public void setSharedData(SharedData sd) {
         this.sd = sd;
+    }
+
+    public void setView(View v) {
+        this.v = v;
     }
 
     private void showAlertDialog(final String title, final String message){

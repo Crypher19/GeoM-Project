@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ public class SharedData implements Parcelable {
     public String password;
     private String response;
     private boolean PTChosen;
-    public Handler handler;
     public PublicTransport pt;
     public double coordX;
     public double coordY;
@@ -30,7 +30,6 @@ public class SharedData implements Parcelable {
         this.pt_list = new ArrayList<>();
         this.response = "";
         this.PTChosen = false;
-        this.handler = null;
         this.pt = null;
         this.coordX = 0.d;
         this.coordY = 0.d;

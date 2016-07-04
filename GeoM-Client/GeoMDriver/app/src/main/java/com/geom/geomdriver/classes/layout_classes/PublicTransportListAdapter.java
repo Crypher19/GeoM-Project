@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.geom.geomdriver.CoordActivity;
 import com.geom.geomdriver.R;
 import com.geom.geomdriver.classes.Connectivity;
+import com.geom.geomdriver.classes.MyBundle;
 import com.geom.geomdriver.classes.PublicTransport;
 import com.geom.geomdriver.classes.SharedData;
 import com.geom.geomdriver.classes.StaticHandler;
@@ -56,18 +57,12 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<PublicTrans
                     s.pt = pt_list.get(holder.getAdapterPosition());
                     s.setPTChosen(true);
 
+                    MyBundle mb = new MyBundle(s, v);
+
                     Message msg = new Message();
-                    msg.obj = s;
+                    msg.obj = mb;
                     Log.i("sMESSAGE", "Handler = " + StaticHandler.getHandler().toString());
                     StaticHandler.getHandler().sendMessage(msg); // invio messaggio che sveglia anche il thread
-
-                    Intent i = new Intent(v.getContext(), CoordActivity.class);
-                    Bundle b = new Bundle();
-
-                    b.putParcelable("SharedData", s);
-                    i.putExtra("bundle", b);
-                    v.getRootView().getContext().startActivity(i);
-                    ((Activity) v.getRootView().getContext()).finish();
                 } else{//client non connesso
                     showAlertDialog(v,
                             v.getContext().getString(R.string.internet_error_title),

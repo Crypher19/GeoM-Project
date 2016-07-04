@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.geom.geomdriver.classes.Connectivity;
+import com.geom.geomdriver.classes.MyBundle;
 import com.geom.geomdriver.classes.SharedData;
 import com.geom.geomdriver.classes.StaticHandler;
 import com.geom.geomdriver.classes.threads.TransportThread;
@@ -106,7 +107,6 @@ public class HomeActivity extends AppCompatActivity {
                                     requestFocus(inputPassword);
                                     break;
                                 case "OK":
-
                                     //finish();
                                     Log.i("sMESSAGE", "FINE SWITCH CASE OK");
                                     break;
@@ -115,19 +115,36 @@ public class HomeActivity extends AppCompatActivity {
                                     break;
                             }
                         }
-                        else if (msg.obj instanceof SharedData) {
-                            SharedData newsd = (SharedData) msg.obj; // object of PublicTransport
+                        else if (msg.obj instanceof MyBundle) {
+                            MyBundle myBundle = (MyBundle) msg.obj;
+                            SharedData newsd = myBundle.s;
+                            View view1 = myBundle.v;
 
                             if (newsd.refreshOnly) {
                                 newsd.refreshOnly = false;
                                 tt.setSharedData(newsd); // refresh SharedData TransportThread
                             } else {
                                 tt.setSharedData(newsd); // refresh SharedData TransportThread
+                                tt.setView(view1); // refresh view
                                 // sveglio il thread, dato che è stato scelto un mezzo
                                 synchronized (StaticHandler.lock) {
                                     StaticHandler.lock.notify();
                                 }
                             }
+                        }
+                        else if (msg.obj instanceof SharedData) {
+                            SharedData newsd = (SharedData) msg.obj; // object of PublicTransport
+
+                            if (newsd.refreshOnly) {
+                                newsd.refreshOnly = false;
+                                tt.setSharedData(newsd); // refresh SharedData TransportThread
+                            } /*else {
+                                tt.setSharedData(newsd); // refresh SharedData TransportThread
+                                // sveglio il thread, dato che è stato scelto un mezzo
+                                synchronized (StaticHandler.lock) {
+                                    StaticHandler.lock.notify();
+                                }
+                            }*/
                         }
 
                     }
