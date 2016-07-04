@@ -21,7 +21,7 @@ class TransportThread (threading.Thread):
 
             # conferma connessione
             pxml = ParserXML()
-            ack = pxml.getDOMResponse()
+            ack = pxml.getDOMResponse() # messaggio di default con "OK"
             self.send(ack)
             #self.send(ack)
 
@@ -40,7 +40,7 @@ class TransportThread (threading.Thread):
                 self.send(ack)
 
                 # invio lista dei mezzi
-                msg = self.sd.getDOMTransportsList(IDCompagnia=ris)
+                msg = self.sd.getDOMTransportsList(IDCompagnia=ris, mezzoAttivo="false")
                 self.send(msg)
 
                 # ricevo il mezzo dell'autista
@@ -48,24 +48,28 @@ class TransportThread (threading.Thread):
                 print(msg)
                 doc = pxml.toDOMObject(msg)
                 self.mezzo = pxml.getTransportObj(doc)
-
-                # invio conferma di ricezione del mezzo           
-                self.send(ack)
-
-                # abilito il mezzo nel DB
-                self.sd.enableTransport(self.mezzo.ID)
+                posI = self.sd.getTransportI(self.mezzo.nomeMezzo, self.mezzo.compagnia, self.mezzo.tratta) # cerco il mezzo nella lista dei mezzi già attivi
             
-                # ricevo posizione (X e Y)
-                while pxml.readDOMResponse(doc, "messaggio") != "END":
-                    msg = self.conn.recv(1024).decode('utf-8').strip()
-                    #print(msg)
-                    doc = pxml.toDOMObject(msg)
-                    pos = pxml.getCoordFromDOM(doc)
-                    if pos != False:
-                        self.coordX,self.coordY = pos[0],pos[1]
-                        print("RICEVO: " + self.coordX + " ; " + self.coordY)  
+                # se il mezzo è già attivo
+                if posI == -1:
+                    self.send(pxml.getDOMResponse(msg="NOTOK"))
+                    print("Mezzo di trasporto gia' attivo")
+                # se il mezzo non è ancora attivo
+                else:
+                    self.send(ack) # invio conferma di ricezione del mezzo           
 
-                # ricevi dati posizione (for/while)
+                    # abilito il mezzo nel DB
+                    self.sd.enableTransport(self.mezzo.ID)
+                
+                    # ricevo posizione (X e Y)
+                    while pxml.readDOMResponse(doc, "messaggio") != "END":
+                        msg = self.conn.recv(1024).decode('utf-8').strip()
+                        #print(msg)
+                        doc = pxml.toDOMObject(msg)
+                        pos = pxml.getCoordFromDOM(doc)
+                        if pos != False:
+                            self.coordX,self.coordY = pos[0],pos[1]
+                            print("RICEVO: " + self.coordX + " ; " + self.coordY)  
                 
             # username errato
             elif ris == -2:
