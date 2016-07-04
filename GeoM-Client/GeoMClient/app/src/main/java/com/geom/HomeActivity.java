@@ -99,7 +99,6 @@ public class HomeActivity extends AppCompatActivity {
                             | Intent.FLAG_ACTIVITY_NEW_TASK
                             | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivityForResult(i, 2);
-                    finish();
                 }//se non ci sono preferiti
                 else {
                     showAlertDialog("Nessun preferito trovato", null);

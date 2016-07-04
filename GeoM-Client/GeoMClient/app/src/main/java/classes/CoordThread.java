@@ -43,14 +43,12 @@ public class CoordThread extends Thread {
         this.sd = sd;
         this.v = v;
         this.pt = pt;
-        //conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
         this.conn = new Connection("51.254.127.27", 3333); // instanzio oggetto
     }
 
     @Override
     public void run() {
         String msgRicevuto = null;
-
 
         conn.startConn(); // connessione con il server
 
@@ -71,12 +69,10 @@ public class CoordThread extends Thread {
                 Intent i = new Intent(v.getContext(), MapsActivity.class);
                 Bundle b = new Bundle();
 
-
-                // TODO: controllare da che listadapter viene richiamato il thread. Di conseguenza, modificare la linea sottostante. Grazie e arrivederci!
-                sd.goToChoosePTActivity = true;//devo tornare a ChoosePTActivity
                 b.putParcelable("PublicTransport", pt);
                 b.putParcelable("SharedData", sd);
                 i.putExtra("bundle", b);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ((Activity) v.getRootView().getContext()).setResult(Activity.RESULT_OK);
                 ((Activity) v.getRootView().getContext()).startActivityForResult(i, 4);
 
@@ -106,16 +102,14 @@ public class CoordThread extends Thread {
                     conn.sendMessage(conn.getDOMResponse("STOP")); // invio messaggio di STOP
                 }
             } else {
+                sd.goToChoosePTActivity = false;
+                sd.goToFavouritesActivity = false;
 
                 Log.i("sMESSAGE", "msgResp: " + msgResp);
                 showAlertDialog(v.getContext().getString(R.string.pt_nondisponibile_title), v.getContext().getString(R.string.pt_nondisponibile_message));
             }
 
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }
     }

@@ -130,6 +130,7 @@ public class PublicTransportListAdapter extends RecyclerView.Adapter<RecyclerVie
                     holder.itemView.setEnabled(false); // imposto la label del mezzo NON cliccabile
                     //controllo la connessione ad internet
                     if (Connectivity.isConnected((v.getRootView().getContext()))) {
+                        s.goToChoosePTActivity = true;
                         CoordThread ct = new CoordThread(s, v, pt);
                         CoordThread.ricezioneCoord = true;
                         ct.start();

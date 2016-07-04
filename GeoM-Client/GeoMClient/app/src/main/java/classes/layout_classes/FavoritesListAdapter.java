@@ -1,6 +1,11 @@
 package classes.layout_classes;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -10,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.geom.HomeActivity;
 import com.geom.R;
 
 import java.util.List;
@@ -37,7 +43,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder,int position){
+    public void onBindViewHolder(final ViewHolder holder, int position){
         List<PublicTransport> fav_list = s.favList;
 
         holder.pt_image.setImageResource(fav_list.get(position).getPt_image_id());
@@ -55,6 +61,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
                 holder.itemView.setEnabled(false); // imposto la label del mezzo NON cliccabile
                 //controllo la connessione ad internet
                 if (Connectivity.isConnected((v.getRootView().getContext()))) {
+                    s.goToFavouritesActivity = true;
                     CoordThread ct = new CoordThread(s, v, pt);
                     CoordThread.ricezioneCoord = true;
                     ct.start();
@@ -63,6 +70,41 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
                             v.getContext().getString(R.string.internet_error_title),
                             v.getContext().getString(R.string.internet_error_message));
                 }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(),
+                        R.style.AppCompatAlertDialogStyleLight);
+                builder.setTitle("Eliminare questo preferito?");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int id) {
+                        String snackbarContent;
+
+                        if(removeListItem(holder.getAdapterPosition())){
+                            snackbarContent = "Preferito eliminato";
+                        } else snackbarContent = "ERRORE, preferito non eliminato";
+
+                        if(s.favList.size() == 0){//ultimo preferito rimasto
+                            Intent i = new Intent(v.getContext(), HomeActivity.class);
+                            Bundle b = new Bundle();
+                            b.putString("snackbarContent", snackbarContent);
+                            b.putParcelable("SharedData", s);
+                            i.putExtra("bundle", b);
+                            v.getContext().startActivity(i);
+                        } else{//non è l'ultimo preferito
+                            Snackbar.make(((Activity) v.getContext()).findViewById(
+                                    R.id.activity_favourites), snackbarContent,
+                                    Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("ANNULLA", null);
+                builder.show();
+                return false;
             }
         });
 
@@ -110,5 +152,18 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
 
         builder.setPositiveButton(Html.fromHtml("<b>"+ "OK" +"</b>"), null);
         builder.show();
+    }
+
+    public boolean removeListItem(int position){
+        PublicTransport pt = s.favList.get(position);
+
+        if(pt != null) {
+            if (s.removeFav(pt)) {
+                //se va tutto bene aggiorno la lista da visualizzare
+                removeItem(position);
+                return true;
+            }
+        }
+        return false;
     }
 }
