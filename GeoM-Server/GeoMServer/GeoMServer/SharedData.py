@@ -22,17 +22,20 @@ class SharedData:
     def getNumTransports(self, tipoMezzo=None):
         return self.db.getNumTransports(tipoMezzo)
 
-    def getDOMTransportsList(self, IDCompagnia=None, tipoMezzo=None, limit=None, offset=None):
-        self.listaMezzi = self.db.getTransports(IDCompagnia, tipoMezzo, limit, offset)
+    def getDOMTransportsList(self, IDCompagnia=None, tipoMezzo=None, mezzoAttivo=None, limit=None, offset=None):
+        self.listaMezzi = self.db.getTransports(IDCompagnia, tipoMezzo, mezzoAttivo, limit, offset)
         pxml = ParserXML()
         doc = pxml.getDOMOfTransportsList(self.listaMezzi)
         return doc
 
     def getTransportI(self, nome, compagnia, tratta):
-        for i, thMezzo in enumerate(self.transportList):
-            if thMezzo.mezzo.nomeMezzo == nome and thMezzo.mezzo.compagnia == compagnia and thMezzo.mezzo.tratta == tratta:
-                return i  # posizione nella lista
-        return -1
+        try:
+            for i, thMezzo in enumerate(self.transportList):
+                if thMezzo.mezzo.nomeMezzo == nome and thMezzo.mezzo.compagnia == compagnia and thMezzo.mezzo.tratta == tratta:
+                    print (thMezzo.mezzo.nomeMezzo, thMezzo.mezzo.compagnia, thMezzo.mezzo.tratta, i)
+                    return i  # posizione nella lista
+        except AttributeError:
+            return -1
         
     def checkLogin(self, username, password):
         auth = self.db.getUser(username) # ricevo una tupla (username, password, IDCompagnia)

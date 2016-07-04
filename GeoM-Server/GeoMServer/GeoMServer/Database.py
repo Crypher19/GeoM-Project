@@ -32,7 +32,7 @@ class Database:
             return False
 
         
-    def getTransports(self, IDcompagnia=None, tipoMezzo=None, limit=None, offset=None):
+    def getTransports(self, IDcompagnia=None, tipoMezzo=None, mezzoAttivo=None, limit=None, offset=None, ):
         sql = """SELECT transports_table.ID,transports_table.TipoMezzo,transports_table.NomeMezzo,
                         transports_table.Tratta,transports_table.Attivo,company_table.Nome
                      FROM transports_table, company_table
@@ -42,6 +42,8 @@ class Database:
             sql += " AND transports_table.Compagnia='"+str(IDcompagnia)+"'"
         if tipoMezzo != None:
             sql += " AND transports_table.TipoMezzo='"+tipoMezzo+"'"
+        if mezzoAttivo != None:
+        	sql += " AND Attivo='"+mezzoAttivo+"'"
         if offset != None and limit != None:
             sql += " LIMIT "+str(offset)+", "+str(limit)
         elif limit != None:
@@ -65,13 +67,11 @@ class Database:
                 return (res[0][0], res[0][1], res[0][2])                      
         return False
 
-    def getNumTransports(self, tipoMezzo=None, mezzoAttivo=None):
+    def getNumTransports(self, tipoMezzo=None):
         sql = "SELECT COUNT(*) FROM transports_table"
 
         if tipoMezzo != None:
             sql += " WHERE TipoMezzo='"+tipoMezzo+"'"
-        if mezzoAttivo != None:
-        	sql += " AND Attivo='"+mezzoAttivo+"'"
 
         if self.execQuery(sql):
             res = cursor.fetchall()

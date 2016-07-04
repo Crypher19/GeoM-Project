@@ -111,56 +111,58 @@ public class TransportThread extends Thread {
                 v.getRootView().getContext().startActivity(intent);
                 ((Activity) v.getRootView().getContext()).finish();
 
-                synchronized (StaticHandler.lock) {
-                    while (!sd.isPTChosen()) {
-                        try {
-                            Log.i("sMESSAGE SYNC", "PTChosen = " + sd.isPTChosen());
-                            StaticHandler.lock.wait();
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
+                do {
+                    synchronized (StaticHandler.lock) {
+                        while (!sd.isPTChosen()) {
+                            try {
+                                Log.i("sMESSAGE SYNC", "PTChosen = " + sd.isPTChosen());
+                                StaticHandler.lock.wait();
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                            }
                         }
                     }
-                }
 
-                Log.i("sMESSAGE FUNZIONA", "DOPO LA WAIT");
-                conn.sendMessage(sd.pt.getDOMPT()); // invio mezzo desiderato
+                    Log.i("sMESSAGE FUNZIONA", "DOPO LA WAIT");
+                    conn.sendMessage(sd.pt.getDOMPT()); // invio mezzo desiderato
 
-                msgRicevuto = conn.readMessage(); // ricevo OK o NOTOK del mezzo
-                docResp = Connection.convertStringToDocument(msgRicevuto);
-                msgResp = conn.readDOMResponse(docResp, "messaggio");
-                Log.i("sMESSAGE RESP", msgResp);
+                    msgRicevuto = conn.readMessage(); // ricevo OK o NOTOK del mezzo
+                    docResp = Connection.convertStringToDocument(msgRicevuto);
+                    msgResp = conn.readDOMResponse(docResp, "messaggio");
+                    Log.i("sMESSAGE RESP", msgResp);
 
-                // se il mezzo è già attivo
-                if ("NOTOK".equals(msgResp)) {
-                    showAlertDialog(v.getContext().getString(R.string.pt_nondisponibile_title), v.getContext().getString(R.string.pt_nondisponibile_message));
-                }
-                // se il server conferma
-                else if ("OK".equals(msgResp)) {
-                    // START CoordActivity
-                    Intent i =  new Intent(v.getContext(), CoordActivity.class);
-                    Bundle b2 = new Bundle();
-
-                    b2.putParcelable("SharedData", sd);
-                    i.putExtra("bundle", b2);
-                    v.getRootView().getContext().startActivity(i);
-                    ((Activity) v.getRootView().getContext()).finish();
-
-                    // invio posizione
-                    sd.sendCoord = true;
-
-                    while(sd.sendCoord) {
-                        conn.sendMessage(conn.getDOMPosizione(Double.toString(sd.coordX), Double.toString(sd.coordY)));
-                        try {
-                            Thread.sleep(4000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        Log.i("sMESSAGE FINE SLEEP", "sd.sendCoord = " + sd.sendCoord);
+                    // se il mezzo è già attivo
+                    if ("NOTOK".equals(msgResp)) {
+                        sd.setPTChosen(false);
+                        showAlertDialog(v.getContext().getString(R.string.pt_nondisponibile_title), v.getContext().getString(R.string.pt_nondisponibile_message));
                     }
-                    Log.i("sMESSAGE FINE WHILE", "sd.sendCoord = " + sd.sendCoord);
-                    conn.sendMessage(conn.getDOMResponse("END"));
-                }
+                    // se il server conferma
+                    else if ("OK".equals(msgResp)) {
+                        // START CoordActivity
+                        Intent i =  new Intent(v.getContext(), CoordActivity.class);
+                        Bundle b2 = new Bundle();
 
+                        b2.putParcelable("SharedData", sd);
+                        i.putExtra("bundle", b2);
+                        v.getRootView().getContext().startActivity(i);
+                        ((Activity) v.getRootView().getContext()).finish();
+
+                        // invio posizione
+                        sd.sendCoord = true;
+
+                        while(sd.sendCoord) {
+                            conn.sendMessage(conn.getDOMPosizione(Double.toString(sd.coordX), Double.toString(sd.coordY)));
+                            try {
+                                Thread.sleep(4000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Log.i("sMESSAGE FINE SLEEP", "sd.sendCoord = " + sd.sendCoord);
+                        }
+                        Log.i("sMESSAGE FINE WHILE", "sd.sendCoord = " + sd.sendCoord);
+                        conn.sendMessage(conn.getDOMResponse("END"));
+                    }
+                } while("NOTOK".equals(msgResp));
             }
             conn.closeConn();
 

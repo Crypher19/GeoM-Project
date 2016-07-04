@@ -21,7 +21,7 @@
     <string name="err_msg_wrong_name">Errore nome utente errato</string>
     <string name="err_msg_wrong_password">Errore password errata</string>
     <string name="err_msg_undefined">Errore, impossibile connettersi a GeoM</string>
-    <string name="pt_nondisponibile_title">Mezzo fuori servizio</string>
+    <string name="pt_nondisponibile_title">Mezzo già attivo</string>
     <string name="pt_nondisponibile_message">Il mezzo non è attualmente disponibile. Riprova più tardi.</string>
 
     <!-- Logout warning strings -->
