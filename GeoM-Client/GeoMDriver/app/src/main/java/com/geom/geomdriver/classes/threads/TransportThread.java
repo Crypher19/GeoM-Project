@@ -1,9 +1,13 @@
 package com.geom.geomdriver.classes.threads;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 
@@ -18,6 +22,7 @@ import java.io.IOException;
 import android.os.Handler;
 
 import com.geom.geomdriver.ChoosePTActivity;
+import com.geom.geomdriver.R;
 import com.geom.geomdriver.classes.Connection;
 import com.geom.geomdriver.classes.PublicTransport;
 import com.geom.geomdriver.classes.SharedData;
@@ -119,20 +124,24 @@ public class TransportThread extends Thread {
                 Log.i("sMESSAGE FUNZIONA", "DOPO LA WAIT");
                 conn.sendMessage(sd.pt.getDOMPT()); // invio mezzo desiderato
 
-                msgRicevuto = conn.readMessage(); // ricevo la conferma del login
+                msgRicevuto = conn.readMessage(); // ricevo OK o NOTOK del mezzo
                 docResp = Connection.convertStringToDocument(msgRicevuto);
                 msgResp = conn.readDOMResponse(docResp, "messaggio");
                 Log.i("sMESSAGE RESP", msgResp);
 
+                // se il mezzo è già attivo
+                if ("NOTOK".equals(msgResp)) {
+                    showAlertDialog(v.getContext().getString(R.string.pt_nondisponibile_title), v.getContext().getString(R.string.pt_nondisponibile_message));
+                }
                 // se il server conferma
-                if ("OK".equals(msgResp)) {
+                else if ("OK".equals(msgResp)) {
                     // invio posizione
                     sd.sendCoord = true;
 
                     while(sd.sendCoord) {
                         conn.sendMessage(conn.getDOMPosizione(Double.toString(sd.coordX), Double.toString(sd.coordY)));
                         try {
-                            Thread.sleep(1500);
+                            Thread.sleep(4000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -152,5 +161,24 @@ public class TransportThread extends Thread {
 
     public void setSharedData(SharedData sd) {
         this.sd = sd;
+    }
+
+    private void showAlertDialog(final String title, final String message){
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(),
+                        R.style.AppCompatAlertDialogStyleLight);
+                if(title != null && !title.isEmpty())
+                    builder.setTitle(Html.fromHtml("<b>" + title + "<b>"));
+                if(message != null && !message.isEmpty())
+                    builder.setMessage(message);
+
+                builder.setPositiveButton(Html.fromHtml(
+                        "<b>" + v.getContext().getString(R.string.ok_string) + "<b>"), null);
+                builder.show();
+            }
+        });
     }
 }

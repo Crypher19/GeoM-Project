@@ -65,11 +65,13 @@ class Database:
                 return (res[0][0], res[0][1], res[0][2])                      
         return False
 
-    def getNumTransports(self, tipoMezzo=None):
+    def getNumTransports(self, tipoMezzo=None, mezzoAttivo=None):
         sql = "SELECT COUNT(*) FROM transports_table"
 
         if tipoMezzo != None:
             sql += " WHERE TipoMezzo='"+tipoMezzo+"'"
+        if mezzoAttivo != None:
+        	sql += " AND Attivo='"+mezzoAttivo+"'"
 
         if self.execQuery(sql):
             res = cursor.fetchall()
