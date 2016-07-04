@@ -38,17 +38,18 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
 
-        <Button
+        <ImageButton
             android:id="@+id/btnMyPT"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="110dp"
-            android:background="@drawable/ic_material_bus_red"
-            android:textColor="#ffffff" />
+            android:src="@drawable/ic_material_bus_blue"
+            android:background="@android:color/white" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

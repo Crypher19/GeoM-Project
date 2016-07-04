@@ -1,6 +1,5 @@
 package com.geom;
 
-import android.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,28 +11,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 
 import classes.CoordThread;
 import classes.PublicTransport;
 import classes.SharedData;
 import classes.ThreadOnMapReady;
-import classes.UiGpsThread;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private SharedData s;
-    private Button btnMyPT;
+    private ImageButton btnMyPT;
 
     private GoogleApiClient client;
 
@@ -54,18 +50,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         checkMyPT = "true";
 
-        btnMyPT = (Button) findViewById(R.id.btnMyPT);
+        btnMyPT = (ImageButton) findViewById(R.id.btnMyPT);
         btnMyPT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Message msg = new Message();
                 if ("true".equals(checkMyPT)) {
                     checkMyPT = "false";
-                    btnMyPT.setBackgroundResource(R.drawable.ic_material_bus_black);
+                    btnMyPT.setBackgroundResource(R.drawable.ic_material_bus_grey);
                 }
                 else if ("false".equals(checkMyPT)) {
                     checkMyPT = "true";
-                    btnMyPT.setBackgroundResource(R.drawable.ic_material_bus_red);
+                    btnMyPT.setBackgroundResource(R.drawable.ic_material_bus_blue);
                 }
                 msg.obj = checkMyPT;
                 Log.i("sMESSAGE", "PREHANDLER checkMyPT = " + checkMyPT);

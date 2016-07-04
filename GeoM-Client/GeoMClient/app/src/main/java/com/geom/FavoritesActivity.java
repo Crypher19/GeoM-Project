@@ -159,24 +159,32 @@ public class FavoritesActivity extends AppCompatActivity {
         if(s.goToHomeActivity){//da FavoritesActivity a HomeActivity
             i = new Intent(FavoritesActivity.this, HomeActivity.class);
             s.goToHomeActivity = false;
+            b.putParcelable("SharedData", s);
+
+            if(returnMessage != null && !returnMessage.isEmpty())
+                b.putString("snackbarContent", returnMessage);
+
+            i.putExtra("bundle", b);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            setResult(RESULT_OK);
+            startActivity(i);
         } else if(s.goToChoosePTActivity){//da FavoritesActivity a ChoosePTActivity
             i = new Intent(FavoritesActivity.this, ChoosePTActivity.class);
             s.goToChoosePTActivity = false;
-        } else{//errore
-            i = new Intent(FavoritesActivity.this, HomeActivity.class);
-            s.goToChoosePTActivity = false;
-            s.goToHomeActivity = false;
+            b.putParcelable("SharedData", s);
+
+            if(returnMessage != null && !returnMessage.isEmpty())
+                b.putString("snackbarContent", returnMessage);
+
+            i.putExtra("bundle", b);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            setResult(RESULT_OK);
+            startActivity(i);
         }
-
-        b.putParcelable("SharedData", s);
-
-        if(returnMessage != null && !returnMessage.isEmpty())
-            b.putString("snackbarContent", returnMessage);
-
-        i.putExtra("bundle", b);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        setResult(RESULT_OK);
-        startActivity(i);
     }
 
     @Override
