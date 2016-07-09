@@ -38,7 +38,7 @@ class SharedData:
         auth = self.db.getUser(username) # ricevo una tupla (username, password, IDCompagnia)
 
         if auth:
-            # controllo se la password è corretta
+            # controllo se la password è corretta 
             if bcrypt.hashpw(password.encode('utf-8'), auth[1].encode('utf-8')) == auth[1].encode('utf-8'):
                 print("Password corretta.")
                 return auth[2] # ritorno l'id della compagnia
